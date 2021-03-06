@@ -20,48 +20,40 @@
 %\section{Introducción}
 
 %----------------------------------------------------------------------------------------
-El capítulo presenta las necesidades a satisfacer y una introducción técnica, con el objetivo de proveer brevemente de los conceptos necesarios para comprender el resto de la memoria.
+El capítulo presenta las necesidades a satisfacer y una introducción técnica breve, con el objetivo de proveer los conceptos necesarios para comprender el resto de la memoria.
 
 \section{Motivación}
 \label{ch1Motivacion}
 
-% Hacia adonde se dirige la tecnología
-% Internet de las cosas 
-% Cómo la próxima evolución de Internet lo cambia todo
-% Dave Evans
-% Abril de 2011
-% Cisco Internet Business Solutions Group (IBSG)
-% https://www.cisco.com/c/dam/global/es_mx/solutions/executive/assets/pdf/internet-of-things-iot-ibsg.pdf
-La tendencia tecnológica actual es interconectar los dispositivos a través de la Internet, a tal punto que la cantidad de objetos en el año 2009 superó al número de personas conectadas, y llegado el 2020 la diferencia es de seis veces en favor de las cosas.
+La tendencia tecnológica actual es interconectar los dispositivos a través de la Internet, a tal punto que la cantidad de objetos en el año 2009 superó al número de personas conectadas, y llegado el 2020 la diferencia es de seis veces en favor de las cosas. \citep{ARTICLE:DaveEvans}
 Los procesos industriales se ven beneficiados con nuevos métodos de control de inventarios y análisis de mediciones, además es posible gestionar los ambientes productivos para lograr una mayor calidad y comodidad.
 Los datos quedan disponibles para ser procesados por modelos de inteligencia artificial, y la información resultante puede ser vista desde cualquier ubicación y en múltiples plataformas. 
 
 % Realidad de la industria local
-% Plan estratégico industrial 2020
 Las empresas locales están retrasadas en su progreso tecnológico, muchas no incorporaron sistemas electrónicos en sus procesos o productos, es necesario crear un sistema que logre adaptar la tecnología en uso con el fin de incorporarlas a las nuevas prácticas de negocios.
 El avance tecnológico modifica el marco normativo de las naciones, para cumplir con los nuevos requerimientos jurídicos, se necesita tener un mínimo de capital.
 El retraso tecnológico ya no solo genera una pérdida de competitividad, sino que también impide que las empresas coloquen sus mercancías en otros países, por incumplimiento en normas de calidad o de protección del medio ambiente.
 		
 % Necesidades de Gador
 % Referencia a la página de Gador	
-La situación de la industria argentina fue la primera razón que impulsó este trabajo, el siguiente paso fue buscar una empresa que quisiera participar de un proyecto adecuado para el pos-grado, y finalmente se logró un acuerdo con los laboratorios \emph{Gador S.A}. La misión de la compañía es \emph{producir medicamentos para la salud humana, con la mejor calidad disponible, y ponerlos al alcance de la comunidad a precios accesibles}.
+La situación de la industria argentina fue la primera razón que impulsó este trabajo, el siguiente paso fue buscar una empresa que quisiera participar de un proyecto adecuado para el pos-grado, y finalmente se logró un acuerdo con los laboratorios Gador S.A. La misión de la compañía es producir medicamentos para la salud humana, con la mejor calidad disponible, y ponerlos al alcance de la comunidad a precios accesibles. \citep{WEBSITE:Gador}
 
-La empresa tiene la necesidad de acceder al mercado estadounidense y para lograrlo se deben satisfacer los requerimientos del \emph{Code of Federal Regulations - Title 21 - Food and Drugs Chapter - Part 11 (21CFR11)}. La norma establece que los registros de las mediciones ambientales de los depósitos y cuartos productivos, se deben almacenar de forma electrónica, pero se debe demostrar que los registros tienen la misma validez y seguridad que aquellos hechos en papel. Esto se traduce en la necesidad de tener un sistema informático que se encuentre aprobado por la \emph{Food and Drug Administration (FDA)}, que es el organismo encargado de controlar los medicamentos y alimentos que ingresan a los Estados Unidos.
-Por esa razón \emph{Gador} tiene comprada una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca \emph{Honeywell}, ya que el producto se encuentra aprobado por la \emph{FDA}. 
+La empresa tiene la necesidad de acceder al mercado estadounidense y para lograrlo se deben satisfacer los requerimientos del \emph{Code of Federal Regulations - Title 21 - Food and Drugs Chapter - Part 11 (21CFR11)}. La norma establece que los registros de las mediciones ambientales de los depósitos y cuartos productivos, se deben almacenar de forma electrónica, pero se debe demostrar que los registros tienen la misma validez y seguridad que aquellos hechos en papel. \citep{ARTICLE:21cfr11} Esto se traduce en la necesidad de tener un sistema informático que se encuentre aprobado por la \emph{Food and Drug Administration (FDA)}, que es el organismo encargado de controlar los medicamentos y alimentos que ingresan a los Estados Unidos.
+Por esa razón Gador tiene comprada una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca \emph{Honeywell}, ya que el producto se encuentra aprobado por la \emph{FDA}. 
 Si bien el programa fue adquirido hace varios años, es indispensable que continúe operando aún cuando los protocolos que utiliza son antiguos. Tampoco es económicamente viable reemplazarlo por un producto moderno que esté aprobado por la \emph{FDA}, se debe lograr un salto tecnológico manteniendo la plataforma que actualmente está operando.
 
 % Perfiles térmicos
 Los requerimientos que se deben cumplir en las mediciones ambientales de los depósitos y cuartos productivos, estipulan que los sensores se deben someter a un plan de calibración rutinario y realizarles periódicos estudios de perfiles térmicos.
-Un estudio de perfil térmico se logra tomando una serie de mediciones de temperatura en varios puntos de un ambiente, y con estos datos se procede a calcular las coordenadas de los puntos críticos del cuarto.
+Un estudio de perfil térmico se logra tomando una serie de mediciones de temperatura en varios puntos de un ambiente, y con estos datos se procede a calcular las coordenadas de los puntos críticos del cuarto. \citep{ARTICLE:Temperature}
 Los puntos críticos son aquellos lugares donde la temperatura es la más baja o más alta dentro de la habitación.
 Teniendo los puntos críticos identificados, se procede a colocar sensores de temperatura en esos lugares.
 
 % Migración de sensores
 Los periódicos estudios de perfiles térmicos, tienen como consecuencia que cada seis meses se deben mover los sensores de temperatura.
-La tarea de migrar los dispositivos se vuelve costosa debido a que se encuentran cableados, además se debe certificar por el departamento de calidad los nuevos recorridos de los cables. El tiempo de migración y de certificación se vería reducido sensiblemente si los equipos fuesen inalámbricos, pero la licencia de \emph{EBI} que tiene \emph{Gador} no es compatible con los protocolos de comunicaciones necesarios para lograrlo.
+La tarea de migrar los dispositivos se vuelve costosa debido a que se encuentran cableados, y además los nuevos recorridos de los cables se deben certificar por el departamento de calidad. El tiempo de migración y de certificación se vería reducido sensiblemente si los equipos fuesen inalámbricos, pero la licencia de \emph{EBI} que tiene Gador no es compatible con los protocolos de comunicaciones necesarios para lograrlo.
 
 % Arquitectura de la red industrial Gador
-Las plantas de producción de la empresa siguen una arquitectura en donde los sensores reportan sus mediciones a unos \emph{controladores lógicos programables (PLCs)}, esa comunicación se logra a través de cables que los conectan. Los datos que adquieren los \emph{PLCs} son entregados al sistema \emph{EBI} utilizando un protocolo de comunicaciones llamado \emph{Modbus TCP}. 
+Las plantas de producción de la empresa siguen una arquitectura en donde los sensores reportan sus mediciones a unos controladores lógicos programables o \emph{PLC} por sus siglas en inglés. Esa comunicación se logra a través de cables que los conectan. Los datos que adquieren los \emph{PLCs} son entregados al sistema \emph{EBI} utilizando un protocolo de comunicaciones llamado \emph{Modbus TCP}. 
 Este protocolo fue creado en el año 1979 y se diseñó teniendo en mente las limitaciones tecnológicas de la época, sin embargo la licencia de \emph{EBI} que adquirió \emph{Gador} solo acepta este formato. El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:redGador}, donde se puede ver una estructura del tipo árbol donde todo converge al sistema \emph{EBI}.
 			
 \begin{figure}[h]
@@ -94,7 +86,7 @@ Este protocolo fue creado en el año 1979 y se diseñó teniendo en mente las li
 \label{ch1IntroduccionTecnica}
 
 % Presentación modelo de capas IoT
-El proyecto realizado presentó una serie de desafíos a resolver, siendo el primero de ellos la variedad de tecnologías involucradas, tanto en la problemática a manipular como en la solución a implementar. Para introducir orden en la variedad de conocimientos que forman parte del sistema desarrollado, se introduce un \emph{modelo de capas de Internet de las cosas (IoT)}. El modelo tiene la ventaja que separa los temas en categorías relacionadas con la función o servicio que prestan en la solución, de la misma manera, cuando se habla de la biología humana y sus múltiples partes y órganos al utilizar el modelo de sistemas del cuerpo humano. 
+El proyecto realizado presentó una serie de desafíos a resolver, siendo el primero de ellos la variedad de tecnologías involucradas, tanto en la problemática a manipular como en la solución a implementar. Para introducir orden en la variedad de conocimientos que forman parte del sistema desarrollado, se introduce un modelo de capas de Internet de las cosas (IoT). El modelo tiene la ventaja que separa los temas en categorías relacionadas con la función o servicio que prestan en la solución, lo que facilita su estudio. 
 
 % Enumeración de las capas y una breve descripción de cada una
 El modelo de capas seleccionado separa los conocimientos en cinco categorías, las cuales son las capas de negocio, aplicación, procesamiento, red y percepción.
@@ -139,7 +131,7 @@ Es importante que el código entregado pueda ser visualizado en múltiples tama�
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/ch1MaterialDesign.jpg}
-	\caption{Ejemplo de interfaz de diseño material.}
+	\caption{Ejemplo de interfaz de diseño material. \citep{WEBSITE:Material}}
 	\label{fig:ch1MaterialDesign}
 \end{figure}
 
@@ -164,7 +156,8 @@ Una base de datos orientada a grafos presenta la información como nodos que se 
 Este tipo de tecnología permite utilizar la teoría de grafos y posibilita realizar consultas siguiendo modelos matemáticos que forman parte de esa rama de la ciencia.
 
 % Capa de red
-Se dispone de un repertorio de protocolos para lograr que los dispositivos se comuniquen entre si, pertenecientes a la capa de red. Entre los mencionados a lo largo de esta memoria se encuentran el protocolo \emph{Modbus}, \emph{MQTT}, \emph{HTTP} y \emph{WebSocket}. El manejo de estas tecnologías fue fundamental para lograr que las distintas partes del proyecto interactúen con el exterior.
+Se dispone de un repertorio de protocolos pertenecientes a la capa de red para lograr que los dispositivos se comuniquen entre si.
+Entre los mencionados a lo largo de esta memoria se encuentran el protocolo \emph{Modbus}, \emph{MQTT}, \emph{HTTP} y \emph{WebSocket}. El manejo de estas tecnologías fue fundamental para lograr que las distintas partes del proyecto interactúen con el exterior.
 
 % Modbus
 \emph{Modbus} es un protocolo que se diseñó teniendo en cuenta su uso para aplicaciones industriales, su prioridad es transmitir los datos manteniendo su integridad aún en ambientes donde el ruido eléctrico es elevado. El protocolo es público y gratuito, lo que provocó que se impusiera en un gran segmento del mercado ya que además es fácil de implementar y requiere poco desarrollo. Los dispositivos de una red \emph{Modbus} tienen una dirección única y por lo general se asigna un equipo como maestro y el resto como esclavos. La arquitectura descripta presenta varias ventajas, pero la antigüedad del protocolo y su diseño para dispositivos del tipo \emph{PLC}, hace que no sea adecuado para aplicaciones \emph{IoT}.
@@ -216,37 +209,73 @@ Teniendo definido los componentes de las capas, se necesita lograr que todas las
 \label{ch1EstadoDelArte}
 
 % La nube
+En la sección \ref{ch1IntroduccionTecnica} se presentó un modelo de capas para analizar las tecnologías. En esta sección se utiliza el mismo esquema para presentar las técnicas que conforman el estado del arte.
+Es importante mencionar el concepto de nube, ya que las soluciones modernas se basan en utilizar ese tipo de plataformas. La nube se refiere a utilizar servidores y servicios provistos por un tercero. Entre los sistemas más representativos se encuentran \emph{Amazon Web Service (AWS)}, \emph{Google Cloud} y \emph{Azure}. Estas empresas ofrecen su infraestructura y una serie de facilidades que promueven un rápido desarrollo y despliegue al mercado.
 
+% Percepción
+Los sensores o actuadores que se utilizan corren un firmware específico para el ecosistema utilizado.
+Si se decidió utilizar \emph{AWS}, por ejemplo, lo más probable es que la capa de percepción ejecute \emph{AWS IoT Core} en sus dispositivos.
+Este esquema es utilizado por los laboratorios Bayer. \citep{WEBSITE:AWSBayer}
 
+% Transporte
+En la capa de transporte, los dispositivos se comunican usualmente utilizando los protocolos \emph{LoRaWAN}, \emph{Sigfox}, \emph{ZigBee} o \emph{Bluetooth}. La selección del protocolo depende de las distancias a cubrir y de las necesidades energéticas. Desde los puntos de agregación al servidor en la nube se suele utilizar el protocolo \emph{MQTT}.
+
+% Procesamiento
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\textwidth]{./Figures/ch1StateOfTheArt.png}
-	\caption{Arquitectura de una solución en la nube.}
-	\label{fig:ch1StateOfTheArt}
+	\begin{tikzpicture}		
+		\tikzstyle{block} = [rectangle,draw=black]
+				
+		\node[block] (r) {Router};
+		
+		\node[below=of r] (aux) {};
+		\node[block,right=of aux] (c) {Config};
+		
+		\node[block,below=of aux] (s3) {Shard 1};
+		\node[left=of s3] (aux1) {};
+		\node[block,left=of aux1] (s2) {Shard 2};
+		\node[left=of s2] (aux2) {};
+		\node[block,left=of aux2] (s1) {Shard 1};
+		\node[left=of s1] (aux3) {};
+		
+		\node[block,below=of aux3] (ra1) {Replica A};
+		\node[block,below=of ra1] (ra2) {Replica B};
+		\node[block,below=of ra2] (ra3) {Replica C};
+		
+		\node[block,below=of aux2] (rb1) {Replica A};
+		\node[block,below=of rb1] (rb2) {Replica B};
+		\node[block,below=of rb2] (rb3) {Replica C};
+		
+		\node[block,below=of aux1] (rc1) {Replica A};
+		\node[block,below=of rc1] (rc2) {Replica B};
+		\node[block,below=of rc2] (rc3) {Replica C};
+				
+		\draw (r)--(s3);
+		\draw (s1)|-(c);
+		\draw (s2)|-(c);
+		\draw (s3)|-(aux);
+		\draw (c)--(aux);
+		
+		\draw (ra1)-|(s1);
+		\draw (ra2)-|(s1);
+		\draw (ra3)-|(s1);	
+		
+		\draw (rb1)-|(s2);
+		\draw (rb2)-|(s2);
+		\draw (rb3)-|(s2);
+		
+		\draw (rc1)-|(s3);
+		\draw (rc2)-|(s3);
+		\draw (rc3)-|(s3);
+	\end{tikzpicture}
+	\caption{Arquitectura de datos de alta disponibilidad.}
+	\label{fig:ch1DatosAltaDisponibilidad}
 \end{figure}
 
-%\begin{figure}[h]
-%	\centering
-%	\begin{tikzpicture}		
-%		\tikzstyle{block} = [rectangle,draw=black]
-%				
-%		\node[block] (r) {Router};
-%		\node[below=of r] (aux) {};
-%		\node[block,right=of aux] (c) {Config};
-%		\node[block,below=of aux] (s1) {Shard 3};
-%		\node[block,left=of s1] (s2) {Shard 2};
-%		\node[block,left=of s2] (s3) {Shard 1};
-%				
-%		\draw (r)--(s1);
-%		\draw (s2)|-(c);
-%		\draw (s3)|-(aux);
-%		\draw (c)--(aux);		
-%	\end{tikzpicture}
-%	\caption{Arquitectura de datos de alta disponibilidad.}
-%	\label{fig:mongodb}
-%\end{figure}
+% Aplicación
 
+% Negocio
 
 \section{Objetivos y alcance}
 \label{objetivos}
