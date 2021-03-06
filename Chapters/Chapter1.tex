@@ -209,18 +209,38 @@ Teniendo definido los componentes de las capas, se necesita lograr que todas las
 \label{ch1EstadoDelArte}
 
 % La nube
-En la sección \ref{ch1IntroduccionTecnica} se presentó un modelo de capas para analizar las tecnologías. En esta sección se utiliza el mismo esquema para presentar las técnicas que conforman el estado del arte.
-Es importante mencionar el concepto de nube, ya que las soluciones modernas se basan en utilizar ese tipo de plataformas. La nube se refiere a utilizar servidores y servicios provistos por un tercero. Entre los sistemas más representativos se encuentran \emph{Amazon Web Service (AWS)}, \emph{Google Cloud} y \emph{Azure}. Estas empresas ofrecen su infraestructura y una serie de facilidades que promueven un rápido desarrollo y despliegue al mercado.
+En la sección \ref{ch1IntroduccionTecnica} se presentó un modelo de capas para analizar las tecnologías.
+En esta sección se utiliza el mismo esquema para presentar las técnicas que conforman el estado del arte.
+Es importante mencionar el concepto de nube, ya que las soluciones modernas se basan en utilizar este tipo de plataforma.
+La nube se refiere a utilizar servicios y servidores provistos por un tercero.
+Entre los sistemas más representativos se encuentran \emph{Amazon Web Service (AWS)}, \emph{Google Cloud} y \emph{Azure}.
+Estas empresas ofrecen su infraestructura y una serie de facilidades que promueven un rápido desarrollo y despliegue en el mercado.
 
 % Percepción
 Los sensores o actuadores que se utilizan corren un firmware específico para el ecosistema utilizado.
 Si se decidió utilizar \emph{AWS}, por ejemplo, lo más probable es que la capa de percepción ejecute \emph{AWS IoT Core} en sus dispositivos.
-Este esquema es utilizado por los laboratorios Bayer. \citep{WEBSITE:AWSBayer}
+Este esquema es ampliamente utilizado a nivel \emph{enterprise}, por ejemplo, los laboratorios Bayer utilizan el ecosistema de \emph{AWS}. \citep{WEBSITE:AWSBayer}
 
 % Transporte
-En la capa de transporte, los dispositivos se comunican usualmente utilizando los protocolos \emph{LoRaWAN}, \emph{Sigfox}, \emph{ZigBee} o \emph{Bluetooth}. La selección del protocolo depende de las distancias a cubrir y de las necesidades energéticas. Desde los puntos de agregación al servidor en la nube se suele utilizar el protocolo \emph{MQTT}.
+En la capa de transporte, los dispositivos se comunican usualmente utilizando los protocolos \emph{LoRaWAN}, \emph{Sigfox}, \emph{ZigBee} o \emph{Bluetooth}.
+La selección del protocolo depende de las distancias a cubrir y de las necesidades energéticas.
+Los sensores convergen luego a un punto de agregación.
+Desde los puntos de agregación se suelen transmiten los datos al servidor en la nube utilizando el protocolo \emph{MQTT}.
 
 % Procesamiento
+En la capa de procesamiento se utiliza un esquema de datos de alta disponibilidad.
+Esto se logra creando réplicas de los datos en distintos servidores.
+Una de las réplicas se configura como maestro y el resto como esclavos.
+El servidor maestro es quien se comunica con el exterior de la réplica y retransmite los nuevos datos a los esclavos.
+Si un servidor maestro sufre un problema, uno de los esclavos se convierte en el nuevo maestro y se mantiene a la réplica funcionando sin interrupciones.
+
+Los datos pueden ser divididos en \emph{shards}, esto se hace para dividir la base de datos según la aplicación.
+Un ejemplo es separar los datos por región geográfica, de esta manera los clientes de una región en particular pueden tener los servidores con los datos que suelen utilizar cerca de ellos.
+Para que los \emph{shards} funcionen como una única base de datos, se dispone de un servidor \emph{router} que es la interfaz con el exterior.
+El \emph{router} recibe las consultas o ingresos de nuevos datos y se encarga de utilizar el \emph{shard} correspondiente.
+La configuración de este sistema se maneja desde un grupo de servidores destinados para tal fin.
+Suelen conformar una réplica donde solo se almacenan los datos de configuración.
+Esta arquitectura de alta disponibilidad se la conoce como granja de datos, se la puede construir con mongoDB \citep{WEBSITE:mongodbSharding} y se encuentra visualizada en la figura \ref{fig:ch1DatosAltaDisponibilidad}.
 
 \begin{figure}[h]
 	\centering
@@ -232,7 +252,7 @@ En la capa de transporte, los dispositivos se comunican usualmente utilizando lo
 		\node[below=of r] (aux) {};
 		\node[block,right=of aux] (c) {Config};
 		
-		\node[block,below=of aux] (s3) {Shard 1};
+		\node[block,below=of aux] (s3) {Shard 3};
 		\node[left=of s3] (aux1) {};
 		\node[block,left=of aux1] (s2) {Shard 2};
 		\node[left=of s2] (aux2) {};
@@ -274,54 +294,113 @@ En la capa de transporte, los dispositivos se comunican usualmente utilizando lo
 \end{figure}
 
 % Aplicación
+La capa de aplicación se suele diseñar rápidamente con un \emph{framework} dedicado a la construcción de interfaces gráficas.
+Uno de los más utilizados es \emph{Angular}, desarrollado por la empresa Google.
+El estilo gráfico de diseño material presentado en la sección \ref{ch1IntroduccionTecnica} es la más utilizada.
+Las plataformas de nube ofrecen sus propios sistemas para diseñar la aplicación sin necesidad de escribir demasiado código, pero estas facilidades generan erogaciones adicionales.
 
 % Negocio
+La plataforma de nube presenta una capa de negocios donde se puede controlar el tráfico del sistema en ejecución.
+Desde allí se puede ver la facturación estimada o el consumo de crédito para mantener en funcionamiento el proyecto.
+En esta capa se pueden cambiar las variables de entorno del sistema y se pueden controlar el estado de los componentes.
+Es posible montar servicios que corran programas como \emph{Checkmk} o \emph{Grafana} para visualizar el estado de los dispositivos en campo. O se puede optar por usar los servicios que ofrezca la empresa de nube.
+
+% Orquestación y despliegue
+La tecnología que se suele utilizar para orquestar toda la solución es \emph{kubernetes}, ya que además de automatizar el despliegue, también permite ajustar la escala.
+Ajustar la escala se refiere a la capacidad de crear una réplica de un servicio cuando uno de ellos está trabajando cerca de su límite de procesamiento.
+Es un sistema basado en contenedores y crea un \emph{clúster} a partir de una plantilla donde se definen las reglas de escalamiento.
 
 \section{Objetivos y alcance}
 \label{objetivos}
-	
+
+% Objetivos
+El objetivo principal que cumplió este proyecto fue demostrarle al cliente el potencial de las nuevas tecnologías y la posibilidad de integrarlas a sus actuales sistemas.
+Se propuso crear una prueba de concepto para evaluar la viabilidad de futuros proyectos.
+La creación de un sistema que pueda unir equipos que utilizan \emph{Modbus} con aquellos que usan \emph{MQTT}, es de relevancia en general para la industria local.
+Otro objetivo importante fue la de utilizar las técnicas adquiridas durante la cursada de la especialización.
+Con la finalidad de sementar los conocimientos a través de la práctica.
+
+% Alcance
+El proyecto se limitó a desarrollar el software a desplegar en un servidor que fue nombrado Nodos.
+Esto significa que no se contempló el desarrollo del hardware, en particular los sensores y los puntos de agregación.
+Es esquema del servidor en la red de Gador puede ser visualizado en la figura \ref{fig:esquemaProyecto}.
+El servidor puede comunicarse con \emph{EBI} de la misma manera que lo logra un \emph{PLC}.
+Además tiene la capacidad de utilizar el protocolo \emph{MQTT} para conectarse directamente con los sensores o a través de puntos de agregación.
+
+
 \begin{figure}[h]
 	\centering
-	\begin{tikzpicture}			
-		\tikzstyle{block} = [rectangle,draw=black]
-				
-		\node[block] (s1) {Sensor 1};
-		\node[block,right=of s1] (s2) {Sensor 2};
-		\node[block,right=of s2] (s3) {Sensor 3};
-		\node[block,right=of s3] (s4) {Sensor 4};
-		\node[block,right=of s4] (sn) {Sensor n};
-
-		\node[block,below=of s2] (a1) {Agregación 1};
-		\node[block,below=of s4] (a2) {Agregación 2};
-
-		\node[below=of s1] (aux1) {};
-		\node[below=of s3] (aux3) {};
-		\node[below=of sn] (auxn) {};
-
-		\node[below=of aux1] (tcp1) {};
-		\node[below=of a1] (tcp2) {};
-		\node[below=of aux3] (tcp3) {TCP/IP};
-		\node[below=of a2] (tcp4) {};
-		\node[below=of auxn] (tcpn) {};
-
-		\node[block, below=of tcp2] (ebi) {EBI};
-		\node[block, below=of tcp4] (nodos) {Nodos};
-
-		\draw (tcp1)--(tcpn);
-		\draw (ebi)--(a1);
-		\draw (nodos)--(a2);
-				
-		\draw (s1)--(a1);
-		\draw (s2)--(a1);
-		\draw (s3)--(a1);
-
-		\draw (s4)--(a2);
-		\draw (sn)--(a2);		
+	\begin{tikzpicture}[level 1/.style={sibling distance=5cm},
+						level 2/.style={sibling distance=2.5cm}]
+		\node[circle,draw]{EBI}
+			child{
+				node[rectangle,draw]{PLC}
+					child[rectangle,draw]{node[rectangle,draw]{Sensor}}
+					child[rectangle,draw]{node[rectangle,draw]{Sensor}}
+				}
+			child{
+				node[rectangle,draw]{Nodos}
+					child{
+						node[rectangle,draw]{Agregación}
+							child[rectangle,draw]{node[rectangle,draw]{Sensor}}
+							child[rectangle,draw]{node[rectangle,draw]{Sensor}}
+					}
+					child{node[rectangle,draw]{Sensor}}
+				}
+		;
 	\end{tikzpicture}
-	\caption{Esquema del proyecto.}
+	\caption{Red industrial Gador.}
 	\label{fig:esquemaProyecto}
 \end{figure}
-	
+
+
+%\begin{figure}[h]
+%	\centering
+%	\begin{tikzpicture}			
+%		\tikzstyle{block} = [rectangle,draw=black]
+%				
+%		\node[block] (s1) {Sensor 1};
+%		\node[block,right=of s1] (s2) {Sensor 2};
+%		\node[block,right=of s2] (s3) {Sensor 3};
+%		\node[block,right=of s3] (s4) {Sensor 4};
+%		\node[block,right=of s4] (sn) {Sensor n};
+%
+%		\node[block,below=of s2] (a1) {Agregación 1};
+%		\node[block,below=of s4] (a2) {Agregación 2};
+%
+%		\node[below=of s1] (aux1) {};
+%		\node[below=of s3] (aux3) {};
+%		\node[below=of sn] (auxn) {};
+%
+%		\node[below=of aux1] (tcp1) {};
+%		\node[below=of a1] (tcp2) {};
+%		\node[below=of aux3] (tcp3) {TCP/IP};
+%		\node[below=of a2] (tcp4) {};
+%		\node[below=of auxn] (tcpn) {};
+%
+%		\node[block, below=of tcp2] (ebi) {EBI};
+%		\node[block, below=of tcp4] (nodos) {Nodos};
+%
+%		\draw (tcp1)--(tcpn);
+%		\draw (ebi)--(a1);
+%		\draw (nodos)--(a2);
+%				
+%		\draw (s1)--(a1);
+%		\draw (s2)--(a1);
+%		\draw (s3)--(a1);
+%
+%		\draw (s4)--(a2);
+%		\draw (sn)--(a2);		
+%	\end{tikzpicture}
+%	\caption{Esquema del proyecto.}
+%	\label{fig:esquemaProyecto}
+%\end{figure}
+
+% Requerimientos
+Cuando se tuvo definidos los objetivos y el alcance del proyecto, se inició un proceso de negociación con el cliente.
+Se buscó determinar cuales eran sus necesidades y sus temores respecto del proyecto.
+Las conversaciones con el cliente dieron como resultado la siguiente lista de requerimientos:
+
 \begin{itemize}
 	\item Debe integrarse a la infraestructura de Gador S.A. sin generar conflictos en otros sistemas.
 	\item Debe crear tramas en el formato \emph{Enterprise Buildings Integrator} y enviarlas al servidor.
