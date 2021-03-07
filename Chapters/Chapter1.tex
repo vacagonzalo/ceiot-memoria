@@ -86,7 +86,8 @@ Este protocolo fue creado en el año 1979 y se diseñó teniendo en mente las li
 \label{ch1IntroduccionTecnica}
 
 % Presentación modelo de capas IoT
-El proyecto realizado presentó una serie de desafíos a resolver, siendo el primero de ellos la variedad de tecnologías involucradas, tanto en la problemática a manipular como en la solución a implementar. Para introducir orden en la variedad de conocimientos que forman parte del sistema desarrollado, se introduce un modelo de capas de Internet de las cosas (IoT). El modelo tiene la ventaja que separa los temas en categorías relacionadas con la función o servicio que prestan en la solución, lo que facilita su estudio. 
+El proyecto realizado presentó una serie de desafíos a resolver, siendo el primero de ellos la variedad de tecnologías involucradas, tanto en la problemática a manipular como en la solución a implementada.
+Para introducir orden en la variedad de conocimientos que forman parte del sistema desarrollado, se introduce un modelo de capas de Internet de las cosas (IoT). El modelo tiene la ventaja que separa los temas en categorías relacionadas con la función o servicio que prestan en la solución, lo que facilita su estudio. 
 
 % Enumeración de las capas y una breve descripción de cada una
 El modelo de capas seleccionado separa los conocimientos en cinco categorías, las cuales son las capas de negocio, aplicación, procesamiento, red y percepción.
@@ -137,7 +138,8 @@ Es importante que el código entregado pueda ser visualizado en múltiples tama�
 
 % Capa de procesamiento
 Para alimentar de datos a la interfaz gráfica se necesita de la capa de procesamiento, que entrega el contenido a mostrar en pantalla. La información puede ser almacenada con distintas tecnologías, siendo una de las principales, las bases de datos relacionales.
-Este tipo de base de datos se basa en un esquema de tablas que se relacionan entre sí. Este tipo de tecnología se la suele llamar \emph{SQL}, y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero.
+Este tipo de base de datos se basa en un esquema de tablas que se relacionan entre sí.
+Estas tecnologías se las suelen llamar \emph{SQL}, y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero.
 Existe otro grupo de bases de datos que se denominan no relacionales o \emph{NoSQL}, esta categoría contienen a las bases de datos tipo clave-valor, documental, de columnas y de grafos.
 
 % clave-valor
@@ -157,14 +159,16 @@ Este tipo de tecnología permite utilizar la teoría de grafos y posibilita real
 
 % Capa de red
 Se dispone de un repertorio de protocolos pertenecientes a la capa de red para lograr que los dispositivos se comuniquen entre si.
-Entre los mencionados a lo largo de esta memoria se encuentran el protocolo \emph{Modbus}, \emph{MQTT}, \emph{HTTP} y \emph{WebSocket}. El manejo de estas tecnologías fue fundamental para lograr que las distintas partes del proyecto interactúen con el exterior.
+Entre los mencionados a lo largo de esta memoria se encuentran el protocolo \emph{Modbus}, \emph{MQTT}, \emph{HTTP} y \emph{WebSocket}. El manejo de estas tecnologías fue fundamental para lograr que las distintas partes del trabajo interactúen con el exterior.
 
 % Modbus
 \emph{Modbus} es un protocolo que se diseñó teniendo en cuenta su uso para aplicaciones industriales, su prioridad es transmitir los datos manteniendo su integridad aún en ambientes donde el ruido eléctrico es elevado. El protocolo es público y gratuito, lo que provocó que se impusiera en un gran segmento del mercado ya que además es fácil de implementar y requiere poco desarrollo. Los dispositivos de una red \emph{Modbus} tienen una dirección única y por lo general se asigna un equipo como maestro y el resto como esclavos. La arquitectura descripta presenta varias ventajas, pero la antigüedad del protocolo y su diseño para dispositivos del tipo \emph{PLC}, hace que no sea adecuado para aplicaciones \emph{IoT}.
 
 % MQTT
-Para interconectar a los dispositivos bajo un esquema de publicación-subscripción se utiliza el protocolo \emph{MQTT}. El protocolo está diseñado para conexiones en lugares remotos donde los dispositivos funcionan con un ancho de banda limitado.
-El resultado es que los mensajes son pequeños y consumen poca batería de los equipos involucrados, por que se usa frecuentemente en los sistemas de \emph{IoT}. El tráfico es gestionado por un servidor del tipo \emph{Broker} que decide quienes son los destinatarios de un mensaje en particular, el resto de los dispositivos son clientes del \emph{Broker}.
+Para interconectar a los dispositivos bajo un esquema de publicación-subscripción se utiliza el protocolo \emph{MQTT}.
+El protocolo está diseñado para conexiones en lugares remotos donde los dispositivos funcionan con un ancho de banda limitado.
+El resultado es que los mensajes son pequeños y consumen poca batería de los equipos involucrados, por lo que se usa frecuentemente en los sistemas de \emph{IoT}.
+El tráfico es gestionado por un servidor del tipo \emph{Broker} que decide quienes son los destinatarios de un mensaje en particular, el resto de los dispositivos son clientes del \emph{Broker}.
 Si un cliente desea transmitir datos, lo hace realizando una publicación a un determinado \emph{topic} y el \emph{Broker} se encarga de determinar quienes deben recibir la información enviada.
 Quienes quieran obtener los datos publicados a un \emph{topic} en particular, se deben suscribir a él ante el \emph{Broker}.
 Este al recibir una publicación de un cliente la transmite solo a los clientes que se encuentres subscritos, como se puede ver en el ejemplo de la figura \ref{fig:ch1MqttEjemplo}, donde el cliente 2 no obtiene los datos del sensor porque no se encuentra subscrito.
@@ -323,7 +327,7 @@ Con la finalidad de sementar los conocimientos a través de la práctica.
 % Alcance
 El proyecto se limitó a desarrollar el software a desplegar en un servidor que fue nombrado Nodos.
 Esto significa que no se contempló el desarrollo del hardware, en particular los sensores y los puntos de agregación.
-Es esquema del servidor en la red de Gador puede ser visualizado en la figura \ref{fig:esquemaProyecto}.
+E esquema del servidor en la red de Gador puede ser visualizado en la figura \ref{fig:esquemaProyecto}.
 El servidor puede comunicarse con \emph{EBI} de la misma manera que lo logra un \emph{PLC}.
 Además tiene la capacidad de utilizar el protocolo \emph{MQTT} para conectarse directamente con los sensores o a través de puntos de agregación.
 
