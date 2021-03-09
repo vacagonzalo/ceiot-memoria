@@ -39,8 +39,8 @@ El retraso tecnológico ya no solo genera una pérdida de competitividad, sino q
 La situación de la industria argentina fue la primera razón que impulsó este trabajo, el siguiente paso fue buscar una empresa que quisiera participar de un proyecto adecuado para el pos-grado, y finalmente se logró un acuerdo con los laboratorios Gador S.A. La misión de la compañía es producir medicamentos para la salud humana, con la mejor calidad disponible, y ponerlos al alcance de la comunidad a precios accesibles. \citep{WEBSITE:Gador}
 
 La empresa tiene la necesidad de acceder al mercado estadounidense y para lograrlo se deben satisfacer los requerimientos del \emph{Code of Federal Regulations - Title 21 - Food and Drugs Chapter - Part 11 (21CFR11)}. La norma establece que los registros de las mediciones ambientales de los depósitos y cuartos productivos, se deben almacenar de forma electrónica, pero se debe demostrar que los registros tienen la misma validez y seguridad que aquellos hechos en papel. \citep{ARTICLE:21cfr11} Esto se traduce en la necesidad de tener un sistema informático que se encuentre aprobado por la \emph{Food and Drug Administration (FDA)}, que es el organismo encargado de controlar los medicamentos y alimentos que ingresan a los Estados Unidos.
-Por esa razón Gador tiene comprada una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca \emph{Honeywell}, ya que el producto se encuentra aprobado por la \emph{FDA}. 
-Si bien el programa fue adquirido hace varios años, es indispensable que continúe operando aún cuando los protocolos que utiliza son antiguos. Tampoco es económicamente viable reemplazarlo por un producto moderno que esté aprobado por la \emph{FDA}, se debe lograr un salto tecnológico manteniendo la plataforma que actualmente está operando.
+Por esa razón Gador tiene comprada una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca \emph{Honeywell}, ya que el producto se encuentra aprobado por la FDA. 
+Si bien el programa fue adquirido hace varios años, es indispensable que continúe operando aún cuando los protocolos que utiliza son antiguos. Tampoco es económicamente viable reemplazarlo por un producto moderno que esté aprobado por la FDA, se debe lograr un salto tecnológico manteniendo la plataforma que actualmente está operando.
 
 % Perfiles térmicos
 Los requerimientos que se deben cumplir en las mediciones ambientales de los depósitos y cuartos productivos, estipulan que los sensores se deben someter a un plan de calibración rutinario y realizarles periódicos estudios de perfiles térmicos.
@@ -50,11 +50,11 @@ Teniendo los puntos críticos identificados, se procede a colocar sensores de te
 
 % Migración de sensores
 Los periódicos estudios de perfiles térmicos, tienen como consecuencia que cada seis meses se deben mover los sensores de temperatura.
-La tarea de migrar los dispositivos se vuelve costosa debido a que se encuentran cableados, y además los nuevos recorridos de los cables se deben certificar por el departamento de calidad. El tiempo de migración y de certificación se vería reducido sensiblemente si los equipos fuesen inalámbricos, pero la licencia de \emph{EBI} que tiene Gador no es compatible con los protocolos de comunicaciones necesarios para lograrlo.
+La tarea de migrar los dispositivos se vuelve costosa debido a que se encuentran cableados, y además los nuevos recorridos de los cables se deben certificar por el departamento de calidad. El tiempo de migración y de certificación se vería reducido sensiblemente si los equipos fuesen inalámbricos, pero la licencia de EBI que tiene Gador no es compatible con los protocolos de comunicaciones necesarios para lograrlo.
 
 % Arquitectura de la red industrial Gador
-Las plantas de producción de la empresa siguen una arquitectura en donde los sensores reportan sus mediciones a unos controladores lógicos programables o \emph{PLC} por sus siglas en inglés. Esa comunicación se logra a través de cables que los conectan. Los datos que adquieren los \emph{PLCs} son entregados al sistema \emph{EBI} utilizando un protocolo de comunicaciones llamado \emph{Modbus TCP}. 
-Este protocolo fue creado en el año 1979 y se diseñó teniendo en mente las limitaciones tecnológicas de la época, sin embargo la licencia de \emph{EBI} que adquirió \emph{Gador} solo acepta este formato. El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:redGador}, donde se puede ver una estructura del tipo árbol donde todo converge al sistema \emph{EBI}.
+Las plantas de producción de la empresa siguen una arquitectura en donde los sensores reportan sus mediciones a unos controladores lógicos programables o PLC por sus siglas en inglés. Esa comunicación se logra a través de cables que los conectan. Los datos que adquieren los PLCs son entregados al sistema EBI utilizando un protocolo de comunicaciones llamado Modbus TCP. 
+Este protocolo fue creado en el año 1979 y se diseñó teniendo en mente las limitaciones tecnológicas de la época, sin embargo la licencia de EBI que adquirió Gador solo acepta este formato. El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:redGador}, donde se puede ver una estructura del tipo árbol donde todo converge al sistema EBI.
 			
 \begin{figure}[h]
 	\centering
@@ -123,7 +123,7 @@ La interacción en este nivel es con el personal que administra un sistema, se d
 La experiencia que tiene el usuario al interactuar con la solución pertenece a la capa de aplicación.
 Aquí se define como se presenta la interfaz gráfica que utilizan las personas, y es común utilizar un formato de sitio web.
 Las páginas webs tienen la ventaja de ser indiferentes de la plataforma que utiliza el operador, solo importa que pueda ejecutar un navegador.
-Actualmente, se construyen las interfaces siguiendo un modelo de diseño según el tipo de operación a realizar por el programa, si la solución abarca una interfaz hombre-máquina industrial que debe ser atendida durante toda una jornada laboral, se suele implementar una norma de manejo de situaciones anormales o \emph{ASM}; si la aplicación es de uso intermitente, se puede usar un esquema de diseño material o \emph{Material Desing} que presenta una experiencia moderna y fluida, como se puede apreciar en la figura \ref{fig:ch1MaterialDesign}.
+Actualmente, se construyen las interfaces siguiendo un modelo de diseño según el tipo de operación a realizar por el programa, si la solución abarca una interfaz hombre-máquina industrial que debe ser atendida durante toda una jornada laboral, se suele implementar una norma de manejo de situaciones anormales o ASM; si la aplicación es de uso intermitente, se puede usar un esquema de diseño material o \emph{Material Desing} que presenta una experiencia moderna y fluida, como se puede apreciar en la figura \ref{fig:ch1MaterialDesign}.
 Para llevar a delante la interfaz seleccionada se utiliza un servidor que tiene como objetivo proveer los componentes gráficos al dispositivo utilizado, una manera de realizarlo es entregando al cliente una \emph{Single Web Application (SWP)}, logrando que el servidor otorgue todo el código necesario para que el dispositivo del usuario genere por si mismo los componentes gráficos a mostrar.
 Es importante que el código entregado pueda ser visualizado en múltiples tamaños de pantallas, en la actualidad las personas utilizan ordenadores, tabletas y teléfonos móviles que presentan grandes diferencias en sus dimensiones, cuando una aplicación cumple con este requerimiento se dice que es responsiva.
 
@@ -139,8 +139,8 @@ Es importante que el código entregado pueda ser visualizado en múltiples tama�
 % Capa de procesamiento
 Para alimentar de datos a la interfaz gráfica se necesita de la capa de procesamiento, que entrega el contenido a mostrar en pantalla. La información puede ser almacenada con distintas tecnologías, siendo una de las principales, las bases de datos relacionales.
 Este tipo de base de datos se basa en un esquema de tablas que se relacionan entre sí.
-Estas tecnologías se las suelen llamar \emph{SQL}, y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero.
-Existe otro grupo de bases de datos que se denominan no relacionales o \emph{NoSQL}, esta categoría contienen a las bases de datos tipo clave-valor, documental, de columnas y de grafos.
+Estas tecnologías se las suelen llamar SQL, y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero.
+Existe otro grupo de bases de datos que se denominan no relacionales o NoSQL, esta categoría contienen a las bases de datos tipo clave-valor, documental, de columnas y de grafos.
 
 % clave-valor
 Las bases de datos clave-valor tratan los datos como una única colección que puede tener campos completamente distintos en cada registro, no existe entonces, ningún tipo de relación entre los miembros de la colección. El uso principal de esta tecnología es gestionar diccionarios dentro de la memoria volátil, ya que se pueden definir tiempos de vida para los datos. La muerte programada de un dato puede ser utilizada para gestionar las sesiones de usuario dentro del programa.
@@ -151,7 +151,7 @@ La persistencia se logra siguiendo un formato de codificación estandar como \em
 
 % columnas
 Las bases de datos orientadas a columnas están pensadas para minimizar el tiempo de búsqueda, principalmente en series temporales.
-La organización particular de este tipo de tecnologías es afín a los sistemas de \emph{IoT} ya que los dispositivos de mediciones suelen generar un gran volumen de datos, que se pueden organizar como series temporales.
+La organización particular de este tipo de tecnologías es afín a los sistemas de IoT ya que los dispositivos de mediciones suelen generar un gran volumen de datos, que se pueden organizar como series temporales.
 
 % grafos
 Una base de datos orientada a grafos presenta la información como nodos que se encuentran relacionados, la diferencia fundamental con los sistemas relacionales es que los nodos no están organizados en tablas, y las relaciones que unen los nodos tienen atributos y no poseen una estructura definida.
@@ -159,18 +159,18 @@ Este tipo de tecnología permite utilizar la teoría de grafos y posibilita real
 
 % Capa de red
 Se dispone de un repertorio de protocolos pertenecientes a la capa de red para lograr que los dispositivos se comuniquen entre si.
-Entre los mencionados a lo largo de esta memoria se encuentran el protocolo \emph{Modbus}, \emph{MQTT}, \emph{HTTP} y \emph{WebSocket}. El manejo de estas tecnologías fue fundamental para lograr que las distintas partes del trabajo interactúen con el exterior.
+Entre los mencionados a lo largo de esta memoria se encuentran el protocolo Modbus, MQTT, HTTP y WebSocket. El manejo de estas tecnologías fue fundamental para lograr que las distintas partes del trabajo interactúen con el exterior.
 
 % Modbus
-\emph{Modbus} es un protocolo que se diseñó teniendo en cuenta su uso para aplicaciones industriales, su prioridad es transmitir los datos manteniendo su integridad aún en ambientes donde el ruido eléctrico es elevado. El protocolo es público y gratuito, lo que provocó que se impusiera en un gran segmento del mercado ya que además es fácil de implementar y requiere poco desarrollo. Los dispositivos de una red \emph{Modbus} tienen una dirección única y por lo general se asigna un equipo como maestro y el resto como esclavos. La arquitectura descripta presenta varias ventajas, pero la antigüedad del protocolo y su diseño para dispositivos del tipo \emph{PLC}, hace que no sea adecuado para aplicaciones \emph{IoT}.
+Modbus es un protocolo que se diseñó teniendo en cuenta su uso para aplicaciones industriales, su prioridad es transmitir los datos manteniendo su integridad aún en ambientes donde el ruido eléctrico es elevado. El protocolo es público y gratuito, lo que provocó que se impusiera en un gran segmento del mercado ya que además es fácil de implementar y requiere poco desarrollo. Los dispositivos de una red Modbus tienen una dirección única y por lo general se asigna un equipo como maestro y el resto como esclavos. La arquitectura descripta presenta varias ventajas, pero la antigüedad del protocolo y su diseño para dispositivos del tipo PLC, hace que no sea adecuado para aplicaciones IoT.
 
 % MQTT
-Para interconectar a los dispositivos bajo un esquema de publicación-subscripción se utiliza el protocolo \emph{MQTT}.
+Para interconectar a los dispositivos bajo un esquema de publicación-subscripción se utiliza el protocolo MQTT.
 El protocolo está diseñado para conexiones en lugares remotos donde los dispositivos funcionan con un ancho de banda limitado.
-El resultado es que los mensajes son pequeños y consumen poca batería de los equipos involucrados, por lo que se usa frecuentemente en los sistemas de \emph{IoT}.
-El tráfico es gestionado por un servidor del tipo \emph{Broker} que decide quienes son los destinatarios de un mensaje en particular, el resto de los dispositivos son clientes del \emph{Broker}.
-Si un cliente desea transmitir datos, lo hace realizando una publicación a un determinado \emph{topic} y el \emph{Broker} se encarga de determinar quienes deben recibir la información enviada.
-Quienes quieran obtener los datos publicados a un \emph{topic} en particular, se deben suscribir a él ante el \emph{Broker}.
+El resultado es que los mensajes son pequeños y consumen poca batería de los equipos involucrados, por lo que se usa frecuentemente en los sistemas de IoT.
+El tráfico es gestionado por un servidor del tipo broker que decide quienes son los destinatarios de un mensaje en particular, el resto de los dispositivos son clientes del broker.
+Si un cliente desea transmitir datos, lo hace realizando una publicación a un determinado \emph{topic} y el broker se encarga de determinar quienes deben recibir la información enviada.
+Quienes quieran obtener los datos publicados a un \emph{topic} en particular, se deben suscribir a él ante el broker.
 Este al recibir una publicación de un cliente la transmite solo a los clientes que se encuentres subscritos, como se puede ver en el ejemplo de la figura \ref{fig:ch1MqttEjemplo}, donde el cliente 2 no obtiene los datos del sensor porque no se encuentra subscrito.
 
 \begin{figure}[h]
@@ -196,14 +196,14 @@ Este al recibir una publicación de un cliente la transmite solo a los clientes 
 \end{figure}
 
 % HTTP y Websocket
-El protocolo de transferencia de hipertexto (\emph{HTTP}) está orientado a transacciones y sigue el esquema petición-respuesta entre un cliente y un servidor.
+El protocolo de transferencia de hipertexto (HTTP) está orientado a transacciones y sigue el esquema petición-respuesta entre un cliente y un servidor.
 El cliente inicia la comunicación enviando una petición al servidor, este último entrega una respuesta y se cierra el canal.
-Existe una variante del protocolo llamada \emph{HTTPS} que agrega una capa de cifrado para que las comunicaciones sean seguras.
+Existe una variante del protocolo llamada HTTPS que agrega una capa de cifrado para que las comunicaciones sean seguras.
 
-\emph{WebSocket} es un protocolo similar a \emph{HTTP} pero con la diferencia que la conexión es bidireccional, esto quiere decir que cuando se logra la conectar al cliente con el servidor, ambos pueden enviar información espontáneamente. Esta cualidad permite realizar transferencias de datos en vivo, con lo que se pueden lograr servicios de \emph{streaming} o \emph{chats}.
+WebSocket es un protocolo similar a HTTP pero con la diferencia que la conexión es bidireccional, esto quiere decir que cuando se logra la conectar al cliente con el servidor, ambos pueden enviar información espontáneamente. Esta cualidad permite realizar transferencias de datos en vivo, con lo que se pueden lograr servicios de \emph{streaming} o \emph{chats}.
 
 % Capa de percepción
-Los sensores utilizados en una solución de \emph{IoT} están incluidos en la capa de percepción, y para que puedan formar parte del sistema se necesita que sean capaces de soportar alguno de los protocolos de comunicaciones mencionados. Dado que el desarrollo de estos dispositivos no formaron parte del proyecto realizado, no se ampliará demasiado en este tema.
+Los sensores utilizados en una solución de IoT están incluidos en la capa de percepción, y para que puedan formar parte del sistema se necesita que sean capaces de soportar alguno de los protocolos de comunicaciones mencionados. Dado que el desarrollo de estos dispositivos no formaron parte del proyecto realizado, no se ampliará demasiado en este tema.
 
 % Despliegue de una solución
 Teniendo definido los componentes de las capas, se necesita lograr que todas las partes funcionen como una única entidad. Para lograr este objetivo existen tecnologías de despliegue y orquestación, que cumplen la función de interconectar y mantener los servicios para que trabajen en equipo. Tradicionalmente se solían utilizar máquinas virtuales pero actualmente ese enfoque está quedando en desuso en favor de las tecnologías de contenedores. Una máquina virtual acapara parte de una computadora y funciona como un ordenador independiente, mientras que un contenedor funciona como un sistema operativo independiente pero no acapara los recursos de la computadora principal.
@@ -222,14 +222,14 @@ Estas empresas ofrecen su infraestructura y una serie de facilidades que promuev
 
 % Percepción
 Los sensores o actuadores que se utilizan corren un firmware específico para el ecosistema utilizado.
-Si se decidió utilizar \emph{AWS}, por ejemplo, lo más probable es que la capa de percepción ejecute \emph{AWS IoT Core} en sus dispositivos.
-Este esquema es ampliamente utilizado a nivel \emph{enterprise}, por ejemplo, los laboratorios Bayer utilizan el ecosistema de \emph{AWS}. \citep{WEBSITE:AWSBayer}
+Si se decidió utilizar AWS, por ejemplo, lo más probable es que la capa de percepción ejecute \emph{AWS IoT Core} en sus dispositivos.
+Este esquema es ampliamente utilizado a nivel \emph{enterprise}, por ejemplo, los laboratorios Bayer utilizan el ecosistema de AWS. \citep{WEBSITE:AWSBayer}
 
 % Transporte
 En la capa de transporte, los dispositivos se comunican usualmente utilizando los protocolos \emph{LoRaWAN}, \emph{Sigfox}, \emph{ZigBee} o \emph{Bluetooth}.
 La selección del protocolo depende de las distancias a cubrir y de las necesidades energéticas.
 Los sensores convergen luego a un punto de agregación.
-Desde los puntos de agregación se suelen transmiten los datos al servidor en la nube utilizando el protocolo \emph{MQTT}.
+Desde los puntos de agregación se suelen transmiten los datos al servidor en la nube utilizando el protocolo MQTT.
 
 % Procesamiento
 En la capa de procesamiento se utiliza un esquema de datos de alta disponibilidad.
@@ -298,8 +298,8 @@ Esta arquitectura de alta disponibilidad se la conoce como granja de datos, se l
 \end{figure}
 
 % Aplicación
-La capa de aplicación se suele diseñar rápidamente con un \emph{framework} dedicado a la construcción de interfaces gráficas.
-Uno de los más utilizados es \emph{Angular}, desarrollado por la empresa Google.
+La capa de aplicación se suele diseñar rápidamente con un framework dedicado a la construcción de interfaces gráficas.
+Uno de los más utilizados es Angular, desarrollado por la empresa Google.
 El estilo gráfico de diseño material presentado en la sección \ref{ch1IntroduccionTecnica} es la más utilizada.
 Las plataformas de nube ofrecen sus propios sistemas para diseñar la aplicación sin necesidad de escribir demasiado código, pero estas facilidades generan erogaciones adicionales.
 
@@ -310,7 +310,7 @@ En esta capa se pueden cambiar las variables de entorno del sistema y se pueden 
 Es posible montar servicios que corran programas como \emph{Checkmk} o \emph{Grafana} para visualizar el estado de los dispositivos en campo. O se puede optar por usar los servicios que ofrezca la empresa de nube.
 
 % Orquestación y despliegue
-La tecnología que se suele utilizar para orquestar toda la solución es \emph{kubernetes}, ya que además de automatizar el despliegue, también permite ajustar la escala.
+La tecnología que se suele utilizar para orquestar toda la solución es Kubernetes, ya que además de automatizar el despliegue, también permite ajustar la escala.
 Ajustar la escala se refiere a la capacidad de crear una réplica de un servicio cuando uno de ellos está trabajando cerca de su límite de procesamiento.
 Es un sistema basado en contenedores y crea un \emph{clúster} a partir de una plantilla donde se definen las reglas de escalamiento.
 
@@ -320,7 +320,7 @@ Es un sistema basado en contenedores y crea un \emph{clúster} a partir de una p
 % Objetivos
 El objetivo principal que cumplió este proyecto fue demostrarle al cliente el potencial de las nuevas tecnologías y la posibilidad de integrarlas a sus actuales sistemas.
 Se propuso crear una prueba de concepto para evaluar la viabilidad de futuros proyectos.
-La creación de un sistema que pueda unir equipos que utilizan \emph{Modbus} con aquellos que usan \emph{MQTT}, es de relevancia en general para la industria local.
+La creación de un sistema que pueda unir equipos que utilizan Modbus con aquellos que usan MQTT, es de relevancia en general para la industria local.
 Otro objetivo importante fue la de utilizar las técnicas adquiridas durante la cursada de la especialización.
 Con la finalidad de sementar los conocimientos a través de la práctica.
 
@@ -328,8 +328,8 @@ Con la finalidad de sementar los conocimientos a través de la práctica.
 El proyecto se limitó a desarrollar el software a desplegar en un servidor que fue nombrado Nodos.
 Esto significa que no se contempló el desarrollo del hardware, en particular los sensores y los puntos de agregación.
 E esquema del servidor en la red de Gador puede ser visualizado en la figura \ref{fig:esquemaProyecto}.
-El servidor puede comunicarse con \emph{EBI} de la misma manera que lo logra un \emph{PLC}.
-Además tiene la capacidad de utilizar el protocolo \emph{MQTT} para conectarse directamente con los sensores o a través de puntos de agregación.
+El servidor puede comunicarse con EBI de la misma manera que lo logra un PLC.
+Además tiene la capacidad de utilizar el protocolo MQTT para conectarse directamente con los sensores o a través de puntos de agregación.
 
 
 \begin{figure}[h]
@@ -357,49 +357,6 @@ Además tiene la capacidad de utilizar el protocolo \emph{MQTT} para conectarse 
 	\label{fig:esquemaProyecto}
 \end{figure}
 
-
-%\begin{figure}[h]
-%	\centering
-%	\begin{tikzpicture}			
-%		\tikzstyle{block} = [rectangle,draw=black]
-%				
-%		\node[block] (s1) {Sensor 1};
-%		\node[block,right=of s1] (s2) {Sensor 2};
-%		\node[block,right=of s2] (s3) {Sensor 3};
-%		\node[block,right=of s3] (s4) {Sensor 4};
-%		\node[block,right=of s4] (sn) {Sensor n};
-%
-%		\node[block,below=of s2] (a1) {Agregación 1};
-%		\node[block,below=of s4] (a2) {Agregación 2};
-%
-%		\node[below=of s1] (aux1) {};
-%		\node[below=of s3] (aux3) {};
-%		\node[below=of sn] (auxn) {};
-%
-%		\node[below=of aux1] (tcp1) {};
-%		\node[below=of a1] (tcp2) {};
-%		\node[below=of aux3] (tcp3) {TCP/IP};
-%		\node[below=of a2] (tcp4) {};
-%		\node[below=of auxn] (tcpn) {};
-%
-%		\node[block, below=of tcp2] (ebi) {EBI};
-%		\node[block, below=of tcp4] (nodos) {Nodos};
-%
-%		\draw (tcp1)--(tcpn);
-%		\draw (ebi)--(a1);
-%		\draw (nodos)--(a2);
-%				
-%		\draw (s1)--(a1);
-%		\draw (s2)--(a1);
-%		\draw (s3)--(a1);
-%
-%		\draw (s4)--(a2);
-%		\draw (sn)--(a2);		
-%	\end{tikzpicture}
-%	\caption{Esquema del proyecto.}
-%	\label{fig:esquemaProyecto}
-%\end{figure}
-
 % Requerimientos
 Cuando se tuvo definidos los objetivos y el alcance del proyecto, se inició un proceso de negociación con el cliente.
 Se buscó determinar cuales eran sus necesidades y sus temores respecto del proyecto.
@@ -412,11 +369,11 @@ Las conversaciones con el cliente dieron como resultado la siguiente lista de re
 	\item Debe interpretar los mensajes de los sensores.
 	\item Debe poder cambiar la frecuencia de lectura de mediciones.
 	\item Debe poseer la capacidad de gestionar los ingresos de usuarios de forma segura.
-	\item Debe permitir que por lo menos 5 (cinco) usuarios accedan al sistema simultáneamente.
+	\item Debe permitir que por lo menos cinco usuarios accedan al sistema simultáneamente.
 	\item Debe presentar una interfaz donde se monitoree el estado de los sensores
 	\item Debe permitir elegir un sensor en particular para editarlo.
 	\item Debe poseer un módulo de gestión de usuarios.
-	\item Debe ser compatible con ordenadores de escritorio y \emph{smartphones}.
+	\item Debe ser compatible con ordenadores de escritorio y smartphones.
 	\item Las contraseñas no persistirán como texto plano.
 	\item Debe persistir todas las modificaciones realizadas a la configuración de los sensores.
 	\item Debe persistir las mediciones obtenidas.

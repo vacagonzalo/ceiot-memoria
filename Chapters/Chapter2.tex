@@ -11,75 +11,118 @@ Este capítulo trata sobre los recursos tecnológicos utilizados en el trabajo q
 \section{Tecnologías utilizadas}
 
 % docker
-\emph{Docker} es un software que permite el uso y creación de contenedores de Linux.
+Docker es un software que permite el uso y creación de contenedores de Linux.
 Un contenedor es una unidad que empaqueta el código de un programa junto con sus dependencias.
-Para crear un contenedor, \emph{Docker} se vale de el concepto de imagen.
-Las imágenes son entidades aisladas que corren como contenedores durante el tiempo de ejecución sobre el motor de \emph{Docker}.
+Para crear un contenedor, Docker se vale de el concepto de imagen.
+Las imágenes son entidades aisladas que corren como contenedores durante el tiempo de ejecución sobre el motor de Docker.
 Los contenedores son entonces, una abstracción de la capa de aplicación de los sistemas Linux, como se puede visualizar en la figura \ref{fig:ch2WhatContainer}.
 Varios contenedores pueden correr en el mismo ordenador como procesos aislados en el espacio de usuario.
 La principal diferencia con las máquinas virtuales, es que estas son una abstracción del hardware del ordenador, transformando una única computadora en varios servidores.
 Los contenedores en cambio, utilizan el kernel del sistema operativo del ordenador físico, no se abstrae un kernel, solo el espacio de aplicación o usuario.
 
 % docker files
-\emph{Docker} puede ser utilizado para construir imágenes definidas por el usuario.
-Un \emph{Dockerfile} es un documento de texto que contiene todos los comandos que un usuario utilizaría para ensamblar una imagen.
-El programador puede crear automáticamente una serie de comandos en sucesión al ejecutar un único comando sobre el \emph{Dockerfile}. 
+Docker puede ser utilizado para construir imágenes definidas por el usuario.
+Un Dockerfile es un documento de texto que contiene todos los comandos que un usuario utilizaría para ensamblar una imagen.
+El programador puede crear automáticamente una serie de comandos en sucesión al ejecutar un único comando sobre el Dockerfile. 
 
 % docker compose
-\emph{Docker Compose}, según se define en su documentación \citep{WEBSITE:WhatDockerCompose}, es una herramienta para definir y correr aplicaciones de \emph{Docker} de múltiples contenedores.
+Docker Compose, según se define en su documentación \citep{WEBSITE:WhatDockerCompose}, es una herramienta para definir y correr aplicaciones de Docker de múltiples contenedores.
 Permite utilizar un archivo \emph{YAML} para configurar los servicios de la aplicación.
 Luego, se puede crear y comenzar todos los servicios de la configuración utilizando un único comando.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/ch2DockerContainer.png}
-	\caption{Arquitectura de \emph{Docker}. \citep{WEBSITE:WhatContainer}}
+	\caption{Arquitectura de Docker. \citep{WEBSITE:WhatContainer}}
 	\label{fig:ch2WhatContainer}
 \end{figure}
 
 % nodejs
-\emph{Nodejs} es un servidor asincrónico y orientado a eventos que ejecuta JavaScript.
+Nodejs es un servidor asincrónico y orientado a eventos que ejecuta JavaScript.
 Estas cualidades son una ventaja frente a las aplicaciones de concurrencia de múltiples hilos en el sistema operativo.
 Ya que no se utilizan candados, no existe la posibilidad de bloquear el servidor.
 Dado que fue diseñado para construir aplicaciones de red escalables, se eligió para formar parte del trabajo.
 
 % python
-\emph{Python} es un lenguaje de programación interpretado que tiene una gran cantidad de bibliotecas a disposición.
+Python es un lenguaje de programación interpretado que tiene una gran cantidad de bibliotecas a disposición.
 Muchas bibliotecas fueron útiles para desarrollar algunos servicios pequeños del proyecto.
 Se utilizó para acelerar la creación de las partes más livianas del sistema.
 
 % mosquitto
-\emph{Eclipse Mosquitto} es un \emph{broker MQTT}.
+Eclipse Mosquitto es un broker MQTT.
 Es liviano y puede ser ejecutado en ordenadores monoplaca.
 Permite ser configurado con varios niveles de calidad de servicio, se pueden agregar usuarios con distintos permisos y es posible utilizar una capa de seguridad en los mensajes.
 Uno de sus atractivos es la serie de programas utilitarios que incluye el proyecto y se integran en la terminal del sistema operativo.
 Estas aplicaciones permiten realizar publicaciones y subscripciones para realizar pruebas, además se pueden crear contraseñas encriptadas para los usuarios.
 
 % mongodb
-"\emph{MongoDB} es una base de datos distribuida, basada en documentos y de uso general diseñada para desarrolladores de aplicaciones modernas y para la era de la nube". \citep{WEBSITE:MongoHome}
-Se decidió utilizar esta tecnología para la capa de procesamiento debido a la afinidad que posee para realizar aplicaciones \emph{IoT}.
+"MongoDB es una base de datos distribuida, basada en documentos y de uso general diseñada para desarrolladores de aplicaciones modernas y para la era de la nube". \citep{WEBSITE:MongoHome}
+Se decidió utilizar esta tecnología para la capa de procesamiento debido a la afinidad que posee para realizar aplicaciones IoT.
 Además es la base de datos documental más utilizada actualmente \citep{WEBSITE:DBRanking} y se evaluó como aspecto relevante, ganar experiencia con esta tecnología.
 
 % redis
+Redis un almacén de estructuras de datos en memoria y puede ser usado como una base de datos, una \emph{caché} de memoria y un broker para crear un bus de eventos.
+Esta tecnología permite hacer persistencia de datos pero solo en el esquema de clave-valor, permite también establecer tiempos de vida para los datos.
 	
 % Descripción de las dependencias del trabajo
 \section{Bibliotecas y paquetes de terceros}
 
 % Angular & Angular Material
+Angular es un framework de diseño de aplicaciones para crear una SWA.
+Se utiliza codificando en el lenguaje TypeScript que es un superset de JavaScript.
+Está basado en el paradigma de componentes para generar aplicaciones escalables y poder reutilizar el código escrito en otros proyectos.
+Pone a disposición una colección de bibliotecas para manejar formularios, comunicaciones cliente-servidor, \emph{routing}, entre otras.
+Tiene entre sus facilidades ofrecidas, un cliente de terminal que acelera los tiempos de desarrollo.
+Por todas estas ventajas, se decidió inclinarse por este framework.
+
+Angular Material es una biblioteca de componentes de interfaz gráfica para Angular.
+Está pensada para construir una experiencia consistente y funcional, adhiriendo con los principios de diseño más utilizados.
+Estos principios se refieren a la portabilidad entre navegadores y la independencia de dispositivos.
 
 % express & cors
+Express es un framework para realizar servidores con Nodejs.
+Está pensado para construir aplicaciones webs e interfaces de programación de aplicaciones (API).
+Una API se encarga de definir las interacciones entre múltiples programas o puede intermediar entre componentes de hardware y software.
+Express es la biblioteca más utilizada para trabajar con Nodejs. \citep{WEBSITE:Express}
 
-% mqtt & ws
+% paho MQTT
+Eclipse Paho es una biblioteca MQTT que está disponible para varios lenguajes.
+En el trabajo realizado se utilizó para darle conectividad a los servicios programados en Python.
+La biblioteca provee una clase cliente que habilita la comunicación con un broker MQTT, además provee funciones auxiliares que permiten codificar el código con mayor facilidad.
+
+% mqttjs
+MQTTjs es una biblioteca que provee de las herramientas para crear un cliente MQTT en Nodejs y en un navegador.
+Se lo puede instalar de forma global en el sistema para hacer uso de las herramientas de terminal que ofrece.
+Las herramientas permiten hacer pruebas de subscripción y publicación de mensajes.
+
+% wsjs
+ws es una biblioteca de Nodejs para realizar servidores con la capacidad de entablar una conexión WebSocket.
+
 
 % mongoose
+Mongoose es una biblioteca de modelado de datos de objetos(ODM).
+Se creó para trabajar con MongoDB y está disponible para la plataforma Nodejs.
+El ODM gestiona las relaciones entre los datos, provee de una validación de esquema y se usa para traducir los objetos del programa en ejecución en una representación dentro de la base de datos.
 
-% bcrypt & jsonwebtoken
+% bcrypt jsonwebtoken
+bcrypt es una biblioteca que contiene funciones para encriptar contraseñas.
+La encriptación se basa en un esquema de \emph{hashing} e incorpora una \emph{salt} para proteger los datos de un ataque \emph{rainbow table}.
+Para darle resistencia a los ataques de búsqueda por fuerza bruta, la biblioteca implementa una función adaptativa que por cada iteración se vuelve más lenta.
+Esto hace que su resistencia sea fuerte aún cuando el ordenador que realiza el ataque sea potente.
+Por estas razones se decidió usar este recurso en el trabajo para proteger las contraseñas de los usuarios.
+
+% jsonwebtoken
+jsonwebtoken es un paquete que permite crear un \emph{JavaScript Web Token (JWT)}.
+JWT es un estandar que se utiliza para la fabricación de \emph{tokens} de acceso que permiten identificar una entidad y determinar cuales son sus privilegios en el sistema.
+El token está formado por una cabecera, una carga útil y una firma.
+La cabecera identifica el algoritmo de encriptación y el tipo de token.
+La carga útil lleva consigo la información relevante para el funcionamiento.
+Finalmente la firma cierra el token para certificar la llave privada del servidor.
+Es relevante mencionar que la biblioteca está diseñada para funcionar con Nodejs
 
 % chai & mocha
 
 % pyModbusTCP
-
-% paho MQTT
 
 % oitc/modbus-server
 
