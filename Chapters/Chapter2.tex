@@ -5,30 +5,34 @@
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
-Este capítulo trata sobre los recursos tecnológicos utilizados en el trabajo que fueron desarrollados por terceros.
+Este capítulo trata sobre los recursos tecnológicos de terceros que fueron utilizados en la producción del trabajo.
 
 % Descripción de las plataformas tecnológicas que sostienen al trabajo
 \section{Tecnologías utilizadas}
 
 % docker
-Docker es un software que permite el uso y creación de contenedores de Linux.
-Un contenedor es una unidad que empaqueta el código de un programa junto con sus dependencias.
-Para crear un contenedor, Docker se vale de el concepto de imagen.
+Para crear una arquitectura de microservicios se utilizó Docker, que es un software que permite el uso y creación de contenedores de Linux.
+Un contenedor es una unidad que empaqueta el código de un programa junto con sus dependencias para aislar su funcionamiento.
+Para crear un contenedor, el motor de Docker se vale de el concepto de imagen.
 Las imágenes son entidades aisladas que corren como contenedores durante el tiempo de ejecución sobre el motor de Docker.
-Los contenedores son entonces, una abstracción de la capa de aplicación de los sistemas Linux, como se puede visualizar en la figura \ref{fig:ch2WhatContainer}.
-Varios contenedores pueden correr en el mismo ordenador como procesos aislados en el espacio de usuario.
+Es la plantilla que crea un contenedor.
+Los contenedores son entonces, unas abstracciones de la capa de aplicación de los sistemas Linux, como se puede visualizar en la figura \ref{fig:ch2WhatContainer}.
+Varios contenedores pueden correr en el mismo ordenador como procesos aislados en el espacio de usuario sin generar ningún tipo de interferencias entre si.
 La principal diferencia con las máquinas virtuales, es que estas son una abstracción del hardware del ordenador, transformando una única computadora en varios servidores.
-Los contenedores en cambio, utilizan el kernel del sistema operativo del ordenador físico, no se abstrae un kernel, solo el espacio de aplicación o usuario.
+Los contenedores en cambio, utilizan el kernel del sistema operativo del ordenador físico, no se abstrae un kernel, solo el espacio de aplicación o de usuario.
 
 % docker files
 Docker puede ser utilizado para construir imágenes definidas por el usuario.
-Un Dockerfile es un documento de texto que contiene todos los comandos que un usuario utilizaría para ensamblar una imagen.
-El programador puede crear automáticamente una serie de comandos en sucesión al ejecutar un único comando sobre el Dockerfile. 
+Para lograrlo se usa un Dokerfile, que es un documento de texto que contiene todos los comandos que un usuario utilizaría para ensamblar una imagen.
+El programador puede correr automáticamente una serie de comandos en sucesión al ejecutar un único comando sobre el Dockerfile.
+Otra capacidad adicional es subir la imagen a un repositorio para ser descargado directamente sobre el entorno de producción.
+De esta manera se facilita el despliegue de la aplicación, faltaría solamente, orquestar los contenedores para que trabajen en conjunto. 
 
 % docker compose
-Docker Compose, según se define en su documentación \citep{WEBSITE:WhatDockerCompose}, es una herramienta para definir y correr aplicaciones de Docker de múltiples contenedores.
+La orquestación necesaria para la etapa de despliegue se logra utilizando Docker Compose.
+Que según se indica en su documentación \citep{WEBSITE:WhatDockerCompose}, es una herramienta para definir y correr aplicaciones de Docker de múltiples contenedores.
 Permite utilizar un archivo \emph{YAML} para configurar los servicios de la aplicación.
-Luego, se puede crear y comenzar todos los servicios de la configuración utilizando un único comando.
+Con esta tecnología se puede crear y comenzar todos los servicios de la configuración utilizando un único comando y finalmente se logra tener orquestada la solución.
 
 \begin{figure}[h]
 	\centering
@@ -38,31 +42,42 @@ Luego, se puede crear y comenzar todos los servicios de la configuración utiliz
 \end{figure}
 
 % nodejs
-Nodejs es un servidor asincrónico y orientado a eventos que ejecuta JavaScript.
-Estas cualidades son una ventaja frente a las aplicaciones de concurrencia de múltiples hilos en el sistema operativo.
-Ya que no se utilizan candados, no existe la posibilidad de bloquear el servidor.
-Dado que fue diseñado para construir aplicaciones de red escalables, se eligió para formar parte del trabajo.
+El trabajo utiliza tecnologías web y la plataforma utilizada para implementarlas fue Nodejs, que es un servidor asincrónico y orientado a eventos que ejecuta JavaScript.
+La orientación a eventos se consideró como una ventaja frente a las aplicaciones de concurrencia de múltiples hilos en el sistema operativo.
+Principalmente porque no se utilizan candados y no existe la posibilidad de bloquear el servidor.
+Una particularidad adicional es que fue diseñado para construir aplicaciones de red escalables y provee un gestor de paquetes muy fácil de utilizar.
+Por estas razones y porque además fue una plataforma estudiada en la especialización, es que se la eligió para formar parte del trabajo.
 
 % python
-Python es un lenguaje de programación interpretado que tiene una gran cantidad de bibliotecas a disposición.
-Muchas bibliotecas fueron útiles para desarrollar algunos servicios pequeños del proyecto.
-Se utilizó para acelerar la creación de las partes más livianas del sistema.
+No todos los servicios del trabajo se realizaron con tecnologías relacionadas a JavaScript.
+Particularmente se utilizaron una serie de bibliotecas y herramientas basadas en Python, que es un lenguaje de programación del tipo interpretado.
+Este lenguaje posee una gran cantidad de recursos hechos por terceros y que se encuentran a disposición con licencias libres.
+Si bien el lenguaje no fue visto con profundidad en la cursada, fue suficiente para entender su potencial.
+Específicamente porque muchas de sus bibliotecas fueron útiles para desarrollar algunos servicios pequeños del trabajo.
+Es una tecnología que resultó muy útil y fue utilizada para acelerar la creación de las partes más livianas del sistema. Partes que no justificaron el uso de una plataforma como Nodejs.
 
 % mosquitto
-Eclipse Mosquitto es un broker MQTT.
-Es liviano y puede ser ejecutado en ordenadores monoplaca.
-Permite ser configurado con varios niveles de calidad de servicio, se pueden agregar usuarios con distintos permisos y es posible utilizar una capa de seguridad en los mensajes.
-Uno de sus atractivos es la serie de programas utilitarios que incluye el proyecto y se integran en la terminal del sistema operativo.
-Estas aplicaciones permiten realizar publicaciones y subscripciones para realizar pruebas, además se pueden crear contraseñas encriptadas para los usuarios.
+Para implementar el protocolo MQTT se decidió utilizar paquetes y bibliotecas desarrolladas por terceros.
+La primera herramienta fue Eclipse Mosquitto que es un broker del protocolo.
+Es liviano, no demanda grandes recursos y puede ser ejecutado en ordenadores monoplaca.
+Es flexible ya que permite ser configurado de distintas maneras según las necesidades de la aplicación.
+Existen varios niveles de calidad de servicio para seleccionar y también se pueden agregar usuarios de manera opcional.
+Los usuarios poseen distintos permisos para publicar y suscribirse a diferentes \emph{topics}.
+También es posible utilizar una capa de seguridad en los mensajes que se basa en encriptación con llaves privadas y el uso de llaves públicas para realizar las lecturas.
+Uno de los atractivos de la plataforma es la serie de programas utilitarios que incluye como recursos adicionales y que se integran en la terminal del sistema operativo.
+Estas aplicaciones permiten realizar publicaciones y subscripciones para realizar pruebas y además se pueden crear contraseñas encriptadas para los usuarios.
 
 % mongodb
+Para persistir la información durante la ejecución del trabajo se utilizó MongoDB.
 "MongoDB es una base de datos distribuida, basada en documentos y de uso general diseñada para desarrolladores de aplicaciones modernas y para la era de la nube". \citep{WEBSITE:MongoHome}
 Se decidió utilizar esta tecnología para la capa de procesamiento debido a la afinidad que posee para realizar aplicaciones IoT.
 Además es la base de datos documental más utilizada actualmente \citep{WEBSITE:DBRanking} y se evaluó como aspecto relevante, ganar experiencia con esta tecnología.
 
 % redis
-Redis un almacén de estructuras de datos en memoria y puede ser usado como una base de datos, una \emph{caché} de memoria y un broker para crear un bus de eventos.
+Los contenedores que forman la aplicación deben compartir una memoria volátil para que el trabajo pueda funcionar correctamente. Se eligió a Redis para que funcione como memoria compartida entre los componentes aislados del trabajo.
+Redis es un almacén de estructuras de datos en memoria y puede ser usado como una base de datos, una \emph{caché} de memoria y un broker para crear un bus de eventos.
 Esta tecnología permite hacer persistencia de datos pero solo en el esquema de clave-valor, permite también establecer tiempos de vida para los datos.
+El tiempo de vida de los datos se utilizó en el trabajo para gestionar las sesiones de los usuarios, de tal manera que si una persona pasa demasiado tiempo sin interactuar con la aplicación deba volver a ingresar su usuario y contraseña para seguir utilizando el trabajo con normalidad.	
 	
 % Descripción de las dependencias del trabajo
 \section{Bibliotecas y paquetes de terceros}
