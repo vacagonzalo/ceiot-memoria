@@ -97,7 +97,8 @@ Las herramientas permiten hacer pruebas de subscripción y publicación de mensa
 
 % wsjs
 ws es una biblioteca de Nodejs para realizar servidores con la capacidad de entablar una conexión WebSocket.
-
+Es fácil de utilizar y es altamente configurable.
+Se decidió usarla debido a que la documentación es completa y simple de entender.
 
 % mongoose
 Mongoose es una biblioteca de modelado de datos de objetos(ODM).
@@ -121,10 +122,53 @@ Finalmente la firma cierra el token para certificar la llave privada del servido
 Es relevante mencionar que la biblioteca está diseñada para funcionar con Nodejs
 
 % chai & mocha
+La biblioteca chai ofrece herramientas para hacer pruebas del software escrito.
+Fue diseñada para Nodejs y puede ser integrada a cualquier framework de JavaScript.
+En el trabajo fue combinado con Mocha, que es un framework de pruebas para Nodejs.
+Las pruebas obtenidas al combinar estos dos recursos fueron fundamentales para detectar comportamientos no deseados.
 
 % pyModbusTCP
+Para que el código escrito en Python pueda utilizar el protocolo Modbus TCP se usó la biblioteca pyModbusTCP.
+Este recurso permite crear un cliente para acceder a un servidor o bien crear una aplicación que se comporte como esclavo.
 
 % oitc/modbus-server
+oitc/modbus-server es un servidor Modbus TCP realizado en Python y disponible como imagen de Docker.
+Está configurado para utilizar el puerto 5020 para evitar problemas de permisos con el sistema operativo. \citep{WEBSITE:dockerhubModbus}
 
 % Descripción del sistema marca Honeywell que funciona en planta.
 \section{Sistema propietario del cliente}
+
+EBI es un sistema de automatización de edificios y gestión empresarial creado por la firma Honeywell.
+Ofrece herramientas para dotar a las dependencias de las empresas de inteligencia para incrementar la comodidad, mejorar la seguridad y reducir los costos operativos.
+
+La solución ofrece gestionar una red de edificios a través de una única interfaz gráfica. Pretende reducir los tiempos de respuesta frente a situaciones anormales y mejorar la seguridad.
+Esta tecnología es compatible con dispositivos y software de terceros, con la idea de ofrecer escalabilidad.
+
+Este software es un ecosistema de módulos que pueden ser adquirido a través de licencias para agregar las siguientes funcionalidades:
+
+\begin{itemize}
+	\item Gestión de consumo energético
+	\item Seguridad de vida
+	\item Control de acceso y intrusión
+	\item Vídeo vigilancia
+\end{itemize}
+
+Las distintas licencias que ofrece Honeywell permiten que EBI utilice los protocolos BACNet, OPC, LonWorks y Modbus TCP.
+Gador adquirió el producto con la licencia Modbus TCP para conectar sus PLCs de distintas marcas.
+Como se puede observar en la figura \ref{fig:ch2EBI1}, se utiliza el software para visualizar los sensores de los distintos cuartos de producción y depósitos.
+En la figura \ref{fig:ch2EBI2} se puede visualizar que EBI está a cargo del control ambiental de las plantas del cliente.
+El sistema es el corazón de la gestión de edificios de la compañía.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ch2EBI1.jpg}
+	\caption{Control de temperatura de sólidos.}
+	\label{fig:ch2EBI1}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ch2EBI2.jpg}
+	\caption{Unidad de tratamiento de aire de sólidos.}
+	\label{fig:ch2EBI2}
+\end{figure}
