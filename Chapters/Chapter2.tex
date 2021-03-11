@@ -14,7 +14,7 @@ Este capítulo trata sobre los recursos tecnológicos de terceros que fueron uti
 Para crear una arquitectura de microservicios se utilizó Docker, que es un software que permite el uso y creación de contenedores de Linux.
 Un contenedor es una unidad que empaqueta el código de un programa junto con sus dependencias para aislar su funcionamiento.
 Para crear un contenedor, el motor de Docker se vale de el concepto de imagen.
-Las imágenes son entidades inmutables que cumple la función de ser plantillas para crear contenedores.
+Las imágenes son entidades inmutables que cumplen la función de ser plantillas para crear contenedores.
 Se puede visualizar a las imágenes como capturas del estado de un contenedor y a partir de estas capturas se pueden instanciar nuevos contenedores.
 Los contenedores son entonces, unas abstracciones de la capa de aplicación de los sistemas Linux, como se puede visualizar en la figura \ref{fig:ch2WhatContainer}.
 Varios contenedores pueden correr en el mismo ordenador como procesos aislados en el espacio de usuario sin generar ningún tipo de interferencias entre si.
@@ -53,7 +53,7 @@ No todos los servicios del trabajo se realizaron con tecnologías relacionadas a
 Particularmente se utilizaron una serie de bibliotecas y herramientas basadas en Python, que es un lenguaje de programación del tipo interpretado.
 Este lenguaje posee una gran cantidad de recursos hechos por terceros y que se encuentran a disposición con licencias libres.
 Si bien el lenguaje no fue visto con profundidad en la cursada, fue suficiente para entender su potencial.
-Específicamente porque muchas de sus bibliotecas fueron útiles para desarrollar algunos servicios más pequeños del trabajo.
+Específicamente porque muchas de sus bibliotecas fueron útiles para desarrollar algunos de los servicios más pequeños del trabajo.
 Es una tecnología que resultó muy útil y fue utilizada para acelerar la creación de las partes más livianas del sistema.
 Partes que no justificaron el uso de una plataforma como Nodejs.
 
@@ -76,10 +76,10 @@ Además es la base de datos documental más utilizada actualmente \citep{WEBSITE
 
 % redis
 Los contenedores que forman la aplicación deben compartir una memoria volátil para que el trabajo pueda funcionar correctamente.
-Se eligió a Redis para que funcione como memoria compartida entre los componentes aislados del trabajo.
+Se eligió a Redis para que funcione como memoria compartida entre los componentes aislados dentro del trabajo.
 Redis es un almacén de estructuras de datos en memoria y puede ser usado como una base de datos, una \emph{caché} de memoria y un broker para crear un bus de eventos.
-Esta tecnología permite hacer persistencia de datos pero solo en el esquema de clave-valor, permite también establecer tiempos de vida para los datos.
-El tiempo de vida de los datos se utilizó en el trabajo para gestionar las sesiones de los usuarios.
+Esta tecnología permite hacer persistencia de datos pero solo en el esquema de clave-valor y permite también establecer los tiempos de vida para los datos.
+Los tiempos de vida de los datos se utilizaron en el trabajo para gestionar las sesiones de los usuarios.
 Si una persona pasa demasiado tiempo sin interactuar con la aplicación tiene que volver a ingresar su usuario y contraseña para seguir utilizando el sistema con normalidad.	
 	
 % Descripción de las dependencias del trabajo
@@ -87,7 +87,7 @@ Si una persona pasa demasiado tiempo sin interactuar con la aplicación tiene qu
 
 % Angular & Angular Material
 Para implementar la capa de aplicación se utilizó un framework de diseño de interfaces gráficas llamado Angular y se creó una SWA.
-Se utiliza codificando en el lenguaje TypeScript que es un \emph{superset} de JavaScript.
+Se desarrolla el código usando el lenguaje TypeScript que es un \emph{superset} de JavaScript.
 Está basado en el paradigma de componentes para generar aplicaciones escalables y poder reutilizar el código escrito en otros trabajos.
 Pone a disposición una colección de bibliotecas para manejar formularios, comunicaciones cliente-servidor, \emph{routing}, entre otras funcionalidades.
 Tiene entre sus facilidades ofrecidas, un cliente de terminal que acelera los tiempos de desarrollo.
@@ -105,18 +105,18 @@ Una API se encarga de definir las interacciones entre múltiples programas o pue
 Express es la biblioteca más utilizada para trabajar con Nodejs. \citep{WEBSITE:Express}
 
 Para solucionar el problema de intercambio de recursos de origen cruzado del frontend (CORS) se utilizó la biblioteca CORS para Nodejs.
-CORS es un permite acceder a recursos restringidos de un dominio diferente al que entregó la SWA.
+CORS es una solución que permite acceder a recursos restringidos de un dominio diferente al del frontend.
 
 % paho MQTT
 Eclipse Paho es una biblioteca MQTT que está disponible para varios lenguajes de programación.
 En el trabajo realizado se utilizó para darle conectividad a los servicios programados en Python.
 La biblioteca provee una clase cliente que habilita la comunicación con un broker MQTT.
-Se ofrece además provee funciones auxiliares que permiten codificar el código con mayor facilidad.
+Se ofrece además, una serie de funciones auxiliares que permiten codificar el programa con mayor facilidad.
 
 % mqttjs
-Se necesitó un recurso que ofrezca capacidades MQTT al código escrito en JavaScript y para eso se usó MQTTjs.
+Se necesitó un recurso que ofrezca de capacidades MQTT al código escrito en JavaScript y para esa misión se usó MQTTjs.
 MQTTjs es una biblioteca que provee de las herramientas para crear un cliente MQTT en Nodejs y en un navegador.
-Se lo puede instalar de forma global en el sistema para hacer uso de las herramientas de terminal que ofrece.
+Se lo puede instalar de forma global en el sistema operativo para hacer uso de las herramientas de terminal que ofrece.
 Las herramientas permiten hacer pruebas de subscripción y publicación de mensajes.
 
 % wsjs
@@ -132,14 +132,14 @@ La biblioteca se creó para trabajar con MongoDB y está disponible para la plat
 
 % bcrypt jsonwebtoken
 Se necesitó cumplir con las necesidades de seguridad que se enumeraron en la sección \ref{objetivos}, para lograrlo se usaron dos bibliotecas compatibles con Nodejs.
-bcrypt es una biblioteca que contiene funciones para encriptar contraseñas.
+Bcrypt es una biblioteca que contiene funciones para encriptar contraseñas.
 La encriptación se basa en un esquema de \emph{hashing} e incorpora una \emph{salt} para proteger los datos de un ataque \emph{rainbow table}.
 Para darle resistencia a los ataques de búsqueda por fuerza bruta, la biblioteca implementa una función adaptativa que por cada iteración se vuelve más lenta.
 Esto hace que su resistencia sea fuerte aún cuando el ordenador que realiza el ataque sea potente.
-Por estas razones se decidió usar este recurso en el trabajo para proteger las contraseñas de los usuarios evitando que persistan como texto plano.
+Por estas razones se decidió usar este recurso en el trabajo, con la idea de proteger las contraseñas de los usuarios evitando que persistan como texto plano.
 
 % jsonwebtoken
-La segunda bibliteca utilizada para cumplir con los requerimientos de seguridad fue jsonwebtoken.
+La segunda bibliteca utilizada para cumplir con los requerimientos de seguridad fue Jsonwebtoken.
 Que es un paquete que permite crear un \emph{JavaScript Web Token (JWT)}.
 JWT es un estándar que se utiliza para la fabricación de \emph{tokens} de acceso que permiten identificar una entidad y determinar cuales son sus privilegios en el sistema.
 El token está formado por una cabecera, una carga útil y una firma.
@@ -149,17 +149,17 @@ Finalmente la firma cierra el token para certificar la llave privada del servido
 Es relevante mencionar que la biblioteca está diseñada para funcionar con Nodejs
 
 % chai & mocha
-La biblioteca chai ofrece herramientas para hacer pruebas del software escrito.
+La biblioteca Chai ofrece herramientas para hacer pruebas del software escrito.
 Fue diseñada para Nodejs y puede ser integrada a cualquier framework de JavaScript.
-En el trabajo fue combinado con Mocha, que es un framework de pruebas para Nodejs.
+En el trabajo fue combinado con Mocha, que es un framework de automatización de pruebas para Nodejs.
 Las pruebas obtenidas al combinar estos dos recursos fueron fundamentales para detectar comportamientos no deseados.
 
 % pyModbusTCP
-Para que el código escrito en Python pueda utilizar el protocolo Modbus TCP se usó la biblioteca pyModbusTCP.
+Para que el código escrito en Python pueda utilizar el protocolo ModbusTCP se usó la biblioteca PyModbusTCP.
 Este recurso permite crear un cliente para acceder a un servidor o bien crear una aplicación que se comporte como esclavo.
 
 % oitc/modbus-server
-oitc/modbus-server es un servidor Modbus TCP realizado en Python y disponible como imagen de Docker.
+Oitc/modbus-server es un servidor ModbusTCP realizado en Python y disponible como imagen de Docker.
 Está configurado para utilizar el puerto 5020 para evitar problemas de permisos con el sistema operativo. \citep{WEBSITE:dockerhubModbus}
 El sistema de orquestación corrige el puerto al conectar el 5020 del contenedor con el 502 del ordenador.
 
@@ -193,19 +193,22 @@ Todas las dependencias del trabajo se pueden visualizar en la tabla \ref{tab:dep
 		Chai               & Pruebas unitarias para JavaScript         \\
 		Mocha              & Pruebas automáticas para Nodejs           \\
 		PyModbusTCP        & Biblioteca Modbus para Python             \\
-		oitc/modbus-server & Servidor Modbus                           \\
+		Oitc/modbus-server & Servidor Modbus                           \\
 		\bottomrule
 		\hline
 	\end{tabular}
 \end{table}
 
 % Descripción del sistema marca Honeywell que funciona en planta.
+\newpage
 \section{Sistema propietario del cliente}
 
-EBI es un sistema de automatización de edificios y gestión empresarial creado por la firma Honeywell.
-Ofrece herramientas para dotar a las dependencias de las empresas de inteligencia para incrementar la comodidad, mejorar la seguridad y reducir los costos operativos.
+Como se explicó en el capítulo \ref{Chapter1}, el trabajo se basa en lograr integrarse al sistema que Gador tiene en ejecución. Esta sección explica con mayor detalle la naturaleza de este producto.
 
-La solución ofrece gestionar una red de edificios a través de una única interfaz gráfica. Pretende reducir los tiempos de respuesta frente a situaciones anormales y mejorar la seguridad.
+EBI es un sistema de automatización de edificios y gestión empresarial creado por la firma Honeywell.
+Ofrece herramientas para dotar a las dependencias de la empresa de la inteligencia necesaria para incrementar la comodidad, mejorar la seguridad y reducir los costos operativos.
+
+La solución tiene la facultad de gestionar una red de edificios a través de una única interfaz gráfica. Pretende reducir los tiempos de respuesta frente a situaciones anormales y mejorar la seguridad.
 Esta tecnología es compatible con dispositivos y software de terceros, con la idea de ofrecer escalabilidad.
 
 Este software es un ecosistema de módulos que pueden ser adquirido a través de licencias para agregar las siguientes funcionalidades:
@@ -213,15 +216,19 @@ Este software es un ecosistema de módulos que pueden ser adquirido a través de
 \begin{itemize}
 	\item Gestión de consumo energético
 	\item Seguridad de vida
-	\item Control de acceso y intrusión
+	\item Control de acceso e intrusión
 	\item Vídeo vigilancia
 \end{itemize}
 
-Las distintas licencias que ofrece Honeywell permiten que EBI utilice los protocolos BACNet, OPC, LonWorks y Modbus TCP.
-Gador adquirió el producto con la licencia Modbus TCP para conectar sus PLCs de distintas marcas.
+Las distintas licencias que vende Honeywell permiten que EBI utilice los protocolos BACNet, OPC, LonWorks y ModbusTCP.
+Gador adquirió el producto con la licencia ModbusTCP para conectar sus PLCs de variadas marcas.
 Como se puede observar en la figura \ref{fig:ch2EBI1}, se utiliza el software para visualizar los sensores de los distintos cuartos de producción y depósitos.
 En la figura \ref{fig:ch2EBI2} se puede visualizar que EBI está a cargo del control ambiental de las plantas del cliente.
-El sistema es el corazón de la gestión de edificios de la compañía.
+Este sistema es el corazón de la gestión de edificios de la compañía y determinó los requerimientos que propuso Gador.
+
+La importancia de EBI para mantener la operación diaria de las plantas de Gador hizo que se limitara el acceso para hacer pruebas.
+El servidor que corre este programa se encuentra custodiado con gran celo dentro de la compañía.
+No se pudieron correr pruebas directamente sobre el ambiente de producción, solo se pudo utilizar por algunas horas una máquina virtual entregada con una licencia de evaluación que tuvo seis horas de duración.
 
 \begin{figure}[h]
 	\centering
