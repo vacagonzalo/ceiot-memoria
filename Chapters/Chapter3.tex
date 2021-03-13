@@ -42,9 +42,300 @@
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
-
+En este capítulo se detallan las tareas realizadas durante el trabajo.
+Se explica como se crearon los servicios y como se interconectaron para lograr una orquestación.
 % Explicación sobre el funcionamiento y la creación de la arquitectura y del código que automáticamente despliega la aplicación en un servidor
 \section{Arquitectura y orquestación}
+Esta sección trata sobre la conexión entre los servicios del trabajo y su despliegue automático.
+
+Para planificar la orquestación se analizaron los servicios que debían ser accesibles desde entidades externas al servidor.
+En la figura \ref{fig:ch3EsquemaTrabajo} se pueden observar las conexiones lógicas entre los contenedores.
+Destacadas en color rojo, se encuentran las entidades externas que interactúan con el servidor Nodos.
+Las interconexiones se simplificaron al crear una capa de puente de red que corre sobre el mismo \emph{Daemon} de Docker.
+El resultado es que cada contenedor pasa a tener una dirección ip dentro del entorno.
+La creación de esta red se logró con el el código \ref{cod:dcNetwork}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ch3EsquemaTrabajo.png}
+	\caption{Esquema de conexión de los servicios.}
+	\label{fig:ch3EsquemaTrabajo}
+\end{figure}
+
+\begin{lstlisting}[label=cod:dcNetwork,caption=Red de interconexión Docker Compose.]
+networks: 
+	iot:
+		driver: bridge
+\end{lstlisting}
+
+El servicio modbus-server se comunica al exterior utilizando el puerto 502.
+El puerto pertenece a la lista de protocolos bien conocidos o puertos de sistema.
+Esta condición hace posible que existan problemas con los permisos que el usuario tiene dentro del sistema operativo.
+Como se puede observar en el código \ref{cod:dcModbusServer}, se conectó el puerto 502 del sistema operativo con el 5020 dentro de la red de Docker.
+En general, es una buena práctica que los puertos internos de la red no sean puertos de sistema para no generar conflictos de permisos y conectarlos a puertos de protocolos según sea necesario.
+Para evitar usar direcciones ip en el código de los servicios se utilizó el parámetro hostname para utilizar el servicio de sistema de nombres de dominio (DNS) que corre dentro del \emph{Daemon} de Docker.
+
+\begin{lstlisting}[label=cod:dcModbusServer,caption=Orquestación del servidor Modbus.]
+modbus-server:
+	image: oitc/modbus-server
+	container_name: modbus-server
+	hostname: modbus-server
+	restart: always
+	ports:
+		- '502:5020'
+	expose: 
+    	- '5020'
+	networks: 
+		- iot
+\end{lstlisting}
+
+El servicio Mosquitto se configuró con tres volúmenes que conectan al contenedor con archivos no efímeros que persisten la información necesaria para que el contenedor muestre un comportamiento correcto.
+Como se puede apreciar en el código \ref{cod:dcMosquitto}, se encuentran los archivos de configuración de usuarios y de lista de control de acceso (acl).
+Con esta configuración se evita que dispositivos anónimos puedan utilizar el broker y que además solo puedan utilizar los \emph{topics} designados.
+Además los distintos usuarios tienen diferentes permisos según el \emph{topic}.
+De esta manera se logra una mayor confiabilidad y seguridad en el manejo de los mensajes.
+
+\begin{lstlisting}[label=cod:dcMosquitto,caption=Orquestación del broker Mosquitto.]
+mosquitto:
+	image: eclipse-mosquitto
+	container_name: mosquitto
+	hostname: mosquitto
+	restart: always
+	volumes: 
+		- ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+		- ./mosquitto/users.txt:/mosquitto/config/users.txt
+		- ./mosquitto/acl.txt:/mosquitto/config/acl.txt
+	expose: 
+		- '1883'
+		- '9001'
+	ports: 
+		- '1883:1883'
+		- '9001:9001'
+	networks: 
+		- iot
+\end{lstlisting}
+
+El servicio \emph{Holding Registers Validator} (hrv) tiene la particularidad de depender de otros servicios, como se puede ver en el cógigo \ref{cod:dcHRV}.
+El contenedor no puede ser creado hasta que los servicios listados como dependencias se encuentren activos.
+Esto se hace de esta manera para evitar que el contenedor genere excepciones y se reinicie varias veces durante el despliegue se la solución.
+Además no es posible saber si el comportamiento final del contenedor puede quedar indefinido.
+Es importante mencionar que este servicio no tiene salida al exterior y no queda visible por la falta de campos \emph{ports}.
+
+La imagen para construir el contenedor no existe y debe ser creada al momento del despliegue.
+Para lograrlo se utiliza el campo \emph{build}, en donde se especifica la ruta al Dockerfile que contiene la receta.
+La imagen queda guardada con el nombre vaca/hrv, de esta manera, no es necesario volver a construirla si se decide reiniciar la solución.
+
+\begin{lstlisting}[label=cod:dcHRV,caption=Orquestación del servicio hrv.]
+hrv:
+	build: ./holdingRegistersValidator/
+	image: vaca/hrv
+	container_name: hrv
+	hostname: hrv
+	restart: always
+	expose: 
+		- '1883'
+		- '5020'
+	depends_on: 
+		- 'mosquitto'
+		- 'mongo'
+		- 'modbus-server'
+	networks: 
+		- iot
+\end{lstlisting}
+
+El Dockerfile que fabrica la imagen puede verse en el código \ref{cod:dfHRV}.
+Este código es común para todos los Dockerfiles que construyen imágenes para los servicios realizados en Python.
+Se utiliza Alpine Linux como imagen base y se genera el usuario y grupo \emph{pythonuser}.
+El usuario es quien corra el servicio dentro del contenedor y se define un comando a ejecutar al momento de crearlo.
+Quedan definidos en este archivo cuales son puertos que se pueden usar para la red puente.
+
+\begin{lstlisting}[label=cod:dfHRV,caption=Dockerfile del servicio hrv.]
+FROM python:3.8-alpine
+LABEL maintainer="Gonzalo Nahuel Vaca <vacagonzalo@gmail.com>"
+RUN addgroup -g 1000 -S pythonuser && \
+	adduser -u 1000 -S pythonuser -G pythonuser && \
+	mkdir -p /app && \
+	pip3 install pyModbusTCP && \
+	pip3 install paho-mqtt && \
+	pip3 install pymongo
+ADD --chown=root:root app/* /app/
+USER pythonuser
+EXPOSE 1883 27017 5020/tcp
+CMD [ "python", "-u", "/app/service.py" ]
+\end{lstlisting}
+
+El servicio MongoDB no tiene salida al exterior del servidor, su configuración se puede ver en el código \ref{cod:dcMongo}.
+La configuración tiene la particularidad de introducir un comando a la hora de crear el contenedor.
+Se le indica al motor de MongoDB que puerto debe escurchar.
+Además se crea un volumen donde figuran una serie de archivos que pueblan la base de datos con información para construir una maqueta.
+Esta maqueta fue utilizada para realizar la demostración al cliente.
+Los archivos son devices.js, measurements.js, seed.js y users.js.
+El archivo devices.js crea una serie de dispositivos ficticios.
+El archivo measurements.js inserta una serie de mediciones que provienen de los dispositivos ficticios creados por devices.js.
+El script users.js genera una serie de usuarios con distintos permisos.
+Con el fin de probar la capacidad de autentificar las sesiones.
+Finalmente seed.js es quién carga todos los datos en MongoDB, según se puede ver en el código \ref{cod:dcSeed}.
+Las mediciones fueron cargadas múltiples veces para generar un volumen de datos que sirviera para realizar pruebas.
+
+\begin{lstlisting}[label=cod:dcMongo,caption=Orquestación de MongoDB.]
+mongo:
+	image: mongo
+	container_name: mongo
+	hostname: mongo
+	command: mongod --bind_ip_all --port 27017
+	expose: 
+		- '27017'
+	volumes: 
+		- ./mongodb/scripts:/scripts
+	networks:
+		- iot
+\end{lstlisting}
+
+\begin{lstlisting}[label=cod:dcSeed,caption=Seed de la base de datos.]
+use gador;
+load("scripts/devices.js")
+load("scripts/users.js")
+load("scripts/measurements.js")
+load("scripts/measurements.js")
+load("scripts/measurements.js")
+load("scripts/measurements.js")
+load("scripts/measurements.js")
+load("scripts/measurements.js")
+load("scripts/measurements.js")
+load("scripts/measurements.js")
+load("scripts/measurements.js")
+\end{lstlisting}
+
+El servicio Persistence Validator (pv), está definido en el código \ref{cod:dcPV}.
+Se puede observar que la imagen no existe y debe ser construida.
+Como el servicio fue realizado en Python, el Dockerfile necesario para construir la imagen es prácticamente idéntico al visto en el código \ref{cod:dfHRV}.
+
+\begin{lstlisting}[label=cod:dcPV,caption=Orquestación del servicio pv.]
+	pv:
+		build: ./persistenceValidator
+		image: vaca/pv
+		container_name: pv
+		hostname: pv
+		restart: always
+	expose: 
+		- '1883'
+		- '27017'
+	depends_on: 
+		- 'mosquitto'
+		- 'mongo'
+	networks: 
+		- iot
+\end{lstlisting}
+
+Para orquestar el servicio backend se utilizó el puerto 8080 del ordenador.
+La razón es que se tiene una comunicación con una entidad externa, el usuario.
+La imagen para crear el contenedor debe ser construida y para tal fin se usó el Dockerfile que se puede observar en el código \ref{cod:dfBackend}.
+
+\begin{lstlisting}[label=cod:dcBackend,caption=Orquestación del servicio Backend.]
+backend:
+	build: ./backend
+	image: vaca/backend
+	container_name: backend
+	hostname: backend
+	expose: 
+		- '1883'
+		- '6379'
+		- '27017'
+	ports: 
+		- '8080:8080'
+	depends_on:
+		- 'mosquitto' 
+		- 'mongo'
+		- 'redis'
+	networks: 
+		- iot
+\end{lstlisting}
+
+El Dockerfile parte de la imagen oficial de Nodejs y copia los archivos de dependencias dentro del contenedor auxiliar.
+Con este archivo se descargan las bibliotecas necesarias.
+Luego se copia el código fuente de la aplicación y finalmente se configura la inicialización del servidor Nodejs como comando por defecto.
+
+\begin{lstlisting}[label=cod:dfBackend,caption=Dockerfile del servicio Backend.]
+FROM node
+LABEL maintainer="Gonzalo Nahuel Vaca <vacagonzalo@gmail.com>"
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 1883 6379 8080 27017
+CMD ["node", "./src/app.js"]
+\end{lstlisting}
+
+El servicio Calibrator es una aplicación de Nodejs y fue orquestada de manera similar al servicio Backend.
+Su configuración se puede observar en el código \ref{cod:dcCalibrator}.
+El Dockerfile necesario para crear su imagen es prácticamente idéntico al mostrado en el código \ref{cod:dfBackend}.
+
+\begin{lstlisting}[label=cod:dcCalibrator,caption=Orquestación del servicio Calibrator.]
+calibrator:
+	build: ./calibrator
+	image: vaca/calibrator
+	container_name: calibrator
+	hostname: calibrator
+	expose: 
+		- '1883'
+		- '9999'
+	ports:
+		- '9999:9999'
+	depends_on: 
+		- 'mosquitto'
+	networks: 
+		- iot
+\end{lstlisting}
+
+El servicio Redis fue creado a partir de la imagen oficial de Redis que se encuentra disponible en Dockerhub. \citep{contrib:redis}
+Como no tiene exposición al exterior del servidor, no se necesitó realizar ninguna configuración adicional.
+Es importante aclarar que si bien se puede aplicar una capa de seguridad, no es aconsejable exponer a Redis a la Internet.
+La orquestación se puede ver en el código \ref{cod:dcRedis}.
+
+\begin{lstlisting}[label=cod:dcRedis,caption=Orquestación del servicio Redis.]
+redis:
+	image: redis
+	container_name: redis
+	hostname: redis
+	expose:
+		- '6379'
+	networks: 
+		- iot
+\end{lstlisting}
+
+El último servicio es el Frontend que fue orquestado como se puede observar en el código \ref{cod:dcFrontend}.
+Su imagen se crea usando el código fuente de la aplicación y un Dockerfile al momento de orquestar la solución.
+La construcción de esta imagen es la más sofisticada de todo el trabajo, como se puede ver en el código \ref{cod:dfFrontend}.
+
+\begin{lstlisting}[label=cod:dcFrontend,caption=Orquestación del servicio Frontend.]
+frontend:
+	build: ./frontend/
+	image: vaca/frontend
+	container_name: frontend
+	hostname: frontend
+	restart: always
+	ports: 
+		- '80:80'
+\end{lstlisting}
+
+El Dockerfile se divide en dos grandes etapas.
+La primer parte es crear un contenedor auxiliar a partir de la imagen oficial de Nodejs y llamarla \emph{builder}.
+Este contenedor temporal copia dentro suyo el código fuente del servicio e instala todas las dependencias.
+Entre las dependencias instaladas se encuentra el framework de Angular.
+Se utiliza el framework para compilar el código fuente de TypeScript y se obtienen archivos en JavaScript, que son ejecutables por un navegador.
+La segunda parte del proceso es crear un contenedor a partir de la imagen oficial de Nginx, que es un servidor web.
+Se transfieren los archivos compilados por el contenedor auxiliar hacia el contenedor de Nginx y se destruye el auxiliar.
+Finalmente se transforma el contenedor de Nginx con los archivos compilados en una imagen.
+
+\begin{lstlisting}[label=cod:dfFrontend,caption=Dockerfile del servicio Frontend.]
+FROM node as builder
+WORKDIR /src/app
+COPY . ./
+RUN npm install
+RUN npm run ng build  --prod
+FROM nginx
+COPY --from=builder /src/app/dist/frontend /usr/share/nginx/html
+\end{lstlisting}
 
 % Explicación sobre el funcionamiento y la creación de los servicios que interactuan con dispositivos
 \section{Servicios orientados a dispositivos}
