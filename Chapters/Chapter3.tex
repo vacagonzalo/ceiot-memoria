@@ -42,18 +42,18 @@
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
-En este capítulo se detallan las tareas realizadas durante el trabajo.
-Se explica como se crearon los servicios y como se interconectaron para lograr una orquestación.
-% Explicación sobre el funcionamiento y la creación de la arquitectura y del código que automáticamente despliega la aplicación en un servidor
+En este capítulo se detallan los componentes realizados por el autor de esta memoria.
+Se explica como se crearon los servicios y como se interconectaron para lograr que todo funcione como una única solución.
+
 \section{Arquitectura y orquestación}
 Esta sección trata sobre la conexión entre los servicios del trabajo y su despliegue automático.
 
 Para planificar la orquestación se analizaron los servicios que debían ser accesibles desde entidades externas al servidor.
 En la figura \ref{fig:ch3EsquemaTrabajo} se pueden observar las conexiones lógicas entre los contenedores.
 Destacadas en color rojo, se encuentran las entidades externas que interactúan con el servidor Nodos.
-Las interconexiones se simplificaron al crear una capa de puente de red que corre sobre el mismo \emph{Daemon} de Docker.
-El resultado es que cada contenedor pasa a tener una dirección ip dentro del entorno.
-La creación de esta red se logró con el el código \ref{cod:dcNetwork}.
+Las interconexiones se simplificaron al crear una capa de puente de red que corre sobre el \emph{Daemon} de Docker.
+El resultado es que cada contenedor pasa a tener una dirección de ip dentro del entorno.
+La creación de la red se logró con el código \ref{cod:dcNetwork}.
 
 \begin{figure}[h]
 	\centering
@@ -71,7 +71,7 @@ networks:
 El servicio modbus-server se comunica al exterior utilizando el puerto 502.
 El puerto pertenece a la lista de protocolos bien conocidos o puertos de sistema.
 Esta condición hace posible que existan problemas con los permisos que el usuario tiene dentro del sistema operativo.
-Como se puede observar en el código \ref{cod:dcModbusServer}, se conectó el puerto 502 del sistema operativo con el 5020 dentro de la red de Docker.
+Como se puede observar en el código \ref{cod:dcModbusServer}, se conectó el puerto 502 del ordenador con el 5020 dentro de la red de Docker.
 En general, es una buena práctica que los puertos internos de la red no sean puertos de sistema para no generar conflictos de permisos y conectarlos a puertos de protocolos según sea necesario.
 Para evitar usar direcciones ip en el código de los servicios se utilizó el parámetro hostname para utilizar el servicio de sistema de nombres de dominio (DNS) que corre dentro del \emph{Daemon} de Docker.
 
@@ -92,7 +92,7 @@ modbus-server:
 El servicio Mosquitto se configuró con tres volúmenes que conectan al contenedor con archivos no efímeros que persisten la información necesaria para que el contenedor muestre un comportamiento correcto.
 Como se puede apreciar en el código \ref{cod:dcMosquitto}, se encuentran los archivos de configuración de usuarios y de lista de control de acceso (acl).
 Con esta configuración se evita que dispositivos anónimos puedan utilizar el broker y que además solo puedan utilizar los \emph{topics} designados.
-Además los distintos usuarios tienen diferentes permisos según el \emph{topic}.
+Adicionalmente, los distintos usuarios tienen diferentes permisos según el \emph{topic}.
 De esta manera se logra una mayor confiabilidad y seguridad en el manejo de los mensajes.
 
 \begin{lstlisting}[label=cod:dcMosquitto,caption=Orquestación del broker Mosquitto.]
@@ -115,7 +115,7 @@ mosquitto:
 		- iot
 \end{lstlisting}
 
-El servicio \emph{Holding Registers Validator} (hrv) tiene la particularidad de depender de otros servicios, como se puede ver en el cógigo \ref{cod:dcHRV}.
+El servicio Holding Registers Validator (hrv) tiene la particularidad de depender de otros servicios, como se puede ver en el cógigo \ref{cod:dcHRV}.
 El contenedor no puede ser creado hasta que los servicios listados como dependencias se encuentren activos.
 Esto se hace de esta manera para evitar que el contenedor genere excepciones y se reinicie varias veces durante el despliegue se la solución.
 Además no es posible saber si el comportamiento final del contenedor puede quedar indefinido.
@@ -123,7 +123,7 @@ Es importante mencionar que este servicio no tiene salida al exterior y no queda
 
 La imagen para construir el contenedor no existe y debe ser creada al momento del despliegue.
 Para lograrlo se utiliza el campo \emph{build}, en donde se especifica la ruta al Dockerfile que contiene la receta.
-La imagen queda guardada con el nombre vaca/hrv, de esta manera, no es necesario volver a construirla si se decide reiniciar la solución.
+La imagen queda guardada con el nombre vaca/hrv, de esta manera, no es necesario volver a construirla si se decide reiniciar la aplicación.
 
 \begin{lstlisting}[label=cod:dcHRV,caption=Orquestación del servicio hrv.]
 hrv:
@@ -146,8 +146,8 @@ hrv:
 El Dockerfile que fabrica la imagen puede verse en el código \ref{cod:dfHRV}.
 Este código es común para todos los Dockerfiles que construyen imágenes para los servicios realizados en Python.
 Se utiliza Alpine Linux como imagen base y se genera el usuario y grupo \emph{pythonuser}.
-El usuario es quien corra el servicio dentro del contenedor y se define un comando a ejecutar al momento de crearlo.
-Quedan definidos en este archivo cuales son puertos que se pueden usar para la red puente.
+El usuario es quien corre el servicio dentro del contenedor y se definió un comando a ejecutar al momento de crearlo.
+Quedan indicados en este archivo cuales son puertos que se pueden usar para la red puente.
 
 \begin{lstlisting}[label=cod:dfHRV,caption=Dockerfile del servicio hrv.]
 FROM python:3.8-alpine
@@ -166,14 +166,13 @@ CMD [ "python", "-u", "/app/service.py" ]
 
 El servicio MongoDB no tiene salida al exterior del servidor, su configuración se puede ver en el código \ref{cod:dcMongo}.
 La configuración tiene la particularidad de introducir un comando a la hora de crear el contenedor.
-Se le indica al motor de MongoDB que puerto debe escurchar.
+Se le indica al motor de MongoDB que puerto debe escuchar.
 Además se crea un volumen donde figuran una serie de archivos que pueblan la base de datos con información para construir una maqueta.
 Esta maqueta fue utilizada para realizar la demostración al cliente.
 Los archivos son devices.js, measurements.js, seed.js y users.js.
 El archivo devices.js crea una serie de dispositivos ficticios.
 El archivo measurements.js inserta una serie de mediciones que provienen de los dispositivos ficticios creados por devices.js.
-El script users.js genera una serie de usuarios con distintos permisos.
-Con el fin de probar la capacidad de autentificar las sesiones.
+El script users.js genera una serie de usuarios con distintos permisos, con el fin de probar la capacidad de autentificar las sesiones.
 Finalmente seed.js es quién carga todos los datos en MongoDB, según se puede ver en el código \ref{cod:dcSeed}.
 Las mediciones fueron cargadas múltiples veces para generar un volumen de datos que sirviera para realizar pruebas.
 
@@ -340,12 +339,11 @@ COPY --from=builder /src/app/dist/frontend /usr/share/nginx/html
 Teniendo definido los Dockerfiles y el archivo docker-compose.yml se puede utilizar un guión escrito en Bash que lanza la aplicación.
 Como se puede observar en el código \ref{cod:bashStart}.
 
-Cuando se desea eliminar todo rastro del sistema del ordenador.
-Se puede utilizar el código \ref{cod:bashClean}.
+Cuando se desea eliminar todo rastro del sistema del ordenador, se puede utilizar el código \ref{cod:bashClean}.
 
 Los únicos requisitos para iniciar la aplicación es tener un ordenador que tenga Docker y Docker Compose instalados.
 No se necesita tener ninguna de las herramientas de desarrollo dentro del ambiente de producción.
-De esta manera se logró una solución altamente portable y agnóstica de la arquitectura del hardware.
+De esta manera se logró una solución altamente portátil y agnóstica de la arquitectura del hardware.
 
 \begin{lstlisting}[label=cod:bashStart,caption=Guión de inicialización.]
 #!/bin/bash
@@ -389,7 +387,7 @@ password_file /mosquitto/config/users.txt
 acl_file /mosquitto/config/acl.txt
 \end{lstlisting}
 
-Se creó una configuración de usuarios que tiene en su interior dos usuarios.
+Se creó una configuración de usuarios que tiene en su interior dos integrantes.
 El primer usuario se denominó docker y su contraseña es container.
 El segundo usuario se nombró device y su contraseña es thing.
 Las contraseñas se guardaron encriptadas utilizando la herramienta \emph{mosquitto\_passwd}.
@@ -397,6 +395,7 @@ El usuario docker se utiliza para que los contenedores se comuniquen con el brok
 Las diferencias entre contenedores y dispositivos se configuran en el archivo de acl, como se visualiza en el código \ref{cod:mosquittoAcl}.
 El topic cmnd se utiliza para los mensajes que alteran la configuración de los dispositivos.
 El topic data tiene la finalidad de llevar las mediciones tomadas por los sensores y hacerlas persistir en la base de datos.
+Además de escribir en una posición de memoria del servidor Modbus, según corresponda.
 Finalmente el topic live tiene la función de llevar las mediciones que se realizan durante las calibraciones.
 
 \begin{lstlisting}[label=cod:mosquittoAcl,caption=Lista de control de acceso]
@@ -453,6 +452,8 @@ Si se cumpla esta condición se procede a impactar en la colección Readings en 
 El servicio fue escrito en Python.
 Se extrajeron las funciones principales y se las pueden ver en el código \ref{cod:PVpython}.
 
+\newpage
+
 \begin{lstlisting}[label=cod:PVpython,caption=Funciones principales del servicio PV]
 # DATABASE
 def insertReading(id, value, unit):
@@ -477,13 +478,18 @@ def onMessage(client, userdata, msg):
     insertReading(data[0], data[1], unit)    
 \end{lstlisting}
 	
-% Explicación sobre el funcionamiento y la creación de los servicios que interactuan con el usuario
-% Imágenes del frontend 2 o 3 máx.
 \section{Servicios orientados a usuarios}
 
 % calibrator
+\subsection{Calibrator}
 El servicio Calibrator es un servidor WebSocket.
 Tiene la finalidad de entablar una conexión con el navegador del usuario para transmitirle mediciones en vivo.
+En el código \ref{cod:Calibrator} se muestra su archivo principal.
+Se escribió en JavaScript para la plataforma Nodejs y depende de las bibliotecas CORS, Express, MQTTjs y WS.
+
+Inicialmente la conexión comienza con el protocolo HTTP y se realiza una actualización para pasar al protocolo WebSocket.
+El servidor guarda una lista de las conexiones abiertas y reenvía todos los mensajes del topic \emph{live} a todos sus clientes.
+Se delega en el frontend la lógica de los datos a mostrar al usuario.
 
 \begin{lstlisting}[label=cod:Calibrator,caption=Archivo principal del servicio Calibrator]
 const mqtt = require('./services/broker');
@@ -518,7 +524,320 @@ mqtt.on('message', (topic, payload) => {
 server.listen(PORT, () => { console.log(`running on: ${PORT}`) }); 
 \end{lstlisting}
 
+\subsection{Backend}
+El servicio Backend tiene la finalidad de proveer una \emph{REST API} al usuario.
+Fue escrito en JavaScript para Nodejs y sus dependencias son Bcript, CORS, Express, JsonWebToken, Mongoose, MQTTs y Redis.
 
-% backend
+En el código \ref{cod:BackendApp} se puede observar el archivo principal de la aplicación.
+Quedan definidos los \emph{endpoints} o entidades del servicio.
+Las entidades son auth, cmnd, devices, logs, users y readings.
+
+\begin{lstlisting}[label=cod:BackendApp,caption=Archivo principal del servicio Backend]
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
+require('./connection/database');
+require('./connection/cache');
+require('./connection/broker');
+
+const PORT = process.env.PORT || 8080;
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+app.use('/auth',require('./routes/auth'));
+app.use('/cmnd', require('./routes/cmnd'));
+app.use('/devices', require('./routes/devices'));
+app.use('/logs', require('./routes/log'));
+app.use('/users', require('./routes/users'));
+app.use('/readings', require('./routes/readings'));
+
+app.listen(PORT, () => { 
+    console.log(`Server running on port ${PORT}`); 
+});
+\end{lstlisting}
+
+La entidad auth solo tiene el método \emph{Post} en donde se le envía un usuario y contraseña.
+Si las credenciales enviadas son correctas, se responde con un JWT que identifica una sesión para utilizar durante la operación del cliente.
+La función principal se extrajo de su archivo y se muestra en el código \ref{cod:BackendAuth}.
+Se puede ver que al crear una nueva sesión, el servidor entrega el estado \emph{Created (201)}.
+En simultaneo se guarda el JWT generado en la memoria de Redis con un tiempo de vida determinado.
+Por el contrario, se entrega el estado \emph{Unauthorized (401)} cuando las credenciales no son válidas.
+
+\newpage
+
+\begin{lstlisting}[label=cod:BackendAuth,caption=Función principal de la entidad auth]
+router.post('/', async (req, res) => {
+    try {
+        const body = req.body;
+        let user = await User.findOne({ name: body.name });
+        if (user) {
+            if(bcrypt.compareSync(body.password,user.password)) {
+                let payload = { subject: user._id };
+                let token = jwt.sign(payload, SECRET_KEY);
+                cache.SETEX(token, TIME_TO_LIVE, user.rank);
+                res.status(201).send({
+                    user: user.name,
+                    rank: user.rank,
+                    token: token
+                });
+            } else {
+                res.sendStatus(401);
+            }
+        } else {
+            res.sendStatus(401);
+        }
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+\end{lstlisting}
+
+La entidad cmnd tiene la misión de gestionar las órdenes que se envían a los sensores.
+Solo se usaron métodos \emph{GET} ya que no fue necesario enviar un cuerpo en el pedido.
+Como se puede ver en las funciones principales mostradas en el código \ref{cod:BackendCmnd}, se puede ordenar que un sensor ingrese al modo calibración o que regrese al modo normal de operación.
+Vale la pena mencionar que las funciones presentan el uso de \emph{middlewares} que tienen como función verificar que el cliente tenga una sesión válida y persistir la operación en un log.
+
+\begin{lstlisting}[label=cod:BackendCmnd,caption=Funciones principales de la entidad cmnd]
+router.get('/reset/:tag',
+    middleware.verifyToken,
+    middleware.verifyRankEngineer,
+    middleware.logRequest,
+    (req, res) => {
+        try {
+            mqtt.publish(`cmnd/${req.params.tag}/reset`, "reset");
+            res.sendStatus(200);
+        } catch (error) {
+            res.sendStatus(500);
+        }
+    });
+
+router.get('/calibrate/:tag',
+    middleware.verifyToken,
+    middleware.verifyRankEngineer,
+    middleware.logRequest,
+    (req, res) => {
+        try {
+            mqtt.publish(`cmnd/${req.params.tag}/calibrate`, "live");
+            res.sendStatus(200);
+        } catch (error) {
+            res.sendStatus(500);
+        }
+    });
+\end{lstlisting}
+
+La entidad devices es la más extensa del servicio.
+Tiene entre sus funciones crear, leer, modificar y borrar los dispositivos de la base de datos.
+Cada una de estas funciones existe con múltiples variantes debido a que se realizan para un solo sensor o varios en simultaneo.
+En el código \ref{cod:BackendDevices} se muestra un método de creación de dispositivo que es representativa para cada una de las funciones dentro del archivo.
+La validación de la sesión del cliente queda delegada al \emph{middleware}.
+Se puede ver que también se realizan comunicaciones con los sensores cuando se realiza un cambio en su configuración.
+Esto crea consistencia entre lo que figura en la base de datos y lo que realmente sucede en campo.
+
+\begin{lstlisting}[label=cod:BackendDevices,caption=Creación de dispositivo de la entidad devices]
+router.post('',
+    middleware.verifyToken,
+    middleware.verifyRankEngineer,
+    middleware.logRequest,
+    async (req, res) => {
+        try {
+            let body = req.body;
+            let dupplicated = await Device.findOne(
+                { $or: [{ serial: body.serial }, { tag: body.tag }] },
+                {}
+            );
+            if (dupplicated) {
+                res.sendStatus(403);
+            } else {
+                let device = new Device({
+                    serial: body.serial,
+                    tag: body.tag,
+                    modbus: body.modbus,
+                    frec: body.frec,
+                    unit: body.unit
+                });
+                await device.save();
+                mqtt.publish(`cmnd/${device.tag}/frec`, `${device.frec}`);
+                res.sendStatus(201);
+            }
+        } catch (error) {
+            console.log(error);
+            res.sendStatus(500);
+        }
+    });
+\end{lstlisting}
+
+La entidad logs cumple la función de persistir todas las actividades que el cliente realiza en el sistema.
+En particular aquellas que modifican el funcionamiento de los equipos en campo, los reportes a EBI y los permisos de usuarios.
+Tiene la finalidad de permitir auditar los eventos ocurridos.
+La función principal de la entidad puede ser vista en el código \ref{cod:BackendLogs} y como en el resto de los \emph{endpoints}, la validación de sesión se manejó a través de un \emph{middleware}.
+
+\newpage
+
+\begin{lstlisting}[label=cod:BackendLogs,caption=Función principal de la entidad logs]
+router.get('',
+    middleware.verifyToken,
+    middleware.verifyRankAdministrator,
+    async (req, res) => {
+        try {
+            let logs = await Log.find();
+            res.status(200).send({ logs });
+        } catch (error) {
+            res.sendStatus(500);
+        }
+    });
+\end{lstlisting}
+
+En la entidad users se definen los usuarios del sistema que persisten en la base de datos.
+Uno de los requerimientos cumplidos (sección \ref{objetivos}) fue persistir las contraseñas de forma encriptada.
+El archivo del \emph{endpoint} es particularmente extenso así que se extrajo la función que crea un nuevo usuario y se la muestra en el código \ref{}.
+Se puede ver como se genera una contraseña encriptada y como se verifican la sesión y jerarquía utilizando un \emph{middleware}.
+
+\begin{lstlisting}[label=cod:BackendLogs,caption=Creación de usuario de la entidad users]
+router.post('/new',
+    middleware.verifyToken,
+    middleware.verifyRankAdministrator,
+    middleware.logRequest,
+    async (req, res) => {
+        try {
+            const body = req.body;
+            let dupplicated = await User.findOne(
+                { $or: [{ name: body.name }, { email: body.email }] },
+                {}
+            );
+            if (dupplicated) {
+                res.sendStatus(403)
+                return;
+            } else {
+                const SALT = bcrypt.genSaltSync(SALT_ROUNDS);
+                const HASH = bcrypt.hashSync(body.password, SALT);
+                let user = new User({
+                    name: body.name,
+                    email: body.email,
+                    password: HASH,
+                    rank: body.rank
+                });
+                await user.save();
+                res.sendStatus(201);
+            }
+        } catch (error) {
+            console.log(error);
+            res.sendStatus(500);
+        }
+    });
+\end{lstlisting}
+
+La entidad readings se encarga de leer las mediciones que se encuentran en MongoDB y las reporta al cliente.
+Solo tiene la función \emph{Get} ya que la información no es modificable y las nuevas mediciones son generadas por los dispositivos.
+En el código \ref{cod:BackendReadings} se muestra la función más utilizada por el cliente, obtener todas las mediciones de un sensor.
+
+\begin{lstlisting}[label=cod:BackendReadings,caption=Función más utilizada de la entidad readings]
+router.get('/all/:device',
+    middleware.verifyToken,
+    middleware.verifyRankAssistant,
+    async (req, res) => {
+        try {
+            let readings = await Measurement.find(
+                { tag: req.params.device },
+                { _id: 0, __v: 0 }
+            );
+            res.status(200).send({ readings });
+        } catch (error) {
+            console.log(error);
+            res.sendStatus(500);
+        }
+    });
+\end{lstlisting}
+
+Como se pudo ver en las entidades, el manejo de sesión y permisos fueron delegados a un \emph{middleware}.
+El servicio de \emph{middleware} se compone de una serie de funciones que interceptan el mensaje del cliente y se ejecutan antes de llegar a la entidad deseada.
+Se generaron tres responsabilidades para estas funciones.
+La primera es verificar que el token que viene en el mensaje sea válido y se encuentre en Redis.
+La segunda es que la jerarquía del usuario sea suficiente para realizar la acción solicitada.
+Finalmente la tercera se encarga de persistir la transacción para futuras auditorías.
+
+La verificación del token se puede ver en el código \ref{cod:BackendMiddlewareToken} y se puede apreciar el orden lógico del control.
+Primero se verifica que exista un token en el mensaje del usuario y luego se controla que el formato sea correcto.
+Luego se verifica que el token se encuentre activo dentro de Redis y que no pertenezca a un usuario que se encuentre desactivado.
+Si estas condiciones se cumplen, se procede a modificar el mensaje original del cliente.
+Se genera un campo \emph{rank} en donde se coloca el nivel de permisos que se le otorga al pedido del usuario.
+Finalmente se actualiza el tiempo de vida del token y se pasa el mensaje a la próxima función.
+Cualquier conflicto que surja en cada etapa interrumpe la petición y devuelve el código \emph{Unauthorized (401)}.
+
+\begin{lstlisting}[label=cod:BackendMiddlewareToken,caption=Verificación de token]
+middleware.verifyToken = (req, res, next) => {
+    try {
+        if (!req.headers.authorization) {
+            return res.sendStatus(401);
+        }
+        let token = req.headers.authorization.split(' ')[1];
+        if (token === 'null') {
+            return res.sendStatus(401);
+        }
+        cache.GET(token, (error, reply) => {
+            if (error) {
+                return res.sendStatus(401);
+            }
+            if (!reply) {
+                return res.sendStatus(401);
+            }
+            if (reply == UNAUTHORIZED) {
+                return res.sendStatus(401);
+            }
+            let payload = jwt.verify(token, SECRET_KEY);
+            if (!payload) {
+                return res.sendStatus(401);
+            }
+            req.userId = payload.subject
+            req.rank = reply;
+            cache.EXPIRE(token, TIME_TO_LIVE);
+            next();
+        });
+    } catch (error) {
+        return res.sendStatus(401);
+    }
+}
+\end{lstlisting}
+
+Antes de procesar el pedido del usuario dentro de la entidad deseada, se verifica que la jerarquía sea la suficiente para realizar la operación.
+En el código \ref{cod:BackendMiddlewareRank} se muestra la función que controla que el usuario tenga permisos de ingeniero o superiores.
+Si cumple la condición se avanza a la siguiente función, de lo contrario se interrumpe el pedido del cliente y se le devuelve el estado 401.
+Las funciones para los otros niveles de usuario son prácticamente iguales a la función de verificación de ingeniero.
+
+\begin{lstlisting}[label=cod:BackendMiddlewareRank,caption=Verificación de rango]
+middleware.verifyRankEngineer = (req, res, next) => {
+    if (req.rank >= ENGINEER) {
+        next();
+    } else {
+        return res.sendStatus(401);
+    }
+}
+\end{lstlisting}
+
+La última etapa del \emph{middleware} se utiliza solo en las acciones a ser auditadas.
+En esta función se guarda en la base de datos el pedido del cliente con el agregado de información adicional para facilitar la tarea del auditor. El método se puede ver en el código \ref{cod:BackendMiddlewareLog}.
+
+\begin{lstlisting}[label=cod:BackendMiddlewareLog,caption=Persistencia de la operación]
+middleware.logRequest = async (req, res, next) => {
+    try {
+        let body = JSON.stringify(req.body);
+        let log = new Log({
+            timestamp: new Date(),
+            method: req.method,
+            endpoint: req.originalUrl,
+            user: req.userId,
+            body: body
+        });
+        await log.save();
+        next();
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+}
+\end{lstlisting}
 
 % frontend
+\subsection{Frontend}
