@@ -337,8 +337,188 @@ FROM nginx
 COPY --from=builder /src/app/dist/frontend /usr/share/nginx/html
 \end{lstlisting}
 
+Teniendo definido los Dockerfiles y el archivo docker-compose.yml se puede utilizar un guión escrito en Bash que lanza la aplicación.
+Como se puede observar en el código \ref{cod:bashStart}.
+
+Cuando se desea eliminar todo rastro del sistema del ordenador.
+Se puede utilizar el código \ref{cod:bashClean}.
+
+Los únicos requisitos para iniciar la aplicación es tener un ordenador que tenga Docker y Docker Compose instalados.
+No se necesita tener ninguna de las herramientas de desarrollo dentro del ambiente de producción.
+De esta manera se logró una solución altamente portable y agnóstica de la arquitectura del hardware.
+
+\begin{lstlisting}[label=cod:bashStart,caption=Guión de inicialización.]
+#!/bin/bash
+chmod +x clean.sh
+docker-compose up -d
+printf "Waiting 10 seconds for internal connections to be made"
+sleep 10
+docker-compose exec mongo sh -c "mongo < /scripts/seed.js"
+printf "checking collections"
+docker-compose exec mongo sh -c "mongo < /scripts/seed.test.js"
+\end{lstlisting}
+
+\begin{lstlisting}[label=cod:bashClean,caption=Guión de limpieza.]
+#!/bin/bash
+docker-compose down
+docker rmi vaca/backend
+docker rmi vaca/hrv
+docker rmi vaca/pv
+docker rmi vaca/auth-api
+docker rmi vaca/calibrator
+docker rmi vaca/frontend
+clear
+\end{lstlisting}
+
+% \newpage
+
 % Explicación sobre el funcionamiento y la creación de los servicios que interactuan con dispositivos
+% Diagrama de flujo que explique la interacción del sistema con los dispositivos.
 \section{Servicios orientados a dispositivos}
+
+% mosquitto
+Mosquitto fue configurado siguiendo su documentación para lograr el máximo nivel de seguridad que no incluyera certificados \emph{SSH}.
+Se decidió no utilizar certificados ya que no figuraban en los requerimientos y el broker no se encuentra expuesto a la Internet.
+Además uno de los motivos del trabajo es simplificar la interacción con los sensores.
+Agregar la tarea de controlar y renovar los certificados iba en contra del objetivo inicial.
+La configuración puede ser observada en el código \ref{cod:mosquittoConfig}.
+
+\begin{lstlisting}[label=cod:mosquittoConfig,caption=Archivo mosquitto.conf]
+allow_anonymous false
+password_file /mosquitto/config/users.txt
+acl_file /mosquitto/config/acl.txt
+\end{lstlisting}
+
+Se creó una configuración de usuarios que tiene en su interior dos usuarios.
+El primer usuario se denominó docker y su contraseña es container.
+El segundo usuario se nombró device y su contraseña es thing.
+Las contraseñas se guardaron encriptadas utilizando la herramienta \emph{mosquitto\_passwd}.
+El usuario docker se utiliza para que los contenedores se comuniquen con el broker, mientras que device se asigna a los sensores en campo.
+Las diferencias entre contenedores y dispositivos se configuran en el archivo de acl, como se visualiza en el código \ref{cod:mosquittoAcl}.
+El topic cmnd se utiliza para los mensajes que alteran la configuración de los dispositivos.
+El topic data tiene la finalidad de llevar las mediciones tomadas por los sensores y hacerlas persistir en la base de datos.
+Finalmente el topic live tiene la función de llevar las mediciones que se realizan durante las calibraciones.
+
+\begin{lstlisting}[label=cod:mosquittoAcl,caption=Lista de control de acceso]
+user docker
+topic readwrite cmnd/#
+topic read data/#
+
+user device
+topic readwrite cmnd/#
+topic write data/#
+topic write live/#
+\end{lstlisting}
+
+% holding register validator
+El servicio Holding Register Validator (HRV) tiene la misión de determinar que mediciones se deben escribir en una posición de memoria del servidor Modbus.
+Para cumplir con esa función, HRV se subscribe al topic data y recibe todos los reportes de los sensores.
+Luego determina si las mediciones recibidas pertenecen a la lista de dispositivos que figuran en la base de datos y si corresponde escribir una posición de memoria.
+Finalmente escribe una posición de memoria del servidor según corresponda.
+Las funciones de cada paso fueron extraídas y se presentan en el código \ref{cod:HRVpython}, escritas en Python.
+
+\begin{lstlisting}[label=cod:HRVpython,caption=Funciones principales del servicio HRV]
+# MQTT
+def onMessage(client, userdata, msg):
+    data = msg.payload.decode().split(",")
+    addr = getAddr(data[0])
+    if addr != -1:
+        val = int(data[1])
+        write_slave(addr, val)
+        
+# DATABASE
+def getAddr(id):
+    global devices
+    d = devices.find_one({"tag": id})
+    if d is None:
+        return -1
+    if 'modbus' in d:
+        return int(d['modbus'])
+    return -1
+
+# MODBUS
+def write_slave(addr, value):
+    global master
+    if master.write_single_register(addr, value):
+        print('writing successful')
+    else:
+        print('writing error')
+\end{lstlisting}
+
+% persistance validator
+El servicio Persistence Validator (PV) tiene la función de recibir las mediciones de los sensores y decidir si deben persistir en la base de datos.
+Para tal fin se encuentra subscrito al topic data.
+Cuando recibe una medición, verifica que provenga de un sensor válido en la base de datos.
+Si se cumpla esta condición se procede a impactar en la colección Readings en MongoDB.
+El servicio fue escrito en Python.
+Se extrajeron las funciones principales y se las pueden ver en el código \ref{cod:PVpython}.
+
+\begin{lstlisting}[label=cod:PVpython,caption=Funciones principales del servicio PV]
+# DATABASE
+def insertReading(id, value, unit):
+    post = {
+        "date": datetime.datetime.utcnow(),
+        "tag": id,
+        "val": value,
+        "unit": unit
+    }
+    global measurements
+    measurements.insert_one(post)
+
+def isValidId(id):
+    global devices
+    d = devices.find_one({'tag': id})
+    return (d is not None)
+    
+# MQTT
+def onMessage(client, userdata, msg):
+    unit = msg.topic.split("/")[1][0]
+    data = msg.payload.decode().split(",")
+    insertReading(data[0], data[1], unit)    
+\end{lstlisting}
 	
 % Explicación sobre el funcionamiento y la creación de los servicios que interactuan con el usuario
+% Imágenes del frontend 2 o 3 máx.
 \section{Servicios orientados a usuarios}
+
+% calibrator
+El servicio Calibrator es un servidor WebSocket.
+Tiene la finalidad de entablar una conexión con el navegador del usuario para transmitirle mediciones en vivo.
+
+\begin{lstlisting}[label=cod:Calibrator,caption=Archivo principal del servicio Calibrator]
+const mqtt = require('./services/broker');
+mqtt.subscribe('live');
+const express = require('express');
+const cors = require('cors');
+const app = express();
+app.use(cors());
+
+const server = require('http').createServer(app);
+
+const PORT = process.env.PORT || 9999;
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (ws) => {
+    ws.on('message', (data) => {
+        wss.clients.forEach((client) => {
+            client.send(data);
+        });
+    });
+});
+
+mqtt.on('message', (topic, payload) => {
+    wss.clients.forEach(client => {
+        let data = `${payload}`;
+        client.send(data);
+    });
+});
+
+server.listen(PORT, () => { console.log(`running on: ${PORT}`) }); 
+\end{lstlisting}
+
+
+% backend
+
+% frontend
