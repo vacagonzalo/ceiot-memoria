@@ -839,5 +839,198 @@ middleware.logRequest = async (req, res, next) => {
 }
 \end{lstlisting}
 
+\newpage
+
 % frontend
 \subsection{Frontend}
+
+El servicio Frontend tiene la misión de generar la interfaz gráfica que experimenta el usuario en su navegador.
+Este servicio fue el más extenso en la cantidad de líneas de código y es el más sofisticado desde el punto de vista tecnológico.
+Es la única aplicación en donde se utilizó el lenguaje TypeScript para escribir los archivos fuente.
+Además se utilizó el framework Angular junto con la biblioteca de componentes Angular Material.
+
+Se crearon una serie de servicios que tienen la finalidad de dotar a la interfaz gráfica de la capacidad de obtener la información que necesita.
+Particularmente, la habilidad de comunicarse con otros servicios de la solución.
+
+% auth.service
+El servicio AuthService se encarga de gestionar las credenciales de cesión.
+Para lograr este objetivo se comunica con el Backend y realiza un \emph{Post} indicando usuario y contraseña.
+Cuando la respuesta es satisfactoria, se guarda el token, el usuario y su rango en la memoria local del navegador.
+Este servicio provee la capacidad de leer estos datos que se encuentran en el navegador para que los componentes se comporten de la forma esperada.
+En el código \ref{cod:FrontendAuthService} se puede ver la función mas importante del servicio, la obtención de credenciales.
+
+\begin{lstlisting}[label=cod:FrontendAuthService,caption=Obtención de credenciales]
+signIn(name: string, password: string): Promise<boolean> {
+    return this.http.post(
+      this.url,
+      {
+        name: name,
+        password: password
+      },
+      {
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        observe: 'response'
+      })
+      .toPromise()
+      .then((res) => {
+        if (res.status == 201) {
+          let credentials = <Credentials>res.body;
+          localStorage.setItem('user', credentials.user);
+          localStorage.setItem('rank', credentials.rank.toString());
+          localStorage.setItem('token', credentials.token);
+          return true;
+        } else {
+          localStorage.clear();
+          return false;
+        }
+      })
+      .catch((error) => {
+        localStorage.clear();
+        return false;
+      })
+  }
+\end{lstlisting}
+
+% credentials interceptor
+El servicio CredentialsInterceptorService tiene la misión de interceptar todos los mensajes que emita la interfaz gráfica y agrega el token a la cabecera del mensaje HTTP.
+Tiene una única función y se la puede ver en el código \ref{cod:FrontendCredentials}.
+
+\begin{lstlisting}[label=cod:FrontendCredentials,caption=Intercepción de mensajes]
+intercept(req, next) {
+  let credentials = req.clone({
+    setHeaders: {
+      'Content-Type': "application/json",
+      Authorization: `Bearer ${this.auth.getToken()}`
+    }
+  });
+  return next.handle(credentials);
+}
+\end{lstlisting}
+
+% devices
+El servicio DevicesService cumple la función de unir la entidad que representa los dispositivos en el Backend.
+Este servicio posee múltiples funciones para satisfacer las operaciones de lectura, creación, modificación y eliminación de recursos.
+Por esta razón solo se muestra el método encargado de obtener la lista de dispositivos que se puede observar en el código \ref{cod:FrontendDevicesService}.
+
+\begin{lstlisting}[label=cod:FrontendDevicesService,caption=Obtención de la lista de dispositivos]
+getAll(): Promise<Devices> {
+  return this.http.get(this.url, { observe: 'response' }).toPromise()
+    .then(res => {
+      let devices = <Devices>res.body;
+      return devices;
+    })
+    .catch(error => {
+      this.auth.logout();
+      return <Devices>{};
+    });
+}
+\end{lstlisting}
+
+% logs
+El servicio LogsService se encarga de obtener el registro de actividades para realizar auditorías.
+Solo es posible obtener la lista y no existen métodos para borrar, alterar ni crear logs. La función se puede ver en el código \ref{cod:FrontendLogsService}.
+
+\begin{lstlisting}[label=cod:FrontendLogsService,caption=Obtención de la lista de logs]
+getAll(): Promise<Logs> {
+  return this.http.get(this.url, { observe: 'response' }).toPromise()
+    .then(res => {
+      let logs: Logs = <Logs>res.body;
+      return logs;
+    })
+    .catch(error => {
+      this.auth.logout();
+      return <Logs>{};
+    })
+}
+\end{lstlisting}
+
+% readings
+El servicio ReadingsService tiene el objetivo de interactuar con el \emph{endpoint} readings del Backend.
+La única funcionalidad es la de leer las lecturas ya que estas son creadas por los dispositivos.
+El método más utilizado de este servicio se puede observar en el código \ref{cod:FrontendReadingsService}.
+
+\begin{lstlisting}[label=cod:FrontendReadingsService,caption=Obtención de mediciones]
+getAllReadings(tag: string): Promise<Readings> {
+  return this.http.get(`${this.url}/all/${tag}`, { observe: 'response' })
+    .toPromise()
+    .then(res => {
+      let readings: Readings = <Readings>res.body;
+      return readings;
+    })
+    .catch(err => {
+      console.log(err);
+      return <Readings>{}
+    })
+}
+\end{lstlisting}
+
+% users
+El servicio UsersService tiene la tarea de conectarse a la entidad \emph{users} del Backend.
+Se satisfacen dos necesidades, la primera es alimentar el \emph{pipe} encargado de mostrar los nombres de usuarios en la pantalla de logs.
+La segunda es que los componentes relacionados con la gestión de usuarios puedan consumir los datos que necesitan.
+Estas dos funcionalidades se pueden ver en el código \ref{cod:FrontendUsersService}. 
+
+\begin{lstlisting}[label=cod:FrontendUsersService,caption=Funciones de UsersService]
+getPipeData(): Promise<PipeData> {
+  return this.http.get(
+    `${this.url}/pipe-data`,
+    { observe: 'response' }
+  ).toPromise()
+    .then(res => {
+      console.log('then')
+      let pipeData: PipeData = <PipeData>res.body;
+      return pipeData;
+    })
+    .catch(error => {
+      this.auth.logout();
+      return <PipeData>{};
+    })
+}
+
+getAll(): Promise<Users> {
+  return this.http.get(`${this.url}/all`, { observe: 'response' }).toPromise()
+    .then(res => {
+      let users: Users = <Users>res.body;
+      return users;
+    })
+    .catch(error => {
+      this.auth.logout();
+      return <Users>{};
+    })
+}
+\end{lstlisting}
+
+% websocket
+El último de los servicios es WebsocketService y fue creado para conectar el navegador del cliente con el servicio Calibrator del servidor Nodos.
+Se genera una conexión del tipo WebSocket para obtener los datos de calibración en vivo de un sensor.
+La función principal se puede ver en el código \ref{cod:FrontendWebsocketService}.
+
+\begin{lstlisting}[label=cod:FrontendWebsocketService,caption=Función principal de WebsocketService]
+public connect(): WebSocketSubject<any> {
+  return webSocket({
+    url: WS_ENDPOINT,
+    deserializer: ({data}) => data
+  });
+}
+\end{lstlisting}
+
+% routh guard
+Cuando el cliente no posee las credenciales necesarias o las que tiene expiraron en el Backend, se debe direccionar a la interfaz gráfica al componente de loggin.
+Para lograr esa función se implementó una guarda de identificación y se muestra en el código \ref{cod:FrontendAuthGuard}.
+
+\begin{lstlisting}[label=cod:FrontendAuthGuard,caption=Función de guarda de identificación]
+canActivate(): boolean {
+  if (this.authService.loggedIn()) {
+    return true;
+  } else {
+    this.router.navigate(['/login']);
+    return false;
+  }
+}
+\end{lstlisting}
+
+% pipes
+
+% models
+
+% componentes y angular material
