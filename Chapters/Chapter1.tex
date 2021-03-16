@@ -25,36 +25,41 @@ El capítulo presenta las necesidades a satisfacer y una introducción técnica 
 \section{Motivación}
 \label{ch1Motivacion}
 
-La tendencia tecnológica actual es interconectar los dispositivos a través de la Internet, a tal punto que la cantidad de objetos en el año 2009 superó al número de personas conectadas, y llegado el 2020 la diferencia es de seis veces en favor de las cosas. \citep{ARTICLE:DaveEvans}
+La tendencia tecnológica actual es interconectar los dispositivos a través de la Internet, a tal punto que la cantidad de objetos en el año 2009 superó al número de personas conectadas y llegado el 2020 la diferencia es de seis veces en favor de las cosas. \citep{ARTICLE:DaveEvans}
 Los procesos industriales se ven beneficiados con nuevos métodos de control de inventarios y análisis de mediciones, además es posible gestionar los ambientes productivos para lograr una mayor calidad y comodidad.
-Los datos quedan disponibles para ser procesados por modelos de inteligencia artificial, y la información resultante puede ser vista desde cualquier ubicación y en múltiples plataformas. 
+Los datos quedan disponibles para ser procesados por modelos de inteligencia artificial y la información resultante puede ser vista desde cualquier ubicación y en múltiples plataformas. 
 
 % Realidad de la industria local
-Las empresas locales están retrasadas en su progreso tecnológico, muchas no incorporaron sistemas electrónicos en sus procesos o productos, es necesario crear un sistema que logre adaptar la tecnología en uso con el fin de incorporarlas a las nuevas prácticas de negocios.
-El avance tecnológico modifica el marco normativo de las naciones, para cumplir con los nuevos requerimientos jurídicos, se necesita tener un mínimo de capital.
-El retraso tecnológico ya no solo genera una pérdida de competitividad, sino que también impide que las empresas coloquen sus mercancías en otros países, por incumplimiento en normas de calidad o de protección del medio ambiente.
+Las empresas locales están retrasadas en su progreso tecnológico y muchas no incorporaron sistemas electrónicos en sus procesos o productos.
+Por lo tanto, es necesario crear un sistema que logre adaptar la tecnología en uso con el fin de integrarlas a las nuevas prácticas de negocios.
+
+El avance tecnológico modifica el marco normativo de las naciones y para cumplir con los nuevos requerimientos jurídicos, se necesita tener un mínimo de capital.
+El retraso tecnológico ya no solo genera una pérdida de competitividad sino que también impide que las empresas coloquen sus mercancías en otros países, por incumplimiento en normas de calidad o de protección del medio ambiente.
 		
 % Necesidades de Gador
 % Referencia a la página de Gador	
-La situación de la industria argentina fue la primera razón que impulsó este trabajo, el siguiente paso fue buscar una empresa que quisiera participar de un proyecto adecuado para el pos-grado, y finalmente se logró un acuerdo con los laboratorios Gador S.A. La misión de la compañía es producir medicamentos para la salud humana, con la mejor calidad disponible, y ponerlos al alcance de la comunidad a precios accesibles. \citep{WEBSITE:Gador}
+La situación de la industria argentina fue la razón que impulsó este trabajo, el siguiente paso fue buscar una empresa que quisiera participar de un proyecto adecuado para el pos-grado, y finalmente se logró un acuerdo con los laboratorios Gador S.A. La misión de la compañía es producir medicamentos para la salud humana, con la mejor calidad disponible, y ponerlos al alcance de la comunidad a precios accesibles. \citep{WEBSITE:Gador}
 
-La empresa tiene la necesidad de acceder al mercado estadounidense y para lograrlo se deben satisfacer los requerimientos del \emph{Code of Federal Regulations - Title 21 - Food and Drugs Chapter - Part 11 (21CFR11)}. La norma establece que los registros de las mediciones ambientales de los depósitos y cuartos productivos, se deben almacenar de forma electrónica, pero se debe demostrar que los registros tienen la misma validez y seguridad que aquellos hechos en papel. \citep{ARTICLE:21cfr11} Esto se traduce en la necesidad de tener un sistema informático que se encuentre aprobado por la \emph{Food and Drug Administration (FDA)}, que es el organismo encargado de controlar los medicamentos y alimentos que ingresan a los Estados Unidos.
+La empresa tiene la necesidad de acceder al mercado estadounidense y para lograrlo se deben satisfacer los requerimientos del \emph{Código federal de regulaciones - Título 21 - Capítulo de alimentos y drogas (21CFR11)}. \citep{ARTICLE:21cfr11}
+La norma establece que los registros de las mediciones ambientales de los depósitos y cuartos productivos se deben almacenar de forma electrónica pero, a su vez, se debe demostrar que los registros tienen la misma validez y seguridad que aquellos hechos en papel. 
+Esto se traduce en la necesidad de tener un sistema informático que se encuentre aprobado por la \emph{Food and Drug Administration (FDA)}, que es el organismo encargado de controlar los medicamentos y alimentos que ingresan a los Estados Unidos.
 Por esa razón Gador tiene comprada una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca \emph{Honeywell}, ya que el producto se encuentra aprobado por la FDA. 
-Si bien el programa fue adquirido hace varios años, es indispensable que continúe operando aún cuando los protocolos que utiliza son antiguos. Tampoco es económicamente viable reemplazarlo por un producto moderno que esté aprobado por la FDA, se debe lograr un salto tecnológico manteniendo la plataforma que actualmente está operando.
+Si bien el programa fue adquirido hace varios años, es indispensable que continúe operando aún cuando los protocolos que utiliza son antiguos.
+Tampoco es económicamente viable reemplazarlo por un producto moderno que esté aprobado por la FDA, en consecuencia, se debe lograr un salto tecnológico manteniendo la plataforma que actualmente está operando.
 
 % Perfiles térmicos
-Los requerimientos que se deben cumplir en las mediciones ambientales de los depósitos y cuartos productivos, estipulan que los sensores se deben someter a un plan de calibración rutinario y realizarles periódicos estudios de perfiles térmicos.
+Los requerimientos que se deben cumplir en las mediciones ambientales de los depósitos y cuartos productivos estipulan que los sensores se deben someter a un plan de calibración rutinario y realizarles periódicos estudios de perfiles térmicos.
 Un estudio de perfil térmico se logra tomando una serie de mediciones de temperatura en varios puntos de un ambiente, y con estos datos se procede a calcular las coordenadas de los puntos críticos del cuarto. \citep{ARTICLE:Temperature}
 Los puntos críticos son aquellos lugares donde la temperatura es la más baja o más alta dentro de la habitación.
 Teniendo los puntos críticos identificados, se procede a colocar sensores de temperatura en esos lugares.
 
 % Migración de sensores
-Los periódicos estudios de perfiles térmicos, tienen como consecuencia que cada seis meses se deben mover los sensores de temperatura.
-La tarea de migrar los dispositivos se vuelve costosa debido a que se encuentran cableados, y además los nuevos recorridos de los cables se deben certificar por el departamento de calidad. El tiempo de migración y de certificación se vería reducido sensiblemente si los equipos fuesen inalámbricos, pero la licencia de EBI que tiene Gador no es compatible con los protocolos de comunicaciones necesarios para lograrlo.
+Los periódicos estudios de perfiles térmicos tienen como consecuencia que cada seis meses se deben mover los sensores de temperatura.
+La tarea de migrar los dispositivos se vuelve costosa debido a que se encuentran cableados y además los nuevos recorridos de los cables se deben certificar por el departamento de calidad. El tiempo de migración y de certificación se vería reducido sensiblemente si los equipos fuesen inalámbricos, pero la licencia de EBI que tiene Gador no es compatible con los protocolos de comunicaciones necesarios para lograrlo.
 
 % Arquitectura de la red industrial Gador
-Las plantas de producción de la empresa siguen una arquitectura en donde los sensores reportan sus mediciones a unos controladores lógicos programables o PLC por sus siglas en inglés. Esa comunicación se logra a través de cables que los conectan. Los datos que adquieren los PLCs son entregados al sistema EBI utilizando un protocolo de comunicaciones llamado Modbus TCP. 
-Este protocolo fue creado en el año 1979 y se diseñó teniendo en mente las limitaciones tecnológicas de la época, sin embargo la licencia de EBI que adquirió Gador solo acepta este formato. El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:redGador}, donde se puede ver una estructura del tipo árbol donde todo converge al sistema EBI.
+Las plantas de producción de la empresa siguen una arquitectura en donde los sensores reportan sus mediciones a unos controladores lógicos programables o PLC por sus siglas en inglés. Esa comunicación se logra a través de cables que los conectan. Los datos que adquieren los PLCs son entregados al sistema EBI. 
+El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:redGador}, donde se puede ver una estructura del tipo árbol donde todo converge al sistema EBI.
 			
 \begin{figure}[h]
 	\centering
@@ -81,21 +86,18 @@ Este protocolo fue creado en el año 1979 y se diseñó teniendo en mente las li
 	\label{fig:redGador}
 \end{figure}
 
+\newpage
 
 \section{Introducción técnica}
 \label{ch1IntroduccionTecnica}
 
 % Presentación modelo de capas IoT
-El proyecto realizado presentó una serie de desafíos a resolver, siendo el primero de ellos la variedad de tecnologías involucradas, tanto en la problemática a manipular como en la solución a implementada.
-Para introducir orden en la variedad de conocimientos que forman parte del sistema desarrollado, se introduce un modelo de capas de Internet de las cosas (IoT). El modelo tiene la ventaja que separa los temas en categorías relacionadas con la función o servicio que prestan en la solución, lo que facilita su estudio. 
+El proyecto realizado presentó una serie de desafíos a resolver, siendo el primero de ellos la variedad de tecnologías involucradas, tanto en la problemática a manipular como en la solución implementada.
+Para introducir orden en la variedad de conocimientos que forman parte del sistema desarrollado, se introduce un modelo de capas de Internet de las cosas (IoT).
 
 % Enumeración de las capas y una breve descripción de cada una
 El modelo de capas seleccionado separa los conocimientos en cinco categorías, las cuales son las capas de negocio, aplicación, procesamiento, red y percepción.
-La capa de negocio agrupa todo lo relacionado con las reglas y el control del sistema, esto incluye supervisar el tráfico de información, verificar el estado de los equipos u otorgar permisos a los usuarios para interactuar con el programa.
-La capa de aplicación relaciona todas las tecnologías que se encargan de interactuar con el usuario final, es lo que las personas pueden ver como el sistema.
-La capa de procesamiento agrupa los conocimientos cuya responsabilidad es almacenar y analizar los datos que se generan.
-La capa de red tiene la finalidad de interconectar los dispositivos para permitir el flujo de datos entre todas las partes involucradas.
-Finalmente la capa de percepción se refiere a todos los artefactos que manipulan o miden algo que se encuentra en el ambiente, como un sensor o un actuador. Este modelo se encuentra resumido en la tabla \ref{tab:modeloCapas}.
+En la tabla \ref{tab:modeloCapas} se presenta un resumen de las funciones de cada capa.
 
 \begin{table}[h]
 	\centering
@@ -115,11 +117,22 @@ Finalmente la capa de percepción se refiere a todos los artefactos que manipula
 \end{table}
 
 % Capa de negocios
+\subsection{Capa de negocios}
 Dependiendo del modelo viabilidad económica de un sistema y de como fue desplegado, la capa de negocio puede tener una funcionalidad contable y calcular los costos de operación.
 Esta capa puede ser la encargada de determinar y generar la facturación para cobrarle a los usuarios de la aplicación, como así también, de resolver operaciones de transferencia de dinero.
 La interacción en este nivel es con el personal que administra un sistema, se determina que permisos tiene cada usuario para manipular los servicios ofrecidos y se lleva adelante el registro de acciones y eventos relevantes para el normal funcionamiento del programa.
+Un ejemplo de capa de negocio se puede observar en la figura \ref{fig:ch1EjemploNegocio}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ch1EjemploNegocio.png}
+	\caption{Software \emph{Checkmk}, ejemplo de capa de negocio. \citep{WEBSITE:checkmk}}
+	\label{fig:ch1EjemploNegocio}
+\end{figure}
+
 
 % Capa de aplicación
+\subsection{Capa de aplicación}
 La experiencia que tiene el usuario al interactuar con la solución pertenece a la capa de aplicación.
 Aquí se define como se presenta la interfaz gráfica que utilizan las personas, y es común utilizar un formato de sitio web.
 Las páginas webs tienen la ventaja de ser indiferentes de la plataforma que utiliza el operador, solo importa que pueda ejecutar un navegador.
@@ -136,7 +149,10 @@ Es importante que el código entregado pueda ser visualizado en múltiples tama�
 	\label{fig:ch1MaterialDesign}
 \end{figure}
 
+\newpage
+
 % Capa de procesamiento
+\subsection{Capa de procesamiento}
 Para alimentar de datos a la interfaz gráfica se necesita de la capa de procesamiento, que entrega el contenido a mostrar en pantalla. La información puede ser almacenada con distintas tecnologías, siendo una de las principales, las bases de datos relacionales.
 Este tipo de base de datos se basa en un esquema de tablas que se relacionan entre sí.
 Estas tecnologías se las suelen llamar SQL, y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero.
@@ -156,8 +172,17 @@ La organización particular de este tipo de tecnologías es afín a los sistemas
 % grafos
 Una base de datos orientada a grafos presenta la información como nodos que se encuentran relacionados, la diferencia fundamental con los sistemas relacionales es que los nodos no están organizados en tablas, y las relaciones que unen los nodos tienen atributos y no poseen una estructura definida.
 Este tipo de tecnología permite utilizar la teoría de grafos y posibilita realizar consultas siguiendo modelos matemáticos que forman parte de esa rama de la ciencia.
+Un ejemplo de esta tecnología se puede ver en la figura \ref{fig:ch1Grafo}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{./Figures/ch1Grafo.png}
+	\caption{Ejemplo de base de datos orientada a grafos. \citep{WEBSITE:neo4j}}
+	\label{fig:ch1Grafo}
+\end{figure}
 
 % Capa de red
+\subsection{Capa de red}
 Se dispone de un repertorio de protocolos pertenecientes a la capa de red para lograr que los dispositivos se comuniquen entre si.
 Entre los mencionados a lo largo de esta memoria se encuentran el protocolo Modbus, MQTT, HTTP y WebSocket. El manejo de estas tecnologías fue fundamental para lograr que las distintas partes del trabajo interactúen con el exterior.
 
@@ -203,9 +228,11 @@ Existe una variante del protocolo llamada HTTPS que agrega una capa de cifrado p
 WebSocket es un protocolo similar a HTTP pero con la diferencia que la conexión es bidireccional, esto quiere decir que cuando se logra la conectar al cliente con el servidor, ambos pueden enviar información espontáneamente. Esta cualidad permite realizar transferencias de datos en vivo, con lo que se pueden lograr servicios de \emph{streaming} o \emph{chats}.
 
 % Capa de percepción
+\subsection{Capa de percepción}
 Los sensores utilizados en una solución de IoT están incluidos en la capa de percepción, y para que puedan formar parte del sistema se necesita que sean capaces de soportar alguno de los protocolos de comunicaciones mencionados. Dado que el desarrollo de estos dispositivos no formaron parte del proyecto realizado, no se ampliará demasiado en este tema.
 
 % Despliegue de una solución
+\subsection{Despliegue de una solución}
 Teniendo definido los componentes de las capas, se necesita lograr que todas las partes funcionen como una única entidad. Para lograr este objetivo existen tecnologías de despliegue y orquestación, que cumplen la función de interconectar y mantener los servicios para que trabajen en equipo. Tradicionalmente se solían utilizar máquinas virtuales pero actualmente ese enfoque está quedando en desuso en favor de las tecnologías de contenedores. Una máquina virtual acapara parte de una computadora y funciona como un ordenador independiente, mientras que un contenedor funciona como un sistema operativo independiente pero no acapara los recursos de la computadora principal.
 
 
@@ -229,7 +256,7 @@ Este esquema es ampliamente utilizado a nivel \emph{enterprise}, por ejemplo, lo
 En la capa de transporte, los dispositivos se comunican usualmente utilizando los protocolos \emph{LoRaWAN}, \emph{Sigfox}, \emph{ZigBee} o \emph{Bluetooth}.
 La selección del protocolo depende de las distancias a cubrir y de las necesidades energéticas.
 Los sensores convergen luego a un punto de agregación.
-Desde los puntos de agregación se suelen transmiten los datos al servidor en la nube utilizando el protocolo MQTT.
+Desde los puntos de agregación se suele transmitir los datos al servidor en la nube utilizando el protocolo MQTT.
 
 % Procesamiento
 En la capa de procesamiento se utiliza un esquema de datos de alta disponibilidad.
@@ -325,9 +352,9 @@ Otro objetivo importante fue la de utilizar las técnicas adquiridas durante la 
 Con la finalidad de sementar los conocimientos a través de la práctica.
 
 % Alcance
-El proyecto se limitó a desarrollar el software a desplegar en un servidor que fue nombrado Nodos.
+El trabajo se limitó a desarrollar el software a desplegar en un servidor que fue nombrado Nodos.
 Esto significa que no se contempló el desarrollo del hardware, en particular los sensores y los puntos de agregación.
-E esquema del servidor en la red de Gador puede ser visualizado en la figura \ref{fig:esquemaProyecto}.
+El esquema del servidor en la red de Gador puede ser visualizado en la figura \ref{fig:esquemaProyecto}.
 El servidor puede comunicarse con EBI de la misma manera que lo logra un PLC.
 Además tiene la capacidad de utilizar el protocolo MQTT para conectarse directamente con los sensores o a través de puntos de agregación.
 
