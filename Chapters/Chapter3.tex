@@ -149,7 +149,7 @@ Se utiliza Alpine Linux como imagen base y se genera el usuario y grupo \emph{py
 El usuario es quien corre el servicio dentro del contenedor y se definió un comando a ejecutar al momento de crearlo.
 Quedan indicados en este archivo cuales son puertos que se pueden usar para la red puente.
 
-\begin{lstlisting}[label=cod:dfHRV,caption=Dockerfile del servicio hrv.]
+\begin{lstlisting}[language=bash,label=cod:dfHRV,caption=Dockerfile del servicio hrv.]
 FROM python:3.8-alpine
 LABEL maintainer="Gonzalo Nahuel Vaca <vacagonzalo@gmail.com>"
 RUN addgroup -g 1000 -S pythonuser && \
@@ -1030,7 +1030,64 @@ canActivate(): boolean {
 \end{lstlisting}
 
 % pipes
+Algunos datos llegan del Backend en un formato no amigable para el usuario. Para mejorar el aspecto de la información o para que sea interpretable por un humano, se utilizan \emph{pipes}.
+En el trabajo se crearon dos \emph{pipes} propios. 
+El primero transforma el código de identificación de usuario (código \emph{HASH}) y lo reemplaza por su nombre y apellido, como se puede ver en el código \ref{cod:FrontendUserPipe}.
+El segundo cambia el código de magnitud de los dispositivos y los expresa en unidades de medición que son de uso común. La transformación se puede ver en el código \ref{cod:FrontendUnitPipe}.
+
+\begin{lstlisting}[label=cod:FrontendUserPipe,caption=Función de pipe de usuario]
+transform(value: string, arg: PipeData): unknown {
+  let data: PipeDataRow[] = arg.pipeData;
+  let name: string = "No encontrado";
+  data.forEach(row => {
+    if(row._id == value) {
+      name = row.name;
+      return;
+    }
+  });
+  return name;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=cod:FrontendUnitPipe,caption=Función de pipe de unidad]
+transform(value: string): string {
+  return value[0] == 't'? "C": value[0] == 'h'? "HR" : "";
+}
+\end{lstlisting}
 
 % models
+Para unir la información proveniente del Backend con una estructura de datos de TypeScript, se crearon una serie de interfaces que cumplen la función de ser modelos de datos.
+En el código \ref{cod:FrontendInterfaceDevice} se muestra la interfaz correspondiente a un dispositivo.
+
+\begin{lstlisting}[label=cod:FrontendInterfaceDevice,caption=Modelo de datos de dispositivo]
+export interface Device {
+    serial: number,
+    tag: string,
+    modbus: number,
+    frec: number,
+    unit: string
+}
+\end{lstlisting}
 
 % componentes y angular material
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/Dispositivos.png}
+	\caption{Lista de dispositivos.}
+	\label{fig:ch3FrontendImg1}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/Readings.png}
+	\caption{Lecturas del sensor.}
+	\label{fig:ch3FrontendImg2}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/DeviceDetails.png}
+	\caption{Detalles del dispositivo.}
+	\label{fig:ch3FrontendImg3}
+\end{figure}
