@@ -11,6 +11,7 @@ Este capítulo trata sobre los recursos tecnológicos de terceros que fueron uti
 \section{Tecnologías utilizadas}
 
 % docker
+\subsection{Orquestación}
 Para crear una arquitectura de microservicios se utilizó Docker, que es un software que permite el uso y creación de contenedores de Linux.
 Un contenedor es una unidad que empaqueta el código de un programa junto con sus dependencias para aislar su funcionamiento.
 Para crear un contenedor, el motor de Docker se vale de el concepto de imagen.
@@ -41,12 +42,21 @@ Con esta tecnología se pueden crear y comenzar todos los servicios de la config
 	\label{fig:ch2WhatContainer}
 \end{figure}
 
+\subsection{Tecnologías de red}
 % nodejs
 El trabajo utiliza tecnologías web y la plataforma utilizada para implementarlas fue Nodejs, que es un servidor asincrónico y orientado a eventos que ejecuta JavaScript.
+Su arquitectura se puede visualizar en la figura \ref{fig:ch2Nodejs}.
 La orientación a eventos se consideró como una ventaja frente a las aplicaciones de concurrencia de múltiples hilos en el sistema operativo.
 Principalmente porque no se utilizan candados y no existe la posibilidad de bloquear el servidor.
 Una particularidad adicional es que fue diseñado para construir aplicaciones de red escalables y provee un gestor de paquetes muy fácil de utilizar.
 Por estas razones y porque además fue una plataforma estudiada en la especialización, es que se la eligió para formar parte del trabajo.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ch2Nodejs.jpeg}
+	\caption{Arquitectura de Nodejs. \citep{WEBSITE:nodejs}}
+	\label{fig:ch2Nodejs}
+\end{figure}
 
 % python
 No todos los servicios del trabajo se realizaron con tecnologías relacionadas a JavaScript.
@@ -68,6 +78,7 @@ También es posible utilizar una capa de seguridad en los mensajes que se basa e
 Uno de los atractivos de la plataforma es la serie de programas utilitarios que incluye como recursos adicionales y que se integran en la terminal del sistema operativo.
 Estas aplicaciones permiten realizar publicaciones y subscripciones para correr pruebas y además se pueden crear contraseñas encriptadas para los usuarios.
 
+\subsection{Bases de datos}
 % mongodb
 Para persistir la información durante la ejecución del trabajo se utilizó MongoDB.
 "MongoDB es una base de datos distribuida, basada en documentos y de uso general diseñada para desarrolladores de aplicaciones modernas y para la era de la nube". \citep{WEBSITE:MongoHome}
@@ -85,6 +96,7 @@ Si una persona pasa demasiado tiempo sin interactuar con la aplicación tiene qu
 % Descripción de las dependencias del trabajo
 \section{Bibliotecas y paquetes de terceros}
 
+\subsection{Bibliotecas y paquetes web}
 % Angular & Angular Material
 Para implementar la capa de aplicación se utilizó un framework de diseño de interfaces gráficas llamado Angular y se creó una SWA.
 Se desarrolla el código usando el lenguaje TypeScript que es un \emph{superset} de JavaScript.
@@ -107,6 +119,13 @@ Express es la biblioteca más utilizada para trabajar con Nodejs. \citep{WEBSITE
 Para solucionar el problema de intercambio de recursos de origen cruzado del frontend (CORS) se utilizó la biblioteca CORS para Nodejs.
 CORS es una solución que permite acceder a recursos restringidos de un dominio diferente al del frontend.
 
+% wsjs
+Para cumplir con el requerimiento de la sección \ref{objetivos} que demanda ver en vivo las mediciones al calibrar un instrumento, se utilizó WS. 
+Esta dependencia es una biblioteca de Nodejs que se usa para realizar servidores con la capacidad de entablar una conexión WebSocket.
+Es fácil de utilizar y es altamente configurable.
+Se decidió incorporarla al trabajo debido a que la documentación es completa y simple de entender.
+
+\subsection{Bibliotecas y paquetes de transporte}
 % paho MQTT
 Eclipse Paho es una biblioteca MQTT que está disponible para varios lenguajes de programación.
 En el trabajo realizado se utilizó para darle conectividad a los servicios programados en Python.
@@ -119,17 +138,21 @@ MQTTjs es una biblioteca que provee de las herramientas para crear un cliente MQ
 Se lo puede instalar de forma global en el sistema operativo para hacer uso de las herramientas de terminal que ofrece.
 Las herramientas permiten hacer pruebas de subscripción y publicación de mensajes.
 
-% wsjs
-Para cumplir con el requerimiento de la sección \ref{objetivos} que demanda ver en vivo las mediciones al calibrar un instrumento, se utilizó WS. 
-Esta dependencia es una biblioteca de Nodejs que se usa para realizar servidores con la capacidad de entablar una conexión WebSocket.
-Es fácil de utilizar y es altamente configurable.
-Se decidió incorporarla al trabajo debido a que la documentación es completa y simple de entender.
+% pyModbusTCP
+Para que el código escrito en Python pueda utilizar el protocolo ModbusTCP se usó la biblioteca PyModbusTCP.
+Este recurso permite crear un cliente para acceder a un servidor o bien crear una aplicación que se comporte como esclavo.
+
+% oitc/modbus-server
+Oitc/modbus-server es un servidor ModbusTCP realizado en Python y disponible como imagen de Docker.
+Está configurado para utilizar el puerto 5020 para evitar problemas de permisos con el sistema operativo. \citep{WEBSITE:dockerhubModbus}
+El sistema de orquestación corrige el puerto al conectar el 5020 del contenedor con el 502 del ordenador.
 
 % mongoose
 Mongoose es una biblioteca de modelado de datos de objetos(ODM).
 Un ODM gestiona las relaciones entre los datos, provee de una validación de esquema y se usa para traducir los objetos del programa en ejecución en una representación dentro de la base de datos.
 La biblioteca se creó para trabajar con MongoDB y está disponible para la plataforma Nodejs.
 
+\subsection{Bibliotecas de seguridad y pruebas}
 % bcrypt jsonwebtoken
 Se necesitó cumplir con las necesidades de seguridad que se enumeraron en la sección \ref{objetivos}, para lograrlo se usaron dos bibliotecas compatibles con Nodejs.
 Bcrypt es una biblioteca que contiene funciones para encriptar contraseñas.
@@ -153,15 +176,6 @@ La biblioteca Chai ofrece herramientas para hacer pruebas del software escrito.
 Fue diseñada para Nodejs y puede ser integrada a cualquier framework de JavaScript.
 En el trabajo fue combinado con Mocha, que es un framework de automatización de pruebas para Nodejs.
 Las pruebas obtenidas al combinar estos dos recursos fueron fundamentales para detectar comportamientos no deseados.
-
-% pyModbusTCP
-Para que el código escrito en Python pueda utilizar el protocolo ModbusTCP se usó la biblioteca PyModbusTCP.
-Este recurso permite crear un cliente para acceder a un servidor o bien crear una aplicación que se comporte como esclavo.
-
-% oitc/modbus-server
-Oitc/modbus-server es un servidor ModbusTCP realizado en Python y disponible como imagen de Docker.
-Está configurado para utilizar el puerto 5020 para evitar problemas de permisos con el sistema operativo. \citep{WEBSITE:dockerhubModbus}
-El sistema de orquestación corrige el puerto al conectar el 5020 del contenedor con el 502 del ordenador.
 
 Todas las dependencias del trabajo se pueden visualizar en la tabla \ref{tab:dependencias}.
 
@@ -225,10 +239,6 @@ Gador adquirió el producto con la licencia ModbusTCP para conectar sus PLCs de 
 Como se puede observar en la figura \ref{fig:ch2EBI1}, se utiliza el software para visualizar los sensores de los distintos cuartos de producción y depósitos.
 En la figura \ref{fig:ch2EBI2} se puede visualizar que EBI está a cargo del control ambiental de las plantas del cliente.
 Este sistema es el corazón de la gestión de edificios de la compañía y determinó los requerimientos que propuso Gador.
-
-La importancia de EBI para mantener la operación diaria de las plantas de Gador hizo que se limitara el acceso para hacer pruebas.
-El servidor que corre este programa se encuentra custodiado con gran celo dentro de la compañía.
-No se pudieron correr pruebas directamente sobre el ambiente de producción, solo se pudo utilizar por algunas horas una máquina virtual entregada con una licencia de evaluación que tuvo seis horas de duración.
 
 \begin{figure}[h]
 	\centering
