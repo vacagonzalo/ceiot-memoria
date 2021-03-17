@@ -68,6 +68,8 @@ networks:
 		driver: bridge
 \end{lstlisting}
 
+\subsection{Servidor Modbus}
+
 El servicio modbus-server se comunica al exterior utilizando el puerto 502.
 El puerto pertenece a la lista de protocolos bien conocidos o puertos de sistema.
 Esta condición hace posible que existan problemas con los permisos que el usuario tiene dentro del sistema operativo.
@@ -89,11 +91,14 @@ modbus-server:
 		- iot
 \end{lstlisting}
 
-El servicio Mosquitto se configuró con tres volúmenes que conectan al contenedor con archivos no efímeros que persisten la información necesaria para que el contenedor muestre un comportamiento correcto.
+\subsection{Broker Mosquitto}
+
+El servicio Mosquitto se configuró con tres volúmenes que conectan al contenedor con archivos no efímeros que persisten la información.
+De esta manera se asegura que el contenedor muestre un comportamiento correcto.
 Como se puede apreciar en el código \ref{cod:dcMosquitto}, se encuentran los archivos de configuración de usuarios y de lista de control de acceso (acl).
-Con esta configuración se evita que dispositivos anónimos puedan utilizar el broker y que además solo puedan utilizar los \emph{topics} designados.
+Con esta configuración se evita que dispositivos anónimos puedan utilizar el broker y que además solo se puedan utilizar los \emph{topics} designados.
 Adicionalmente, los distintos usuarios tienen diferentes permisos según el \emph{topic}.
-De esta manera se logra una mayor confiabilidad y seguridad en el manejo de los mensajes.
+Así se logra una mayor confiabilidad y seguridad en el manejo de los mensajes.
 
 \begin{lstlisting}[label=cod:dcMosquitto,caption=Orquestación del broker Mosquitto.]
 mosquitto:
@@ -114,6 +119,8 @@ mosquitto:
 	networks: 
 		- iot
 \end{lstlisting}
+
+\subsection{Validación de registros Modbus}
 
 El servicio Holding Registers Validator (hrv) tiene la particularidad de depender de otros servicios, como se puede ver en el cógigo \ref{cod:dcHRV}.
 El contenedor no puede ser creado hasta que los servicios listados como dependencias se encuentren activos.
@@ -164,17 +171,19 @@ EXPOSE 1883 27017 5020/tcp
 CMD [ "python", "-u", "/app/service.py" ]
 \end{lstlisting}
 
-El servicio MongoDB no tiene salida al exterior del servidor, su configuración se puede ver en el código \ref{cod:dcMongo}.
+\subsection{MongoDB}
+
+El servicio MongoDB no tiene salida al exterior del servidor y su configuración se puede ver en el código \ref{cod:dcMongo}.
 La configuración tiene la particularidad de introducir un comando a la hora de crear el contenedor.
-Se le indica al motor de MongoDB que puerto debe escuchar.
+Así se le indica al motor de MongoDB cual puerto debe escuchar.
 Además se crea un volumen donde figuran una serie de archivos que pueblan la base de datos con información para construir una maqueta.
 Esta maqueta fue utilizada para realizar la demostración al cliente.
 Los archivos son devices.js, measurements.js, seed.js y users.js.
 El archivo devices.js crea una serie de dispositivos ficticios.
 El archivo measurements.js inserta una serie de mediciones que provienen de los dispositivos ficticios creados por devices.js.
 El script users.js genera una serie de usuarios con distintos permisos, con el fin de probar la capacidad de autentificar las sesiones.
-Finalmente seed.js es quién carga todos los datos en MongoDB, según se puede ver en el código \ref{cod:dcSeed}.
-Las mediciones fueron cargadas múltiples veces para generar un volumen de datos que sirviera para realizar pruebas.
+Finalmente seed.js es quién carga todos los datos en MongoDB.
+Según se puede ver en el código \ref{cod:dcSeed}, las mediciones fueron cargadas múltiples veces para generar un volumen de datos que sirviera para realizar pruebas.
 
 \begin{lstlisting}[label=cod:dcMongo,caption=Orquestación de MongoDB.]
 mongo:
@@ -205,9 +214,13 @@ load("scripts/measurements.js")
 load("scripts/measurements.js")
 \end{lstlisting}
 
-El servicio Persistence Validator (pv), está definido en el código \ref{cod:dcPV}.
-Se puede observar que la imagen no existe y debe ser construida.
+\subsection{Validación de mediciones}
+
+El servicio Persistence Validator (pv) está definido en el código \ref{cod:dcPV} y se puede observar que la imagen no existe.
+Debe ser construida utilizando un Dockerfile.
 Como el servicio fue realizado en Python, el Dockerfile necesario para construir la imagen es prácticamente idéntico al visto en el código \ref{cod:dfHRV}.
+
+\newpage
 
 \begin{lstlisting}[label=cod:dcPV,caption=Orquestación del servicio pv.]
 	pv:
@@ -226,9 +239,13 @@ Como el servicio fue realizado en Python, el Dockerfile necesario para construir
 		- iot
 \end{lstlisting}
 
-Para orquestar el servicio backend se utilizó el puerto 8080 del ordenador.
-La razón es que se tiene una comunicación con una entidad externa, el usuario.
+\subsection{Backend}
+
+Para orquestar el servicio backend, según el código \ref{cod:dcBackend}, se utilizó el puerto 8080 del ordenador para permitir la comunicación con una entidad externa.
 La imagen para crear el contenedor debe ser construida y para tal fin se usó el Dockerfile que se puede observar en el código \ref{cod:dfBackend}.
+El Dockerfile parte de la imagen oficial de Nodejs y copia los archivos de dependencias dentro del contenedor auxiliar.
+Con este contenedor se descargan las bibliotecas necesarias.
+Luego se copia el código fuente de la aplicación y finalmente se configura la inicialización del servidor Nodejs como comando por defecto.
 
 \begin{lstlisting}[label=cod:dcBackend,caption=Orquestación del servicio Backend.]
 backend:
@@ -250,10 +267,6 @@ backend:
 		- iot
 \end{lstlisting}
 
-El Dockerfile parte de la imagen oficial de Nodejs y copia los archivos de dependencias dentro del contenedor auxiliar.
-Con este archivo se descargan las bibliotecas necesarias.
-Luego se copia el código fuente de la aplicación y finalmente se configura la inicialización del servidor Nodejs como comando por defecto.
-
 \begin{lstlisting}[label=cod:dfBackend,caption=Dockerfile del servicio Backend.]
 FROM node
 LABEL maintainer="Gonzalo Nahuel Vaca <vacagonzalo@gmail.com>"
@@ -264,6 +277,8 @@ COPY . .
 EXPOSE 1883 6379 8080 27017
 CMD ["node", "./src/app.js"]
 \end{lstlisting}
+
+\subsection{Servicio de calibración}
 
 El servicio Calibrator es una aplicación de Nodejs y fue orquestada de manera similar al servicio Backend.
 Su configuración se puede observar en el código \ref{cod:dcCalibrator}.
@@ -286,6 +301,8 @@ calibrator:
 		- iot
 \end{lstlisting}
 
+\subsection{Redis}
+
 El servicio Redis fue creado a partir de la imagen oficial de Redis que se encuentra disponible en Dockerhub. \citep{contrib:redis}
 Como no tiene exposición al exterior del servidor, no se necesitó realizar ninguna configuración adicional.
 Es importante aclarar que si bien se puede aplicar una capa de seguridad, no es aconsejable exponer a Redis a la Internet.
@@ -301,6 +318,8 @@ redis:
 	networks: 
 		- iot
 \end{lstlisting}
+
+\subsection{Frontend}
 
 El último servicio es el Frontend que fue orquestado como se puede observar en el código \ref{cod:dcFrontend}.
 Su imagen se crea usando el código fuente de la aplicación y un Dockerfile al momento de orquestar la solución.
@@ -321,7 +340,7 @@ El Dockerfile se divide en dos grandes etapas.
 La primer parte es crear un contenedor auxiliar a partir de la imagen oficial de Nodejs y llamarla \emph{builder}.
 Este contenedor temporal copia dentro suyo el código fuente del servicio e instala todas las dependencias.
 Entre las dependencias instaladas se encuentra el framework de Angular.
-Se utiliza el framework para compilar el código fuente de TypeScript y se obtienen archivos en JavaScript, que son ejecutables por un navegador.
+Se utiliza el framework para compilar el código fuente de TypeScript y se obtienen archivos en JavaScript que son ejecutables por un navegador.
 La segunda parte del proceso es crear un contenedor a partir de la imagen oficial de Nginx, que es un servidor web.
 Se transfieren los archivos compilados por el contenedor auxiliar hacia el contenedor de Nginx y se destruye el auxiliar.
 Finalmente se transforma el contenedor de Nginx con los archivos compilados en una imagen.
@@ -336,7 +355,9 @@ FROM nginx
 COPY --from=builder /src/app/dist/frontend /usr/share/nginx/html
 \end{lstlisting}
 
-Teniendo definido los Dockerfiles y el archivo docker-compose.yml se puede utilizar un guión escrito en Bash que lanza la aplicación.
+\subsection{Despliegue automático}
+
+Con los Dockerfiles definidos y el archivo docker-compose.yml se puede utilizar un guión escrito en Bash que lanza la aplicación.
 Como se puede observar en el código \ref{cod:bashStart}.
 
 Cuando se desea eliminar todo rastro del sistema del ordenador, se puede utilizar el código \ref{cod:bashClean}.
@@ -374,6 +395,8 @@ clear
 % Diagrama de flujo que explique la interacción del sistema con los dispositivos.
 \section{Servicios orientados a dispositivos}
 
+\subsection{Broker Mosquitto}
+
 % mosquitto
 Mosquitto fue configurado siguiendo su documentación para lograr el máximo nivel de seguridad que no incluyera certificados \emph{SSH}.
 Se decidió no utilizar certificados ya que no figuraban en los requerimientos y el broker no se encuentra expuesto a la Internet.
@@ -391,7 +414,7 @@ Se creó una configuración de usuarios que tiene en su interior dos integrantes
 El primer usuario se denominó docker y su contraseña es container.
 El segundo usuario se nombró device y su contraseña es thing.
 Las contraseñas se guardaron encriptadas utilizando la herramienta \emph{mosquitto\_passwd}.
-El usuario docker se utiliza para que los contenedores se comuniquen con el broker, mientras que device se asigna a los sensores en campo.
+El usuario docker se utiliza para que los contenedores se comuniquen con el broker mientras que device se asigna a los sensores en campo.
 Las diferencias entre contenedores y dispositivos se configuran en el archivo de acl, como se visualiza en el código \ref{cod:mosquittoAcl}.
 El topic cmnd se utiliza para los mensajes que alteran la configuración de los dispositivos.
 El topic data tiene la finalidad de llevar las mediciones tomadas por los sensores y hacerlas persistir en la base de datos.
@@ -409,12 +432,16 @@ topic write data/#
 topic write live/#
 \end{lstlisting}
 
+\subsection{Validación de registros Modbus}
+
 % holding register validator
 El servicio Holding Register Validator (HRV) tiene la misión de determinar que mediciones se deben escribir en una posición de memoria del servidor Modbus.
 Para cumplir con esa función, HRV se subscribe al topic data y recibe todos los reportes de los sensores.
 Luego determina si las mediciones recibidas pertenecen a la lista de dispositivos que figuran en la base de datos y si corresponde escribir una posición de memoria.
 Finalmente escribe una posición de memoria del servidor según corresponda.
 Las funciones de cada paso fueron extraídas y se presentan en el código \ref{cod:HRVpython}, escritas en Python.
+
+\newpage
 
 \begin{lstlisting}[label=cod:HRVpython,caption=Funciones principales del servicio HRV]
 # MQTT
@@ -444,15 +471,14 @@ def write_slave(addr, value):
         print('writing error')
 \end{lstlisting}
 
+\subsection{Validación de mediciones}
+
 % persistance validator
 El servicio Persistence Validator (PV) tiene la función de recibir las mediciones de los sensores y decidir si deben persistir en la base de datos.
 Para tal fin se encuentra subscrito al topic data.
-Cuando recibe una medición, verifica que provenga de un sensor válido en la base de datos.
-Si se cumpla esta condición se procede a impactar en la colección Readings en MongoDB.
-El servicio fue escrito en Python.
-Se extrajeron las funciones principales y se las pueden ver en el código \ref{cod:PVpython}.
-
-\newpage
+Cuando recibe una medición verifica que provenga de un sensor válido en la base de datos.
+Si se cumple esta condición se procede a impactar en la colección Readings en MongoDB.
+El servicio fue escrito en Python y se extrajeron las funciones principale, se las pueden ver en el código \ref{cod:PVpython}.
 
 \begin{lstlisting}[label=cod:PVpython,caption=Funciones principales del servicio PV]
 # DATABASE
@@ -480,8 +506,8 @@ def onMessage(client, userdata, msg):
 	
 \section{Servicios orientados a usuarios}
 
-% calibrator
 \subsection{Calibrator}
+% calibrator
 El servicio Calibrator es un servidor WebSocket.
 Tiene la finalidad de entablar una conexión con el navegador del usuario para transmitirle mediciones en vivo.
 En el código \ref{cod:Calibrator} se muestra su archivo principal.
@@ -532,6 +558,8 @@ En el código \ref{cod:BackendApp} se puede observar el archivo principal de la 
 Quedan definidos los \emph{endpoints} o entidades del servicio.
 Las entidades son auth, cmnd, devices, logs, users y readings.
 
+\newpage
+
 \begin{lstlisting}[label=cod:BackendApp,caption=Archivo principal del servicio Backend]
 const express = require('express');
 const cors = require('cors');
@@ -561,11 +589,9 @@ app.listen(PORT, () => {
 La entidad auth solo tiene el método \emph{Post} en donde se le envía un usuario y contraseña.
 Si las credenciales enviadas son correctas, se responde con un JWT que identifica una sesión para utilizar durante la operación del cliente.
 La función principal se extrajo de su archivo y se muestra en el código \ref{cod:BackendAuth}.
-Se puede ver que al crear una nueva sesión, el servidor entrega el estado \emph{Created (201)}.
+Se puede ver que al crear una nueva sesión el servidor entrega el estado \emph{Created (201)}.
 En simultaneo se guarda el JWT generado en la memoria de Redis con un tiempo de vida determinado.
 Por el contrario, se entrega el estado \emph{Unauthorized (401)} cuando las credenciales no son válidas.
-
-\newpage
 
 \begin{lstlisting}[label=cod:BackendAuth,caption=Función principal de la entidad auth]
 router.post('/', async (req, res) => {
@@ -636,6 +662,8 @@ La validación de la sesión del cliente queda delegada al \emph{middleware}.
 Se puede ver que también se realizan comunicaciones con los sensores cuando se realiza un cambio en su configuración.
 Esto crea consistencia entre lo que figura en la base de datos y lo que realmente sucede en campo.
 
+\newpage
+
 \begin{lstlisting}[label=cod:BackendDevices,caption=Creación de dispositivo de la entidad devices]
 router.post('',
     middleware.verifyToken,
@@ -674,8 +702,6 @@ En particular aquellas que modifican el funcionamiento de los equipos en campo, 
 Tiene la finalidad de permitir auditar los eventos ocurridos.
 La función principal de la entidad puede ser vista en el código \ref{cod:BackendLogs} y como en el resto de los \emph{endpoints}, la validación de sesión se manejó a través de un \emph{middleware}.
 
-\newpage
-
 \begin{lstlisting}[label=cod:BackendLogs,caption=Función principal de la entidad logs]
 router.get('',
     middleware.verifyToken,
@@ -692,10 +718,10 @@ router.get('',
 
 En la entidad users se definen los usuarios del sistema que persisten en la base de datos.
 Uno de los requerimientos cumplidos (sección \ref{objetivos}) fue persistir las contraseñas de forma encriptada.
-El archivo del \emph{endpoint} es particularmente extenso así que se extrajo la función que crea un nuevo usuario y se la muestra en el código \ref{}.
+El archivo del \emph{endpoint} es particularmente extenso así que se extrajo la función que crea un nuevo usuario y se la muestra en el código \ref{cod:BackendUsers}.
 Se puede ver como se genera una contraseña encriptada y como se verifican la sesión y jerarquía utilizando un \emph{middleware}.
 
-\begin{lstlisting}[label=cod:BackendLogs,caption=Creación de usuario de la entidad users]
+\begin{lstlisting}[label=cod:BackendUsers,caption=Creación de usuario de la entidad users]
 router.post('/new',
     middleware.verifyToken,
     middleware.verifyRankAdministrator,
@@ -731,7 +757,7 @@ router.post('/new',
 
 La entidad readings se encarga de leer las mediciones que se encuentran en MongoDB y las reporta al cliente.
 Solo tiene la función \emph{Get} ya que la información no es modificable y las nuevas mediciones son generadas por los dispositivos.
-En el código \ref{cod:BackendReadings} se muestra la función más utilizada por el cliente, obtener todas las mediciones de un sensor.
+En el código \ref{cod:BackendReadings} se muestra la función más utilizada por el cliente que es obtener todas las mediciones de un sensor.
 
 \begin{lstlisting}[label=cod:BackendReadings,caption=Función más utilizada de la entidad readings]
 router.get('/all/:device',
@@ -803,7 +829,7 @@ middleware.verifyToken = (req, res, next) => {
 
 Antes de procesar el pedido del usuario dentro de la entidad deseada, se verifica que la jerarquía sea la suficiente para realizar la operación.
 En el código \ref{cod:BackendMiddlewareRank} se muestra la función que controla que el usuario tenga permisos de ingeniero o superiores.
-Si cumple la condición se avanza a la siguiente función, de lo contrario se interrumpe el pedido del cliente y se le devuelve el estado 401.
+Si cumple la condición se avanza a la siguiente función o de lo contrario se interrumpe el pedido del cliente y se le devuelve el estado 401.
 Las funciones para los otros niveles de usuario son prácticamente iguales a la función de verificación de ingeniero.
 
 \begin{lstlisting}[label=cod:BackendMiddlewareRank,caption=Verificación de rango]
@@ -839,8 +865,6 @@ middleware.logRequest = async (req, res, next) => {
 }
 \end{lstlisting}
 
-\newpage
-
 % frontend
 \subsection{Frontend}
 
@@ -853,11 +877,13 @@ Se crearon una serie de servicios que tienen la finalidad de dotar a la interfaz
 Particularmente, la habilidad de comunicarse con otros servicios de la solución.
 
 % auth.service
-El servicio AuthService se encarga de gestionar las credenciales de cesión.
+El servicio AuthService se encarga de gestionar las credenciales de sesión.
 Para lograr este objetivo se comunica con el Backend y realiza un \emph{Post} indicando usuario y contraseña.
 Cuando la respuesta es satisfactoria, se guarda el token, el usuario y su rango en la memoria local del navegador.
 Este servicio provee la capacidad de leer estos datos que se encuentran en el navegador para que los componentes se comporten de la forma esperada.
 En el código \ref{cod:FrontendAuthService} se puede ver la función mas importante del servicio, la obtención de credenciales.
+
+\newpage
 
 \begin{lstlisting}[label=cod:FrontendAuthService,caption=Obtención de credenciales]
 signIn(name: string, password: string): Promise<boolean> {
@@ -911,6 +937,8 @@ intercept(req, next) {
 El servicio DevicesService cumple la función de unir la entidad que representa los dispositivos en el Backend.
 Este servicio posee múltiples funciones para satisfacer las operaciones de lectura, creación, modificación y eliminación de recursos.
 Por esta razón solo se muestra el método encargado de obtener la lista de dispositivos que se puede observar en el código \ref{cod:FrontendDevicesService}.
+
+\newpage
 
 \begin{lstlisting}[label=cod:FrontendDevicesService,caption=Obtención de la lista de dispositivos]
 getAll(): Promise<Devices> {
@@ -970,6 +998,8 @@ Se satisfacen dos necesidades, la primera es alimentar el \emph{pipe} encargado 
 La segunda es que los componentes relacionados con la gestión de usuarios puedan consumir los datos que necesitan.
 Estas dos funcionalidades se pueden ver en el código \ref{cod:FrontendUsersService}. 
 
+\newpage
+
 \begin{lstlisting}[label=cod:FrontendUsersService,caption=Funciones de UsersService]
 getPipeData(): Promise<PipeData> {
   return this.http.get(
@@ -1015,7 +1045,7 @@ public connect(): WebSocketSubject<any> {
 \end{lstlisting}
 
 % routh guard
-Cuando el cliente no posee las credenciales necesarias o las que tiene expiraron en el Backend, se debe direccionar a la interfaz gráfica al componente de loggin.
+Cuando el cliente no posee las credenciales necesarias o las que tiene expiraron en el Backend, se debe direccionar la interfaz gráfica a la pantalla del componente de loggin.
 Para lograr esa función se implementó una guarda de identificación y se muestra en el código \ref{cod:FrontendAuthGuard}.
 
 \begin{lstlisting}[label=cod:FrontendAuthGuard,caption=Función de guarda de identificación]
@@ -1070,6 +1100,9 @@ export interface Device {
 \end{lstlisting}
 
 % componentes y angular material
+La etapa final del desarrollo del Frontend fue crear los componentes gráficos a mostrar en pantalla.
+La tarea se llevó a cabo utilizando la biblioteca Angular Material y en las figuras \ref{fig:ch3FrontendImg1}, \ref{fig:ch3FrontendImg1} y \ref{fig:ch3FrontendImg1} se puede observar la apariencia lograda.
+En los ejemplos se aprecian formularios, tablas con paginación y listas desarrolladas. 
 
 \begin{figure}[h]
 	\centering
