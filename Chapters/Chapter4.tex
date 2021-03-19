@@ -8,16 +8,148 @@
 %	SECTION 1
 %----------------------------------------------------------------------------------------
 
-Párrafo introductorio del capítulo.
+Este capítulo tiene la finalidad de explicar el proceso de aceptación del trabajo y como se determinó que los requerimientos se cumplieron. Además se expone la metodología utilizada para validar el código a medida que se fue escribiendo.
 
-% Explicación de como se implementó TDD en algunos servicios y como se hicieron pruebas unitarias en otras
-\section{Pruebas unitarias}
+\section{Recursos utilizados}
 
-% Explicación del proceso de decición para determinar cuando debí realizar simulaciones. Descripción de las simulaciones creadas y su valides
-\section{Simulaciones}
+Para desarrollar el trabajo y realizar pruebas se utilizaron una serie de equipos que se detallan a continuación:
+
+\begin{itemize}
+	\item Ordenador portátil Banghó
+	\item Ordenador monoplaca Raspberry Pi 4 B
+	\item Módulo Nodemcu Esp32 Wi-Fi
+	\item Smartphone LG K20 Aurora Black
+	\item Router Sagemcom F@ST 3890 v2 TLC
+\end{itemize}
+
+Los detalles del ordenador portátil son:
+\begin{itemize}
+	\item Sistema operativo: Ubuntu 20.04 focal
+	\item Kernel: x68\_64 Linux 5.4.0-67-generic
+	\item Shell: bash
+	\item Resolución: 2732x768
+	\item Entorno de escritorio: GNOME 3.36.5
+	\item CPU: Intel Core i7-4710MQ @ 8x 3.5GHz
+	\item GPU: Intel Corporation 4th Gen Core Processor Integrated Graphics Controller (rev 06)
+	\item RAM: 11891MiB
+\end{itemize}
+
+Se utilizaron además una serie de programas para hacer el desarrollo y las pruebas y se los enumera a continuación:
+
+\begin{itemize}
+	\item Visual Studio Code versión 1.54.3
+	\item Navegador Chromium versión 89.0.4389.90 (Build oficial) snap (64 bits)
+	\item Terminal de Gnome versión 3.36.2
+	\item Postman versión 8.0.7
+	\item Wireshark versión 3.2.3
+	\item Nmap versión 7.80
+	\item Mosquitto versión 1.6.9
+\end{itemize}
 
 % Explicación del proceso de decición para determinar cuando debí realizar scripts. Descripción de las scripts creados y su valides
 \section{Guiones y comandos}
+% necesidad de realizar mocks
+En el capítulo \ref{Chapter3} se detalló el trabajo realizado, como funcionan todas sus partes y la interdependencia que existe entre ellas. Antes de llegar a tener un sistema completo y funcionando se tuvieron partes incompletas y servicios inexistentes. Esta situación demandó crear una serie de guiones y comandos que pudieran recrear de forma limitada alguna de las funcionalidades de las dependencias de cada componente.
+
+\subsection{Base de datos}
+
+Varios de los servicios necesitaron tener acceso a una conexión de base de datos en MongoDB durante su desarrollo.
+Para crear una instancia efímera del motor se utilizó un guión de bash que se puede ver en el código \ref{cod:ch3GuionDB}.
+Se puede observar que se utilizó docker para esa etapa del trabajo.
+El código se escribió para facilitar variaciones en la configuración y se designó una carpeta para almacenar una serie de archivos en JavaScript que cumplieron la función de poblar con datos a MongoDB.
+
+\begin{lstlisting}[language=bash,label=cod:ch3GuionDB,caption=Guión de base de datos.]
+#!/bin/bash
+IMAGE_NAME=mongo
+CONTAINER_NAME=mongo
+CONTAINER_PORT=27017
+CONTAINER_DIRECTORY=/scripts
+MACHINE_PORT=27017
+MACHINE_DIRECTORY=$PWD/mockDB
+
+docker run \
+--rm \
+--name $CONTAINER_NAME \
+-p $MACHINE_PORT:$CONTAINER_PORT \
+-v $MACHINE_DIRECTORY:$CONTAINER_DIRECTORY \
+-d \
+$IMAGE_NAME
+
+sleep 5
+docker exec $CONTAINER_NAME sh -c "mongo < /scripts/mockData.js"
+\end{lstlisting}
+
+\subsection{Mosquitto}
+
+Los servicios que necesitaron de un broker MQTT para validar su desarrollo se valieron de un guión de bash.
+Ese guión, que se puede ver en el código \ref{cod:ch3GuionMosquitto}, se encargó de proveer un broker completamente promiscuo y sin ninguna medida de seguridad.
+La razón para generar esta configuración fue eliminar cualquier tipo de falla producto de las medidas de seguridad y que cualquier comportamiento no deseado se debiera al código escrito para cada servicio en particular.
+
+\begin{lstlisting}[language=bash,label=cod:ch3GuionMosquitto,caption=Guión de Mosquitto.]
+#!/bin/bash
+IMAGE_NAME=eclipse-mosquitto
+CONTAINER_NAME=mosquitto
+CONTAINER_PORT=1883
+MACHINE_PORT=1883
+
+docker run \
+--rm \
+--name $CONTAINER_NAME \
+-p $MACHINE_PORT:$CONTAINER_PORT \
+-d \
+$IMAGE_NAME
+\end{lstlisting}
+
+Se utilizaron los servicios que provee Mosquitto para realizar publicaciones y subscripciones desde la terminal del ordenador portátil y el ordenador monoplaca.
+Los comandos se pueden ver de forma genérica en el código \ref{cod:ch3ComandosMosquitto}.
+
+\begin{lstlisting}[language=bash,label=cod:ch3ComandosMosquitto,caption=Comandos de Mosquitto.]
+mosquitto_sub -h 'localhost' -u 'docker' -P 'container' -t 'data/#'
+mosquitto_pub -h 'localhost' -u 'device' -P 'thing' -t 'data' -m 'edu-ciaa,25'
+\end{lstlisting}
+
+\subsection{Redis}
+
+Los componentes del sistema que utilizaron un mecanismo de identificación de clientes usaron Redis para lograrlo.
+Por ese motivo se creó un guión de bash que creara un contenedor de Redis con la configuración por defecto.
+El código \ref{} muestra las instrucciones necesarias para lograr el objetivo.
+Se puede ver en su última línea que se creó un token de prueba para verificar la conexión con el servicio.
+
+\begin{lstlisting}[language=bash,label=cod:ch3GuionRedis,caption=Guión de Redis.]
+#!/bin/bash
+IMAGE_NAME=redis
+CONTAINER_NAME=redis
+CONTAINER_PORT=6379
+MACHINE_PORT=6379
+
+docker run \
+--rm \
+--name $CONTAINER_NAME \
+-p $MACHINE_PORT:$CONTAINER_PORT \
+-d \
+$IMAGE_NAME
+
+sleep 5
+docker exec redis sh -c "redis-cli SET xxxx.yyyy.zzzz 3"
+\end{lstlisting}
+
+\subsection{Nodejs}
+Se necesitó crear un ambiente de desarrollo y pruebas para podes escribir el código de los servicios basados en Nodejs.
+Esto se logró al construir los componentes que se detallan a continuación:
+\begin{itemize}
+	\item Archivo de variables de entorno
+	\item Archivo de configuración del framework de pruebas Mocha
+	\item Creación de guiones en el archivo de paquetes de Nodejs
+\end{itemize}
+
+
+
+% Explicación de como se implementó TDD en algunos servicios y como se hicieron pruebas unitarias en otras
+\section{Pruebas unitarias}
+% introducción. Inicio con TDD, abandono de TDD por incremento exponencial en la complejidad de las pruebas.
+
+% Explicación del proceso de decición para determinar cuando debí realizar simulaciones. Descripción de las simulaciones creadas y su valides
+\section{Simulaciones}
 
 % Recepción del cliente, sus comentarios y modificaciones realizadas para satisfacerlo
 \section{Pruebas del cliente}
