@@ -267,7 +267,7 @@ backend:
 		- iot
 \end{lstlisting}
 
-\begin{lstlisting}[label=cod:dfBackend,caption=Dockerfile del servicio Backend.]
+\begin{lstlisting}[language=bash,label=cod:dfBackend,caption=Dockerfile del servicio Backend.]
 FROM node
 LABEL maintainer="Gonzalo Nahuel Vaca <vacagonzalo@gmail.com>"
 WORKDIR /usr/src/app
@@ -345,7 +345,7 @@ La segunda parte del proceso es crear un contenedor a partir de la imagen oficia
 Se transfieren los archivos compilados por el contenedor auxiliar hacia el contenedor de Nginx y se destruye el auxiliar.
 Finalmente se transforma el contenedor de Nginx con los archivos compilados en una imagen.
 
-\begin{lstlisting}[label=cod:dfFrontend,caption=Dockerfile del servicio Frontend.]
+\begin{lstlisting}[language=bash,label=cod:dfFrontend,caption=Dockerfile del servicio Frontend.]
 FROM node as builder
 WORKDIR /src/app
 COPY . ./
@@ -366,7 +366,7 @@ Los únicos requisitos para iniciar la aplicación es tener un ordenador que ten
 No se necesita tener ninguna de las herramientas de desarrollo dentro del ambiente de producción.
 De esta manera se logró una solución altamente portátil y agnóstica de la arquitectura del hardware.
 
-\begin{lstlisting}[label=cod:bashStart,caption=Guión de inicialización.]
+\begin{lstlisting}[language=bash,label=cod:bashStart,caption=Guión de inicialización.]
 #!/bin/bash
 chmod +x clean.sh
 docker-compose up -d
@@ -377,7 +377,7 @@ printf "checking collections"
 docker-compose exec mongo sh -c "mongo < /scripts/seed.test.js"
 \end{lstlisting}
 
-\begin{lstlisting}[label=cod:bashClean,caption=Guión de limpieza.]
+\begin{lstlisting}[language=bash,label=cod:bashClean,caption=Guión de limpieza.]
 #!/bin/bash
 docker-compose down
 docker rmi vaca/backend
