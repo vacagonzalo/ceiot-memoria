@@ -17,8 +17,10 @@ Un contenedor es una unidad que empaqueta el código de un programa junto con su
 Para crear un contenedor, el motor de Docker se vale de el concepto de imagen.
 Las imágenes son entidades inmutables que cumplen la función de ser plantillas para crear contenedores.
 Se puede visualizar a las imágenes como capturas del estado de un contenedor y a partir de estas capturas se pueden instanciar nuevos contenedores.
-Los contenedores son entonces, unas abstracciones de la capa de aplicación de los sistemas Linux, como se puede visualizar en la figura \ref{fig:ch2WhatContainer}.
+
+Los contenedores cumplen la función de ser abstracciones de la capa de aplicación de los sistemas Linux, como se puede visualizar en la figura \ref{fig:ch2WhatContainer}.
 Varios contenedores pueden correr en el mismo ordenador como procesos aislados en el espacio de usuario sin generar ningún tipo de interferencias entre si.
+
 La principal diferencia con las máquinas virtuales, es que estas son una abstracción del hardware del ordenador, transformando una única computadora en varios servidores.
 Los contenedores, en cambio, utilizan el kernel del sistema operativo del ordenador físico, no se abstrae un kernel, solo el espacio de aplicación o de usuario.
 
@@ -214,7 +216,7 @@ Todas las dependencias del trabajo se pueden visualizar en la tabla \ref{tab:dep
 \end{table}
 
 % Descripción del sistema marca Honeywell que funciona en planta.
-\newpage
+%\newpage
 \section{Sistema propietario del cliente}
 
 Como se explicó en el capítulo \ref{Chapter1}, el trabajo se basa en lograr integrarse al sistema que Gador tiene en ejecución. Esta sección explica con mayor detalle la naturaleza de este producto.

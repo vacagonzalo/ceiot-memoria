@@ -179,7 +179,15 @@ La configuración tiene la particularidad de introducir un comando a la hora de 
 Así se le indica al motor de MongoDB cual puerto debe escuchar.
 Además se crea un volumen donde figuran una serie de archivos que pueblan la base de datos con información para construir una maqueta.
 Esta maqueta fue utilizada para realizar la demostración al cliente.
-Los archivos son devices.js, measurements.js, seed.js y users.js.
+Los archivos utilizados para su construcción son:
+
+\begin{itemize}
+	\item devices.js
+	\item measurements.js
+	\item seed.js
+	\item users.js
+\end{itemize}
+
 El archivo devices.js crea una serie de dispositivos ficticios.
 El archivo measurements.js inserta una serie de mediciones que provienen de los dispositivos ficticios creados por devices.js.
 El script users.js genera una serie de usuarios con distintos permisos, con el fin de probar la capacidad de autentificar las sesiones.
@@ -215,13 +223,15 @@ load("scripts/measurements.js")
 load("scripts/measurements.js")
 \end{lstlisting}
 
+\newpage
+
 \subsection{Validación de mediciones}
 
 El servicio Persistence Validator (pv) está definido en el código \ref{cod:dcPV} y se puede observar que la imagen no existe.
 Debe ser construida utilizando un Dockerfile.
 Como el servicio fue realizado en Python, el Dockerfile necesario para construir la imagen es prácticamente idéntico al visto en el código \ref{cod:dfHRV}.
 
-\newpage
+%\newpage
 
 \begin{lstlisting}[label=cod:dcPV,caption=Orquestación del servicio pv.]
 	pv:
@@ -267,6 +277,8 @@ backend:
 	networks: 
 		- iot
 \end{lstlisting}
+
+\newpage
 
 \begin{lstlisting}[language=bash,label=cod:dfBackend,caption=Dockerfile del servicio Backend.]
 FROM node
@@ -320,6 +332,8 @@ redis:
 		- iot
 \end{lstlisting}
 
+\newpage
+
 \subsection{Frontend}
 
 El último servicio es el Frontend que fue orquestado como se puede observar en el código \ref{cod:dcFrontend}.
@@ -367,14 +381,14 @@ Los únicos requisitos para iniciar la aplicación es tener un ordenador que ten
 No se necesita tener ninguna de las herramientas de desarrollo dentro del ambiente de producción.
 De esta manera se logró una solución altamente portátil y agnóstica de la arquitectura del hardware.
 
+\newpage
+
 \begin{lstlisting}[language=bash,label=cod:bashStart,caption=Guión de inicialización.]
 #!/bin/bash
 chmod +x clean.sh
 docker-compose up -d
-printf "Waiting 10 seconds for internal connections to be made"
 sleep 10
 docker-compose exec mongo sh -c "mongo < /scripts/seed.js"
-printf "checking collections"
 docker-compose exec mongo sh -c "mongo < /scripts/seed.test.js"
 \end{lstlisting}
 
@@ -422,6 +436,8 @@ El topic data tiene la finalidad de llevar las mediciones tomadas por los sensor
 Además de escribir en una posición de memoria del servidor Modbus, según corresponda.
 Finalmente el topic live tiene la función de llevar las mediciones que se realizan durante las calibraciones.
 
+\newpage
+
 \begin{lstlisting}[label=cod:mosquittoAcl,caption=Lista de control de acceso]
 user docker
 topic readwrite cmnd/#
@@ -442,7 +458,7 @@ Luego determina si las mediciones recibidas pertenecen a la lista de dispositivo
 Finalmente escribe una posición de memoria del servidor según corresponda.
 Las funciones de cada paso fueron extraídas y se presentan en el código \ref{cod:HRVpython}, escritas en Python.
 
-\newpage
+%\newpage
 
 \begin{lstlisting}[label=cod:HRVpython,caption=Funciones principales del servicio HRV]
 # MQTT
@@ -559,7 +575,7 @@ En el código \ref{cod:BackendApp} se puede observar el archivo principal de la 
 Quedan definidos los \emph{endpoints} o entidades del servicio.
 Las entidades son auth, cmnd, devices, logs, users y readings.
 
-\newpage
+%\newpage
 
 \begin{lstlisting}[label=cod:BackendApp,caption=Archivo principal del servicio Backend]
 const express = require('express');
@@ -593,6 +609,8 @@ La función principal se extrajo de su archivo y se muestra en el código \ref{c
 Se puede ver que al crear una nueva sesión el servidor entrega el estado \emph{Created (201)}.
 En simultaneo se guarda el JWT generado en la memoria de Redis con un tiempo de vida determinado.
 Por el contrario, se entrega el estado \emph{Unauthorized (401)} cuando las credenciales no son válidas.
+
+\newpage
 
 \begin{lstlisting}[label=cod:BackendAuth,caption=Función principal de la entidad auth]
 router.post('/', async (req, res) => {
@@ -663,7 +681,7 @@ La validación de la sesión del cliente queda delegada al \emph{middleware}.
 Se puede ver que también se realizan comunicaciones con los sensores cuando se realiza un cambio en su configuración.
 Esto crea consistencia entre lo que figura en la base de datos y lo que realmente sucede en campo.
 
-\newpage
+%\newpage
 
 \begin{lstlisting}[label=cod:BackendDevices,caption=Creación de dispositivo de la entidad devices]
 router.post('',
@@ -702,6 +720,8 @@ La entidad logs cumple la función de persistir todas las actividades que el cli
 En particular aquellas que modifican el funcionamiento de los equipos en campo, los reportes a EBI y los permisos de usuarios.
 Tiene la finalidad de permitir auditar los eventos ocurridos.
 La función principal de la entidad puede ser vista en el código \ref{cod:BackendLogs} y como en el resto de los \emph{endpoints}, la validación de sesión se manejó a través de un \emph{middleware}.
+
+\newpage
 
 \begin{lstlisting}[label=cod:BackendLogs,caption=Función principal de la entidad logs]
 router.get('',
@@ -884,7 +904,7 @@ Cuando la respuesta es satisfactoria, se guarda el token, el usuario y su rango 
 Este servicio provee la capacidad de leer estos datos que se encuentran en el navegador para que los componentes se comporten de la forma esperada.
 En el código \ref{cod:FrontendAuthService} se puede ver la función mas importante del servicio, la obtención de credenciales.
 
-\newpage
+%\newpage
 
 \begin{lstlisting}[label=cod:FrontendAuthService,caption=Obtención de credenciales]
 signIn(name: string, password: string): Promise<boolean> {
@@ -922,6 +942,8 @@ signIn(name: string, password: string): Promise<boolean> {
 El servicio CredentialsInterceptorService tiene la misión de interceptar todos los mensajes que emita la interfaz gráfica y agrega el token a la cabecera del mensaje HTTP.
 Tiene una única función y se la puede ver en el código \ref{cod:FrontendCredentials}.
 
+\newpage
+
 \begin{lstlisting}[label=cod:FrontendCredentials,caption=Intercepción de mensajes]
 intercept(req, next) {
   let credentials = req.clone({
@@ -939,7 +961,7 @@ El servicio DevicesService cumple la función de unir la entidad que representa 
 Este servicio posee múltiples funciones para satisfacer las operaciones de lectura, creación, modificación y eliminación de recursos.
 Por esta razón solo se muestra el método encargado de obtener la lista de dispositivos que se puede observar en el código \ref{cod:FrontendDevicesService}.
 
-\newpage
+%\newpage
 
 \begin{lstlisting}[label=cod:FrontendDevicesService,caption=Obtención de la lista de dispositivos]
 getAll(): Promise<Devices> {
@@ -978,6 +1000,8 @@ El servicio ReadingsService tiene el objetivo de interactuar con el \emph{endpoi
 La única funcionalidad es la de leer las lecturas ya que estas son creadas por los dispositivos.
 El método más utilizado de este servicio se puede observar en el código \ref{cod:FrontendReadingsService}.
 
+\newpage
+
 \begin{lstlisting}[label=cod:FrontendReadingsService,caption=Obtención de mediciones]
 getAllReadings(tag: string): Promise<Readings> {
   return this.http.get(`${this.url}/all/${tag}`, { observe: 'response' })
@@ -999,7 +1023,7 @@ Se satisfacen dos necesidades, la primera es alimentar el \emph{pipe} encargado 
 La segunda es que los componentes relacionados con la gestión de usuarios puedan consumir los datos que necesitan.
 Estas dos funcionalidades se pueden ver en el código \ref{cod:FrontendUsersService}. 
 
-\newpage
+%\newpage
 
 \begin{lstlisting}[label=cod:FrontendUsersService,caption=Funciones de UsersService]
 getPipeData(): Promise<PipeData> {
@@ -1035,6 +1059,8 @@ getAll(): Promise<Users> {
 El último de los servicios es WebsocketService y fue creado para conectar el navegador del cliente con el servicio Calibrator del servidor Nodos.
 Se genera una conexión del tipo WebSocket para obtener los datos de calibración en vivo de un sensor.
 La función principal se puede ver en el código \ref{cod:FrontendWebsocketService}.
+
+\newpage
 
 \begin{lstlisting}[label=cod:FrontendWebsocketService,caption=Función principal de WebsocketService]
 public connect(): WebSocketSubject<any> {
@@ -1089,6 +1115,8 @@ transform(value: string): string {
 % models
 Para unir la información proveniente del Backend con una estructura de datos de TypeScript, se crearon una serie de interfaces que cumplen la función de ser modelos de datos.
 En el código \ref{cod:FrontendInterfaceDevice} se muestra la interfaz correspondiente a un dispositivo.
+
+\newpage
 
 \begin{lstlisting}[label=cod:FrontendInterfaceDevice,caption=Modelo de datos de dispositivo]
 export interface Device {

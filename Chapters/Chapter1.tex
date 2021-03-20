@@ -43,7 +43,7 @@ La situación de la industria argentina fue la razón que impulsó este trabajo,
 La empresa tiene la necesidad de acceder al mercado estadounidense y para lograrlo se deben satisfacer los requerimientos del \emph{Código federal de regulaciones - Título 21 - Capítulo de alimentos y drogas (21CFR11)}. \citep{ARTICLE:21cfr11}
 La norma establece que los registros de las mediciones ambientales de los depósitos y cuartos productivos se deben almacenar de forma electrónica pero, a su vez, se debe demostrar que los registros tienen la misma validez y seguridad que aquellos hechos en papel. 
 Esto se traduce en la necesidad de tener un sistema informático que se encuentre aprobado por la \emph{Food and Drug Administration (FDA)}, que es el organismo encargado de controlar los medicamentos y alimentos que ingresan a los Estados Unidos.
-Por esa razón Gador tiene comprada una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca \emph{Honeywell}, ya que el producto se encuentra aprobado por la FDA. 
+Por esa razón Gador tiene comprada una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca Honeywell, ya que el producto se encuentra aprobado por la FDA. 
 Si bien el programa fue adquirido hace varios años, es indispensable que continúe operando aún cuando los protocolos que utiliza son antiguos.
 Tampoco es económicamente viable reemplazarlo por un producto moderno que esté aprobado por la FDA, en consecuencia, se debe lograr un salto tecnológico manteniendo la plataforma que actualmente está operando.
 
@@ -135,10 +135,16 @@ Un ejemplo de capa de negocio se puede observar en la figura \ref{fig:ch1Ejemplo
 \subsection{Capa de aplicación}
 La experiencia que tiene el usuario al interactuar con la solución pertenece a la capa de aplicación.
 Aquí se define como se presenta la interfaz gráfica que utilizan las personas, y es común utilizar un formato de sitio web.
-Las páginas webs tienen la ventaja de ser indiferentes de la plataforma que utiliza el operador, solo importa que pueda ejecutar un navegador.
-Actualmente, se construyen las interfaces siguiendo un modelo de diseño según el tipo de operación a realizar por el programa, si la solución abarca una interfaz hombre-máquina industrial que debe ser atendida durante toda una jornada laboral, se suele implementar una norma de manejo de situaciones anormales o ASM; si la aplicación es de uso intermitente, se puede usar un esquema de diseño material o \emph{Material Desing} que presenta una experiencia moderna y fluida, como se puede apreciar en la figura \ref{fig:ch1MaterialDesign}.
-Para llevar a delante la interfaz seleccionada se utiliza un servidor que tiene como objetivo proveer los componentes gráficos al dispositivo utilizado, una manera de realizarlo es entregando al cliente una \emph{Single Web Application (SWP)}, logrando que el servidor otorgue todo el código necesario para que el dispositivo del usuario genere por si mismo los componentes gráficos a mostrar.
-Es importante que el código entregado pueda ser visualizado en múltiples tamaños de pantallas, en la actualidad las personas utilizan ordenadores, tabletas y teléfonos móviles que presentan grandes diferencias en sus dimensiones, cuando una aplicación cumple con este requerimiento se dice que es responsiva.
+Las páginas webs tienen la ventaja de ser indiferentes de la plataforma que utiliza el operador y solo importa que pueda ejecutar un navegador.
+
+Actualmente, se construyen las interfaces siguiendo un modelo de diseño según el tipo de operación a realizar por el programa.
+Si la solución abarca una interfaz hombre-máquina industrial que debe ser atendida durante toda una jornada laboral, se suele implementar una norma de manejo de situaciones anormales o ASM.
+Si la aplicación es de uso intermitente, se puede usar un esquema de diseño material o \emph{Material Desing} que presenta una experiencia moderna y fluida, como se puede apreciar en la figura \ref{fig:ch1MaterialDesign}.
+
+Para llevar a delante la interfaz seleccionada se utiliza un servidor que tiene como objetivo proveer los componentes gráficos al dispositivo utilizado.
+Una manera de realizarlo es entregando al cliente una \emph{Single Web Application (SWP)}, logrando que el servidor otorgue todo el código necesario para que el dispositivo del usuario genere por si mismo los componentes gráficos a mostrar.
+Es importante que el código entregado pueda ser visualizado en múltiples tamaños de pantallas, en la actualidad las personas utilizan ordenadores, tabletas y teléfonos móviles que presentan grandes diferencias en sus dimensiones.
+Cuando una aplicación cumple con este requerimiento se la define como responsiva.
 
 % poner referencia de la figura en pie de página
 % https://material.io/blog/mda-2020-winners
@@ -155,15 +161,30 @@ Es importante que el código entregado pueda ser visualizado en múltiples tama�
 \subsection{Capa de procesamiento}
 Para alimentar de datos a la interfaz gráfica se necesita de la capa de procesamiento, que entrega el contenido a mostrar en pantalla. La información puede ser almacenada con distintas tecnologías, siendo una de las principales, las bases de datos relacionales.
 Este tipo de base de datos se basa en un esquema de tablas que se relacionan entre sí.
-Estas tecnologías se las suelen llamar SQL, y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero.
+Estas tecnologías se las suelen llamar SQL y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero.
 Existe otro grupo de bases de datos que se denominan no relacionales o NoSQL, esta categoría contienen a las bases de datos tipo clave-valor, documental, de columnas y de grafos.
+
+\begin{itemize}
+	\item Clave-valor
+	\item Orientada a documentos
+	\item Orientada a columnas
+	\item Orientada a grafos
+\end{itemize}
 
 % clave-valor
 Las bases de datos clave-valor tratan los datos como una única colección que puede tener campos completamente distintos en cada registro, no existe entonces, ningún tipo de relación entre los miembros de la colección. El uso principal de esta tecnología es gestionar diccionarios dentro de la memoria volátil, ya que se pueden definir tiempos de vida para los datos. La muerte programada de un dato puede ser utilizada para gestionar las sesiones de usuario dentro del programa.
 
 % documental
 Almacenar los datos de manera documental significa que se agrupa la información siguiendo un criterio de entidades similares, lo cual no significa que exista una estructura rígida, sino que los datos tienen una naturaleza similar.
-La persistencia se logra siguiendo un formato de codificación estandar como \emph{XML}, \emph{YAML} y \emph{JSON}.
+La persistencia se logra siguiendo uno formatos de codificación estándar, los cuales son:
+% como \emph{XML}, \emph{YAML} y \emph{JSON}.
+
+\begin{itemize}
+	\item \emph{XML}
+	\item \emph{YAML}
+	\item \emph{JSON}
+	\item \emph{BSON}
+\end{itemize}
 
 % columnas
 Las bases de datos orientadas a columnas están pensadas para minimizar el tiempo de búsqueda, principalmente en series temporales.
@@ -172,14 +193,16 @@ La organización particular de este tipo de tecnologías es afín a los sistemas
 % grafos
 Una base de datos orientada a grafos presenta la información como nodos que se encuentran relacionados, la diferencia fundamental con los sistemas relacionales es que los nodos no están organizados en tablas, y las relaciones que unen los nodos tienen atributos y no poseen una estructura definida.
 Este tipo de tecnología permite utilizar la teoría de grafos y posibilita realizar consultas siguiendo modelos matemáticos que forman parte de esa rama de la ciencia.
-Un ejemplo de esta tecnología se puede ver en la figura \ref{fig:ch1Grafo}.
+%Un ejemplo de esta tecnología se puede ver en la figura \ref{fig:ch1Grafo}.
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=.6\textwidth]{./Figures/ch1Grafo.png}
-	\caption{Ejemplo de base de datos orientada a grafos. \citep{WEBSITE:neo4j}}
-	\label{fig:ch1Grafo}
-\end{figure}
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[width=.6\textwidth]{./Figures/ch1Grafo.png}
+%	\caption{Ejemplo de base de datos orientada a grafos. \citep{WEBSITE:neo4j}}
+%	\label{fig:ch1Grafo}
+%\end{figure}
+
+\newpage
 
 % Capa de red
 \subsection{Capa de red}
