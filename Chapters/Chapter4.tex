@@ -142,11 +142,141 @@ Esto se logró al construir los componentes que se detallan a continuación:
 	\item Creación de guiones en el archivo de paquetes de Nodejs
 \end{itemize}
 
+El archivo de variables de entorno se utilizó para no colocar en el código las contraseñas ni las direcciones de los recursos externos.
+Un ejemplo de este tipo de archivo se puede ver en el código \ref{cod:ch3VariablesEntorno}. Su configuración apunta a servicios creados con los comandos y guiones de pruebas.
 
+\begin{lstlisting}[language=bash,label=cod:ch3VariablesEntorno,caption=Archivo de variables de entorno.]
+PORT=8080
+DB_URL=mongodb://localhost:27017/gador
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+SECRET_KEY=secret
+TIME_TO_LIVE=120
+MQTT_HOST=mqtt://localhost
+\end{lstlisting}
+
+Para configurar el framework de pruebas de Mocha se utilizó la configuración del código \ref{cod:ch3ConfiguraciónMocha}.
+Se observa que se determinó un tiempo de ejecución máximo para evitar trabar el ensayo en el caso que una función no pueda converger a un resultado.
+
+\begin{lstlisting}[language=bash,label=cod:ch3ConfiguraciónMocha,caption=Configuración de Mocha.]
+module.exports = {
+    recursive: true,
+    slow: 75,
+    timeout: 5000,
+    spec: ['test/**/*.test.js']
+}
+\end{lstlisting}
+
+Finalmente se crearon guiones para correr con el gestor de paquetes de Nodejs.
+Se los puede ver en el código \ref{cod:ch3GuionesNodejs}.
+El guión dev cumple la función de correr los guiones de creación de MongoDB, Redis y Mosquitto.
+Además carga las variables de entorno en la sesión de terminal para finalmente correr la aplicación en modo desarrollo.
+Con el entorno de desarrollo activo se pueden realizar las pruebas al ejecutar el guión test.
+Este guión limpia la terminal y reinicia la base de datos. Luego procede a cargar las variables de entorno y ejecutar Mocha.
+
+\begin{lstlisting}[language=bash,label=cod:ch3GuionesNodejs,caption=Guiones de Nodejs.]
+"build": "npm install",
+"dev": "./mockDB/mongo.sh && ./mockDB/redis.sh && ./mockDB/mosquitto.sh && eval $(cat ./.env) nodemon ./src/app.js",
+"production": "eval $(cat ./enviroment/.env) node ./src/app.js",
+"test": "clear && ./mockDB/restart.sh && eval $(cat ./.env) mocha",
+"clean": "docker stop mongo && docker stop redis && docker stop mosquitto"
+\end{lstlisting}
 
 % Explicación de como se implementó TDD en algunos servicios y como se hicieron pruebas unitarias en otras
 \section{Pruebas unitarias}
 % introducción. Inicio con TDD, abandono de TDD por incremento exponencial en la complejidad de las pruebas.
+Durante las primeras etapas del desarrollo del trabajo se utilizó la metodología \emph{TDD} para trabajar.
+Luego se abandonó la metodología y se pasó a utilizar distintos programas para realizar pruebas.
+Se decidió realizar el cambio en la forma de trabajar debido a que la complejidad de las pruebas fue creciendo de manera exponencial al necesitar interconectar los servicios.
+Llegado a un punto del proyecto \emph{TDD} se volvió improductivo y su abandono fue la única manera de continuar a un ritmo aceptable para un equipo de desarrollo unipersonal.
+
+En la primera etapa del trabajo se escribieron pruebas unitarias que fueron creciendo a medida que se agregaban funcionalidades al código fuente.
+En el caso del endpoint que representa los dispositivos en el backend el archivo de pruebas unitarias alcanzó las 285 líneas de código.
+Mientras que el archivo del endpoint solo demandó 148 líneas escritas.
+Se alcanzó el punto donde las pruebas superaron al código fuente en su extensión.
+Algunos ejemplos de pruebas de la entidad dispositivos del backend se puede ver en el código \ref{cod:ch3BackendUnitTest}.
+El ejemplo se divide en cuatro pruebas realizadas al método \emph{GET} de la entidad cuando se solicita un dispositivo en particular.
+Los casos analizados son:
+
+\begin{itemize}
+	\item El pedido no tiene credenciales
+	\item El pedido tiene credenciales inválidas
+	\item El pedido tiene credenciales válidas y el dispositivo existe
+	\item El pedido tiene credenciales válidas y el dispositivo no existe
+\end{itemize}
+
+\begin{lstlisting}[language=bash,label=cod:ch3BackendUnitTest,caption=Extracto de prueba unitaria Backend.]
+describe(`GET on "${url}/<device tag>" without a token`, () => {
+    it('should return STATUS 401', async () => {
+        let response = await fetch(`${url}/esp32`, voidGET);
+        expect(response.status).to.be.equal(401);
+    });
+});
+
+describe(`GET on "${url}/<device tag>" with an INVALID token`, () => {
+    it('should return STATUS 401', async () => {
+        let response = await fetch(`${url}/esp32`, invalidGET);
+        expect(response.status).to.be.equal(401);
+    });
+});
+
+describe(`GET on "${url}/<device tag>" with a VALID token`, () => {
+    let data = { serial: 123, tag: "esp32", modbus: 0, frec: 60, unit: "t" };
+    data = JSON.stringify(data);
+    it('should return "status 200" and data', async () => {
+        let response = await fetch(`${url}/esp32`, validGET);
+        let status = response.status;
+        let text = await response.text();
+        expect(status).to.be.equal(200);
+        expect(text).to.be.equal(data);
+    });
+});
+
+describe(`GET on "${url}/<device tag>" when the device does not exist`, () => {
+    it('should return "status 204"', async () => {
+        let response = await fetch(`${url}/void`, validGET);
+        let status = response.status;
+        expect(status).to.be.equal(204);
+    });
+});
+\end{lstlisting}
+
+Este procedimiento de pruebas se generó para cada función de cada entidad.
+Razón por la cual los archivos de pruebas unitarias crecieron rápidamente.
+Cuando se abandonó \emph{TDD} se usaron programas como \emph{Postman} para hacer pruebas manuales de casos puntuales.
+En la imagen \ref{fig:ch3Postman1} se visualiza la operación realizada para obtener las credenciales necesarias para usar una sesión en el servidor.
+La ilustración \ref{fig:ch3Postman2} muestra la creación exitosa de una sesión.
+En la figura \ref{fig:ch3Postman3} se observa como se usaron las credenciales para hacer un pedido de dispositivos al Backend.
+Finalmente en la imagen \ref{fig:ch3Postman4} se ve la respuesta obtenida. 
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/postman1.png}
+	\caption{Pedido de credenciales con Postman.}
+	\label{fig:ch3Postman1}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/postman2.png}
+	\caption{Respuesta de credenciales con Postman.}
+	\label{fig:ch3Postman2}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/postman3.png}
+	\caption{Pedido de dispositivos con Postman.}
+	\label{fig:ch3Postman3}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/postman4.png}
+	\caption{Respuesta de dispositivos con Postman.}
+	\label{fig:ch3Postman4}
+\end{figure}
 
 % Explicación del proceso de decición para determinar cuando debí realizar simulaciones. Descripción de las simulaciones creadas y su valides
 \section{Simulaciones}
