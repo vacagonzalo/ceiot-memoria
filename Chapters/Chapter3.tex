@@ -51,7 +51,7 @@ Esta sección trata sobre la conexión entre los servicios del trabajo y su desp
 
 Para planificar la orquestación se analizaron los servicios que debían ser accesibles desde entidades externas al servidor.
 En la figura \ref{fig:ch3EsquemaTrabajo} se pueden observar las conexiones lógicas entre los contenedores.
-Destacadas en color rojo, se encuentran las entidades externas que interactúan con el servidor Nodos.
+Las entidades externas que interactúan con el servidor Nodos se encuentran destacadas en color rojo.
 Las interconexiones se simplificaron al crear una capa de puente de red que corre sobre el \emph{Daemon} de Docker.
 El resultado es que cada contenedor pasa a tener una dirección de ip dentro del entorno.
 La creación de la red se logró con el código \ref{cod:dcNetwork}.
@@ -227,7 +227,7 @@ load("scripts/measurements.js")
 
 \subsection{Validación de mediciones}
 
-El servicio Persistence Validator (pv) está definido en el código \ref{cod:dcPV} y se puede observar que la imagen no existe.
+El servicio Persistence Validator (pv) está definido en el código \ref{cod:dcPV}, donde se puede observar que la imagen no existe.
 Debe ser construida utilizando un Dockerfile.
 Como el servicio fue realizado en Python, el Dockerfile necesario para construir la imagen es prácticamente idéntico al visto en el código \ref{cod:dfHRV}.
 
@@ -316,7 +316,7 @@ calibrator:
 
 \subsection{Redis}
 
-El servicio Redis fue creado a partir de la imagen oficial de Redis que se encuentra disponible en Dockerhub. \citep{contrib:redis}
+El servicio Redis fue creado a partir de la imagen oficial de Redis que se encuentra disponible en Dockerhub \citep{contrib:redis}.
 Como no tiene exposición al exterior del servidor, no se necesitó realizar ninguna configuración adicional.
 Es importante aclarar que si bien se puede aplicar una capa de seguridad, no es aconsejable exponer a Redis a la Internet.
 La orquestación se puede ver en el código \ref{cod:dcRedis}.
@@ -372,11 +372,9 @@ COPY --from=builder /src/app/dist/frontend /usr/share/nginx/html
 
 \subsection{Despliegue automático}
 
-Con los Dockerfiles definidos y el archivo docker-compose.yml se puede utilizar un guión escrito en Bash que lanza la aplicación.
-Como se puede observar en el código \ref{cod:bashStart}.
+Con los Dockerfiles definidos y el archivo docker-compose.yml se puede utilizar un guión escrito en Bash que lanza la aplicación, como se puede observar en el código \ref{cod:bashStart}.
 
 Cuando se desea eliminar todo rastro del sistema del ordenador, se puede utilizar el código \ref{cod:bashClean}.
-
 Los únicos requisitos para iniciar la aplicación es tener un ordenador que tenga Docker y Docker Compose instalados.
 No se necesita tener ninguna de las herramientas de desarrollo dentro del ambiente de producción.
 De esta manera se logró una solución altamente portátil y agnóstica de la arquitectura del hardware.
@@ -416,7 +414,7 @@ clear
 Mosquitto fue configurado siguiendo su documentación para lograr el máximo nivel de seguridad que no incluyera certificados \emph{SSH}.
 Se decidió no utilizar certificados ya que no figuraban en los requerimientos y el broker no se encuentra expuesto a la Internet.
 Además uno de los motivos del trabajo es simplificar la interacción con los sensores.
-Agregar la tarea de controlar y renovar los certificados iba en contra del objetivo inicial.
+Por esta razón agregar la tarea de controlar y renovar los certificados iba en contra del objetivo inicial.
 La configuración puede ser observada en el código \ref{cod:mosquittoConfig}.
 
 \begin{lstlisting}[label=cod:mosquittoConfig,caption=Archivo mosquitto.conf]
@@ -603,7 +601,7 @@ app.listen(PORT, () => {
 });
 \end{lstlisting}
 
-La entidad auth solo tiene el método \emph{Post} en donde se le envía un usuario y contraseña.
+La entidad \emph{auth} solo tiene el método \emph{Post} en donde se le envía un usuario y contraseña.
 Si las credenciales enviadas son correctas, se responde con un JWT que identifica una sesión para utilizar durante la operación del cliente.
 La función principal se extrajo de su archivo y se muestra en el código \ref{cod:BackendAuth}.
 Se puede ver que al crear una nueva sesión el servidor entrega el estado \emph{Created (201)}.
@@ -640,7 +638,7 @@ router.post('/', async (req, res) => {
 });
 \end{lstlisting}
 
-La entidad cmnd tiene la misión de gestionar las órdenes que se envían a los sensores.
+La entidad \emph{cmnd} tiene la misión de gestionar las órdenes que se envían a los sensores.
 Solo se usaron métodos \emph{GET} ya que no fue necesario enviar un cuerpo en el pedido.
 Como se puede ver en las funciones principales mostradas en el código \ref{cod:BackendCmnd}, se puede ordenar que un sensor ingrese al modo calibración o que regrese al modo normal de operación.
 Vale la pena mencionar que las funciones presentan el uso de \emph{middlewares} que tienen como función verificar que el cliente tenga una sesión válida y persistir la operación en un log.
@@ -673,7 +671,7 @@ router.get('/calibrate/:tag',
     });
 \end{lstlisting}
 
-La entidad devices es la más extensa del servicio.
+La entidad \emph{devices} es la más extensa del servicio.
 Tiene entre sus funciones crear, leer, modificar y borrar los dispositivos de la base de datos.
 Cada una de estas funciones existe con múltiples variantes debido a que se realizan para un solo sensor o varios en simultaneo.
 En el código \ref{cod:BackendDevices} se muestra un método de creación de dispositivo que es representativa para cada una de las funciones dentro del archivo.
@@ -716,7 +714,7 @@ router.post('',
     });
 \end{lstlisting}
 
-La entidad logs cumple la función de persistir todas las actividades que el cliente realiza en el sistema.
+La entidad \emph{logs} cumple la función de persistir todas las actividades que el cliente realiza en el sistema.
 En particular aquellas que modifican el funcionamiento de los equipos en campo, los reportes a EBI y los permisos de usuarios.
 Tiene la finalidad de permitir auditar los eventos ocurridos.
 La función principal de la entidad puede ser vista en el código \ref{cod:BackendLogs} y como en el resto de los \emph{endpoints}, la validación de sesión se manejó a través de un \emph{middleware}.
@@ -737,7 +735,7 @@ router.get('',
     });
 \end{lstlisting}
 
-En la entidad users se definen los usuarios del sistema que persisten en la base de datos.
+En la entidad \emph{users} se definen los usuarios del sistema que persisten en la base de datos.
 Uno de los requerimientos cumplidos (sección \ref{objetivos}) fue persistir las contraseñas de forma encriptada.
 El archivo del \emph{endpoint} es particularmente extenso así que se extrajo la función que crea un nuevo usuario y se la muestra en el código \ref{cod:BackendUsers}.
 Se puede ver como se genera una contraseña encriptada y como se verifican la sesión y jerarquía utilizando un \emph{middleware}.
@@ -776,7 +774,7 @@ router.post('/new',
     });
 \end{lstlisting}
 
-La entidad readings se encarga de leer las mediciones que se encuentran en MongoDB y las reporta al cliente.
+La entidad \emph{readings} se encarga de leer las mediciones que se encuentran en MongoDB y las reporta al cliente.
 Solo tiene la función \emph{Get} ya que la información no es modificable y las nuevas mediciones son generadas por los dispositivos.
 En el código \ref{cod:BackendReadings} se muestra la función más utilizada por el cliente que es obtener todas las mediciones de un sensor.
 

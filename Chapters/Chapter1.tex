@@ -25,41 +25,41 @@ El capítulo presenta las necesidades a satisfacer y una introducción técnica 
 \section{Motivación}
 \label{ch1Motivacion}
 
-La tendencia tecnológica actual es interconectar los dispositivos a través de la Internet, a tal punto que la cantidad de objetos en el año 2009 superó al número de personas conectadas y llegado el 2020 la diferencia es de seis veces en favor de las cosas. \citep{ARTICLE:DaveEvans}
+La tendencia tecnológica actual es interconectar los dispositivos a través de la Internet, a tal punto que la cantidad de objetos en el año 2009 superó al número de personas conectadas y llegado el 2020 la diferencia es de seis veces en favor de los objetos (denominados en la jerga "cosas") \citep{ARTICLE:DaveEvans}.
 Los procesos industriales se ven beneficiados con nuevos métodos de control de inventarios y análisis de mediciones, además es posible gestionar los ambientes productivos para lograr una mayor calidad y comodidad.
 Los datos quedan disponibles para ser procesados por modelos de inteligencia artificial y la información resultante puede ser vista desde cualquier ubicación y en múltiples plataformas. 
 
 % Realidad de la industria local
-Las empresas locales están retrasadas en su progreso tecnológico y muchas no incorporaron sistemas electrónicos en sus procesos o productos.
+En Argentina muchas empresas están retrasadas en su progreso tecnológico y muchas no incorporaron sistemas electrónicos en sus procesos o productos.
 Por lo tanto, es necesario crear un sistema que logre adaptar la tecnología en uso con el fin de integrarlas a las nuevas prácticas de negocios.
 
-El avance tecnológico modifica el marco normativo de las naciones y para cumplir con los nuevos requerimientos jurídicos, se necesita tener un mínimo de capital.
 El retraso tecnológico ya no solo genera una pérdida de competitividad sino que también impide que las empresas coloquen sus mercancías en otros países, por incumplimiento en normas de calidad o de protección del medio ambiente.
 		
 % Necesidades de Gador
 % Referencia a la página de Gador	
-La situación de la industria argentina fue la razón que impulsó este trabajo, el siguiente paso fue buscar una empresa que quisiera participar de un proyecto adecuado para el pos-grado, y finalmente se logró un acuerdo con los laboratorios Gador S.A. La misión de la compañía es producir medicamentos para la salud humana, con la mejor calidad disponible, y ponerlos al alcance de la comunidad a precios accesibles. \citep{WEBSITE:Gador}
+En este contexto, con el objetivo de mostrar un caso de éxito en la adecuación tecnológica, se logró un acuerdo con los laboratorios Gador S.A.
+La misión de la compañía es producir medicamentos para la salud humana, con la mejor calidad disponible, y ponerlos al alcance de la comunidad a precios accesibles \citep{WEBSITE:Gador}.
 
-La empresa tiene la necesidad de acceder al mercado estadounidense y para lograrlo se deben satisfacer los requerimientos del \emph{Código federal de regulaciones - Título 21 - Capítulo de alimentos y drogas (21CFR11)}. \citep{ARTICLE:21cfr11}
+La empresa tiene la necesidad de acceder al mercado estadounidense y para lograrlo debe satisfacer los requerimientos del \emph{Código federal de regulaciones - Título 21 - Capítulo de alimentos y drogas (21CFR11)} \citep{ARTICLE:21cfr11}.
 La norma establece que los registros de las mediciones ambientales de los depósitos y cuartos productivos se deben almacenar de forma electrónica pero, a su vez, se debe demostrar que los registros tienen la misma validez y seguridad que aquellos hechos en papel. 
 Esto se traduce en la necesidad de tener un sistema informático que se encuentre aprobado por la \emph{Food and Drug Administration (FDA)}, que es el organismo encargado de controlar los medicamentos y alimentos que ingresan a los Estados Unidos.
-Por esa razón Gador tiene comprada una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca Honeywell, ya que el producto se encuentra aprobado por la FDA. 
-Si bien el programa fue adquirido hace varios años, es indispensable que continúe operando aún cuando los protocolos que utiliza son antiguos.
-Tampoco es económicamente viable reemplazarlo por un producto moderno que esté aprobado por la FDA, en consecuencia, se debe lograr un salto tecnológico manteniendo la plataforma que actualmente está operando.
+Por esa razón Gador tiene comprada y en uso una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca Honeywell, ya que el producto se encuentra aprobado por la FDA. 
+Si bien el programa fue adquirido hace varios años, no es económicamente viable reemplazarlo por un producto moderno que esté aprobado por la FDA.
+En consecuencia, se debe lograr un salto tecnológico manteniendo la plataforma que actualmente está operando.
 
 % Perfiles térmicos
 Los requerimientos que se deben cumplir en las mediciones ambientales de los depósitos y cuartos productivos estipulan que los sensores se deben someter a un plan de calibración rutinario y realizarles periódicos estudios de perfiles térmicos.
-Un estudio de perfil térmico se logra tomando una serie de mediciones de temperatura en varios puntos de un ambiente, y con estos datos se procede a calcular las coordenadas de los puntos críticos del cuarto. \citep{ARTICLE:Temperature}
+Un estudio de perfil térmico se logra tomando una serie de mediciones de temperatura en varios puntos de un ambiente, y con estos datos se procede a calcular las coordenadas de los puntos críticos del cuarto \citep{ARTICLE:Temperature}.
 Los puntos críticos son aquellos lugares donde la temperatura es la más baja o más alta dentro de la habitación.
 Teniendo los puntos críticos identificados, se procede a colocar sensores de temperatura en esos lugares.
 
 % Migración de sensores
-Los periódicos estudios de perfiles térmicos tienen como consecuencia que cada seis meses se deben mover los sensores de temperatura.
+Los estudios periódicos de perfiles térmicos tienen como consecuencia que cada seis meses se deben mover los sensores de temperatura.
 La tarea de migrar los dispositivos se vuelve costosa debido a que se encuentran cableados y además los nuevos recorridos de los cables se deben certificar por el departamento de calidad. El tiempo de migración y de certificación se vería reducido sensiblemente si los equipos fuesen inalámbricos, pero la licencia de EBI que tiene Gador no es compatible con los protocolos de comunicaciones necesarios para lograrlo.
 
 % Arquitectura de la red industrial Gador
 Las plantas de producción de la empresa siguen una arquitectura en donde los sensores reportan sus mediciones a unos controladores lógicos programables o PLC por sus siglas en inglés. Esa comunicación se logra a través de cables que los conectan. Los datos que adquieren los PLCs son entregados al sistema EBI. 
-El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:redGador}, donde se puede ver una estructura del tipo árbol donde todo converge al sistema EBI.
+El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:redGador}, donde se puede ver una estructura del tipo árbol donde la información es suministrada al sistema EBI.
 			
 \begin{figure}[h]
 	\centering
@@ -88,7 +88,7 @@ El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:r
 
 \newpage
 
-\section{Introducción técnica}
+\section{Modelo de capas de la Internet de las Cosas}
 \label{ch1IntroduccionTecnica}
 
 % Presentación modelo de capas IoT
@@ -118,9 +118,10 @@ En la tabla \ref{tab:modeloCapas} se presenta un resumen de las funciones de cad
 
 % Capa de negocios
 \subsection{Capa de negocios}
-Dependiendo del modelo viabilidad económica de un sistema y de como fue desplegado, la capa de negocio puede tener una funcionalidad contable y calcular los costos de operación.
-Esta capa puede ser la encargada de determinar y generar la facturación para cobrarle a los usuarios de la aplicación, como así también, de resolver operaciones de transferencia de dinero.
-La interacción en este nivel es con el personal que administra un sistema, se determina que permisos tiene cada usuario para manipular los servicios ofrecidos y se lleva adelante el registro de acciones y eventos relevantes para el normal funcionamiento del programa.
+La capa de negocio suele tener una funcionalidad contable.
+Esta capa puede ser la encargada de determinar y generar la facturación para cobrarle a los usuarios de la aplicación, como así también, resolver operaciones de transferencia de dinero.
+La interacción en este nivel es con el personal que administra un sistema.
+Se determina que permisos tiene cada usuario para manipular los servicios ofrecidos y se lleva adelante el registro de acciones y eventos relevantes para el normal funcionamiento del programa.
 Un ejemplo de capa de negocio se puede observar en la figura \ref{fig:ch1EjemploNegocio}.
 
 \begin{figure}[h]
@@ -141,10 +142,11 @@ Actualmente, se construyen las interfaces siguiendo un modelo de diseño según 
 Si la solución abarca una interfaz hombre-máquina industrial que debe ser atendida durante toda una jornada laboral, se suele implementar una norma de manejo de situaciones anormales o ASM.
 Si la aplicación es de uso intermitente, se puede usar un esquema de diseño material o \emph{Material Desing} que presenta una experiencia moderna y fluida, como se puede apreciar en la figura \ref{fig:ch1MaterialDesign}.
 
-Para llevar a delante la interfaz seleccionada se utiliza un servidor que tiene como objetivo proveer los componentes gráficos al dispositivo utilizado.
-Una manera de realizarlo es entregando al cliente una \emph{Single Web Application (SWP)}, logrando que el servidor otorgue todo el código necesario para que el dispositivo del usuario genere por si mismo los componentes gráficos a mostrar.
-Es importante que el código entregado pueda ser visualizado en múltiples tamaños de pantallas, en la actualidad las personas utilizan ordenadores, tabletas y teléfonos móviles que presentan grandes diferencias en sus dimensiones.
-Cuando una aplicación cumple con este requerimiento se la define como responsiva.
+Para llevar adelante la interfaz seleccionada se utiliza un servidor que tiene como objetivo proveer los componentes gráficos al dispositivo utilizado.
+Una manera de realizarlo es entregando al cliente una \emph{Single Web Application (SWP)}.
+De esta manera se logra que el servidor otorgue todo el código necesario para que el dispositivo del usuario genere por sí mismo los componentes gráficos a mostrar.
+Es importante que el código entregado pueda ser visualizado en múltiples tamaños de pantallas, ya que en la actualidad las personas utilizan ordenadores, tabletas y teléfonos móviles que presentan grandes diferencias en sus dimensiones.
+Cuando una aplicación cumple con este requerimiento se la define como \emph{responsiva}.
 
 % poner referencia de la figura en pie de página
 % https://material.io/blog/mda-2020-winners
@@ -159,10 +161,12 @@ Cuando una aplicación cumple con este requerimiento se la define como responsiv
 
 % Capa de procesamiento
 \subsection{Capa de procesamiento}
-Para alimentar de datos a la interfaz gráfica se necesita de la capa de procesamiento, que entrega el contenido a mostrar en pantalla. La información puede ser almacenada con distintas tecnologías, siendo una de las principales, las bases de datos relacionales.
+Para alimentar de datos a la interfaz gráfica se necesita de la capa de procesamiento, que entrega el contenido a mostrar en pantalla. La información puede ser almacenada con distintas tecnologías.
+Una de las principales es la tecnología de las bases de datos relacionales.
 Este tipo de base de datos se basa en un esquema de tablas que se relacionan entre sí.
 Estas tecnologías se las suelen llamar SQL y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero.
-Existe otro grupo de bases de datos que se denominan no relacionales o NoSQL, esta categoría contienen a las bases de datos tipo clave-valor, documental, de columnas y de grafos.
+Existe otro grupo de bases de datos que se denominan no relacionales o NoSQL.
+Esta categoría contiene a los siguientes tipos de bases de datos:
 
 \begin{itemize}
 	\item Clave-valor
@@ -172,11 +176,12 @@ Existe otro grupo de bases de datos que se denominan no relacionales o NoSQL, es
 \end{itemize}
 
 % clave-valor
-Las bases de datos clave-valor tratan los datos como una única colección que puede tener campos completamente distintos en cada registro, no existe entonces, ningún tipo de relación entre los miembros de la colección. El uso principal de esta tecnología es gestionar diccionarios dentro de la memoria volátil, ya que se pueden definir tiempos de vida para los datos. La muerte programada de un dato puede ser utilizada para gestionar las sesiones de usuario dentro del programa.
+Las bases de datos clave-valor tratan los datos como una única colección que puede tener campos completamente distintos en cada registro.
+No existe entonces, ningún tipo de relación entre los miembros de la colección. El uso principal de esta tecnología es gestionar diccionarios dentro de la memoria volátil, ya que se pueden definir tiempos de vida para los datos. La muerte programada de un dato puede ser utilizada para gestionar las sesiones de usuario dentro del programa.
 
 % documental
 Almacenar los datos de manera documental significa que se agrupa la información siguiendo un criterio de entidades similares, lo cual no significa que exista una estructura rígida, sino que los datos tienen una naturaleza similar.
-La persistencia se logra siguiendo uno formatos de codificación estándar, los cuales son:
+La persistencia se logra siguiendo formatos de codificación estándar, los cuales son:
 % como \emph{XML}, \emph{YAML} y \emph{JSON}.
 
 \begin{itemize}
@@ -191,7 +196,9 @@ Las bases de datos orientadas a columnas están pensadas para minimizar el tiemp
 La organización particular de este tipo de tecnologías es afín a los sistemas de IoT ya que los dispositivos de mediciones suelen generar un gran volumen de datos, que se pueden organizar como series temporales.
 
 % grafos
-Una base de datos orientada a grafos presenta la información como nodos que se encuentran relacionados, la diferencia fundamental con los sistemas relacionales es que los nodos no están organizados en tablas, y las relaciones que unen los nodos tienen atributos y no poseen una estructura definida.
+Una base de datos orientada a grafos presenta la información como nodos que se encuentran relacionados.
+La diferencia fundamental con los sistemas relacionales es que los nodos no están organizados en tablas.
+Además las relaciones que unen los nodos tienen atributos y no poseen una estructura definida.
 Este tipo de tecnología permite utilizar la teoría de grafos y posibilita realizar consultas siguiendo modelos matemáticos que forman parte de esa rama de la ciencia.
 %Un ejemplo de esta tecnología se puede ver en la figura \ref{fig:ch1Grafo}.
 
@@ -206,11 +213,13 @@ Este tipo de tecnología permite utilizar la teoría de grafos y posibilita real
 
 % Capa de red
 \subsection{Capa de red}
-Se dispone de un repertorio de protocolos pertenecientes a la capa de red para lograr que los dispositivos se comuniquen entre si.
-Entre los mencionados a lo largo de esta memoria se encuentran el protocolo Modbus, MQTT, HTTP y WebSocket. El manejo de estas tecnologías fue fundamental para lograr que las distintas partes del trabajo interactúen con el exterior.
+Se dispone de un repertorio de protocolos pertenecientes a la capa de red para lograr que los dispositivos se comuniquen entre sí.
+Entre los mencionados a lo largo de esta memoria se encuentran Modbus, MQTT, HTTP y WebSocket. El manejo de estas tecnologías fue fundamental para lograr que las distintas partes del trabajo interactúen con el exterior.
 
 % Modbus
-Modbus es un protocolo que se diseñó teniendo en cuenta su uso para aplicaciones industriales, su prioridad es transmitir los datos manteniendo su integridad aún en ambientes donde el ruido eléctrico es elevado. El protocolo es público y gratuito, lo que provocó que se impusiera en un gran segmento del mercado ya que además es fácil de implementar y requiere poco desarrollo. Los dispositivos de una red Modbus tienen una dirección única y por lo general se asigna un equipo como maestro y el resto como esclavos. La arquitectura descripta presenta varias ventajas, pero la antigüedad del protocolo y su diseño para dispositivos del tipo PLC, hace que no sea adecuado para aplicaciones IoT.
+Modbus es un protocolo que se diseñó para aplicaciones industriales.
+Su prioridad es transmitir los datos manteniendo su integridad aún en ambientes donde el ruido eléctrico es elevado. El protocolo es público y gratuito, lo que provocó que se impusiera en un gran segmento del mercado ya que además es fácil de implementar.
+Los dispositivos de una red Modbus tienen una dirección única y por lo general se asigna un equipo como maestro y el resto como esclavos. La arquitectura descripta presenta varias ventajas, pero no es adecuado para aplicaciones IoT.
 
 % MQTT
 Para interconectar a los dispositivos bajo un esquema de publicación-subscripción se utiliza el protocolo MQTT.
@@ -248,15 +257,17 @@ El protocolo de transferencia de hipertexto (HTTP) está orientado a transaccion
 El cliente inicia la comunicación enviando una petición al servidor, este último entrega una respuesta y se cierra el canal.
 Existe una variante del protocolo llamada HTTPS que agrega una capa de cifrado para que las comunicaciones sean seguras.
 
-WebSocket es un protocolo similar a HTTP pero con la diferencia que la conexión es bidireccional, esto quiere decir que cuando se logra la conectar al cliente con el servidor, ambos pueden enviar información espontáneamente. Esta cualidad permite realizar transferencias de datos en vivo, con lo que se pueden lograr servicios de \emph{streaming} o \emph{chats}.
+WebSocket es un protocolo similar a HTTP pero con la diferencia que la conexión es bidireccional.
+Esto quiere decir que cuando se logra la conectar al cliente con el servidor, ambos pueden enviar información espontáneamente. Esta cualidad permite realizar transferencias de datos en vivo, con lo que se pueden lograr servicios de \emph{streaming} o \emph{chats}.
 
 % Capa de percepción
 \subsection{Capa de percepción}
-Los sensores utilizados en una solución de IoT están incluidos en la capa de percepción, y para que puedan formar parte del sistema se necesita que sean capaces de soportar alguno de los protocolos de comunicaciones mencionados. Dado que el desarrollo de estos dispositivos no formaron parte del proyecto realizado, no se ampliará demasiado en este tema.
+Los sensores utilizados en una solución de IoT están incluidos en la capa de percepción.
+Para que puedan formar parte del sistema se necesita que sean capaces de soportar alguno de los protocolos de comunicaciones mencionados. Dado que el desarrollo de estos dispositivos no formaron parte del proyecto realizado, no se ampliará en este tema.
 
 % Despliegue de una solución
 \subsection{Despliegue de una solución}
-Teniendo definido los componentes de las capas, se necesita lograr que todas las partes funcionen como una única entidad. Para lograr este objetivo existen tecnologías de despliegue y orquestación, que cumplen la función de interconectar y mantener los servicios para que trabajen en equipo. Tradicionalmente se solían utilizar máquinas virtuales pero actualmente ese enfoque está quedando en desuso en favor de las tecnologías de contenedores. Una máquina virtual acapara parte de una computadora y funciona como un ordenador independiente, mientras que un contenedor funciona como un sistema operativo independiente pero no acapara los recursos de la computadora principal.
+Teniendo definidos los componentes de las capas, se necesita lograr que todas las partes funcionen como una única entidad. Para lograr este objetivo existen tecnologías de despliegue y orquestación, que cumplen la función de interconectar y mantener los servicios para que trabajen en equipo. Tradicionalmente se solían utilizar máquinas virtuales pero actualmente ese enfoque está quedando en desuso en favor de las tecnologías de contenedores. Una máquina virtual acapara parte de una computadora y funciona como un ordenador independiente, mientras que un contenedor funciona como un sistema operativo independiente pero no acapara los recursos de la computadora principal.
 
 
 \section{Estado del arte}
@@ -265,15 +276,17 @@ Teniendo definido los componentes de las capas, se necesita lograr que todas las
 % La nube
 En la sección \ref{ch1IntroduccionTecnica} se presentó un modelo de capas para analizar las tecnologías.
 En esta sección se utiliza el mismo esquema para presentar las técnicas que conforman el estado del arte.
+
 Es importante mencionar el concepto de nube, ya que las soluciones modernas se basan en utilizar este tipo de plataforma.
 La nube se refiere a utilizar servicios y servidores provistos por un tercero.
 Entre los sistemas más representativos se encuentran \emph{Amazon Web Service (AWS)}, \emph{Google Cloud} y \emph{Azure}.
 Estas empresas ofrecen su infraestructura y una serie de facilidades que promueven un rápido desarrollo y despliegue en el mercado.
 
 % Percepción
-Los sensores o actuadores que se utilizan corren un firmware específico para el ecosistema utilizado.
-Si se decidió utilizar AWS, por ejemplo, lo más probable es que la capa de percepción ejecute \emph{AWS IoT Core} en sus dispositivos.
-Este esquema es ampliamente utilizado a nivel \emph{enterprise}, por ejemplo, los laboratorios Bayer utilizan el ecosistema de AWS. \citep{WEBSITE:AWSBayer}
+Los sensores o actuadores que utilizan corren un firmware específico.
+Por ejemplo, si se decidió utilizar AWS lo más probable es que la capa de percepción ejecute \emph{AWS IoT Core} en sus dispositivos.
+Este esquema es ampliamente utilizado a nivel \emph{enterprise}.
+Por ejemplo, los laboratorios Bayer utilizan el ecosistema de AWS \citep{WEBSITE:AWSBayer}.
 
 % Transporte
 En la capa de transporte, los dispositivos se comunican usualmente utilizando los protocolos \emph{LoRaWAN}, \emph{Sigfox}, \emph{ZigBee} o \emph{Bluetooth}.
@@ -288,13 +301,14 @@ Una de las réplicas se configura como maestro y el resto como esclavos.
 El servidor maestro es quien se comunica con el exterior de la réplica y retransmite los nuevos datos a los esclavos.
 Si un servidor maestro sufre un problema, uno de los esclavos se convierte en el nuevo maestro y se mantiene a la réplica funcionando sin interrupciones.
 
-Los datos pueden ser divididos en \emph{shards}, esto se hace para dividir la base de datos según la aplicación.
-Un ejemplo es separar los datos por región geográfica, de esta manera los clientes de una región en particular pueden tener los servidores con los datos que suelen utilizar cerca de ellos.
+Los datos pueden ser divididos en \emph{shards}.
+Esto se hace para dividir la base de datos según la aplicación.
+Un ejemplo es separar los datos por región geográfica.
+De esta manera los clientes de una región en particular pueden tener los servidores con los datos que suelen utilizar cerca de ellos.
 Para que los \emph{shards} funcionen como una única base de datos, se dispone de un servidor \emph{router} que es la interfaz con el exterior.
 El \emph{router} recibe las consultas o ingresos de nuevos datos y se encarga de utilizar el \emph{shard} correspondiente.
-La configuración de este sistema se maneja desde un grupo de servidores destinados para tal fin.
-Suelen conformar una réplica donde solo se almacenan los datos de configuración.
-Esta arquitectura de alta disponibilidad se la conoce como granja de datos, se la puede construir con mongoDB \citep{WEBSITE:mongodbSharding} y se encuentra visualizada en la figura \ref{fig:ch1DatosAltaDisponibilidad}.
+La configuración de este sistema se maneja desde un grupo de servidores destinados para tal fin, que suelen conformar una réplica donde solo se almacenan los datos de configuración.
+Esta arquitectura de alta disponibilidad se conoce como granja de datos, se puede construir con mongoDB \citep{WEBSITE:mongodbSharding} y se encuentra representada en la figura \ref{fig:ch1DatosAltaDisponibilidad}.
 
 \begin{figure}[h]
 	\centering
@@ -368,16 +382,16 @@ Es un sistema basado en contenedores y crea un \emph{clúster} a partir de una p
 \label{objetivos}
 
 % Objetivos
-El objetivo principal que cumplió este proyecto fue demostrarle al cliente el potencial de las nuevas tecnologías y la posibilidad de integrarlas a sus actuales sistemas.
+El objetivo principal que cumplió este trabajo fue demostrarle al cliente el potencial de las nuevas tecnologías y la posibilidad de integrarlas a sus actuales sistemas.
 Se propuso crear una prueba de concepto para evaluar la viabilidad de futuros proyectos.
 La creación de un sistema que pueda unir equipos que utilizan Modbus con aquellos que usan MQTT, es de relevancia en general para la industria local.
-Otro objetivo importante fue la de utilizar las técnicas adquiridas durante la cursada de la especialización.
-Con la finalidad de sementar los conocimientos a través de la práctica.
+
+Otro objetivo importante fue la de utilizar las técnicas adquiridas durante la cursada de la especialización, con la finalidad de asentar los conocimientos a través de la práctica.
 
 % Alcance
-El trabajo se limitó a desarrollar el software a desplegar en un servidor que fue nombrado Nodos.
+El trabajo se limitó a desarrollar el software a desplegar en un servidor.
 Esto significa que no se contempló el desarrollo del hardware, en particular los sensores y los puntos de agregación.
-El esquema del servidor en la red de Gador puede ser visualizado en la figura \ref{fig:esquemaProyecto}.
+El esquema del servidor en la red de Gador puede ser visualizado en la figura \ref{fig:esquemaProyecto}, donde el servidor denominado Nodos corresponde a la solución desarrollada.
 El servidor puede comunicarse con EBI de la misma manera que lo logra un PLC.
 Además tiene la capacidad de utilizar el protocolo MQTT para conectarse directamente con los sensores o a través de puntos de agregación.
 
@@ -408,7 +422,7 @@ Además tiene la capacidad de utilizar el protocolo MQTT para conectarse directa
 \end{figure}
 
 % Requerimientos
-Cuando se tuvo definidos los objetivos y el alcance del proyecto, se inició un proceso de negociación con el cliente.
+Una vez definidos los objetivos y el alcance del proyecto, se inició un proceso de negociación con el cliente.
 Se buscó determinar cuales eran sus necesidades y sus temores respecto del proyecto.
 Las conversaciones con el cliente dieron como resultado la siguiente lista de requerimientos:
 
