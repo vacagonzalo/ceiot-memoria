@@ -424,8 +424,8 @@ acl_file /mosquitto/config/acl.txt
 \end{lstlisting}
 
 Se creó una configuración de usuarios que tiene en su interior dos integrantes.
-El primer usuario se denominó docker y su contraseña es container.
-El segundo usuario se nombró device y su contraseña es thing.
+El primer usuario se denominó docker y se usó con los contenedores.
+El segundo usuario se nombró device y se empleó para identificar a los dispositivos.
 Las contraseñas se guardaron encriptadas utilizando la herramienta \emph{mosquitto\_passwd}.
 El usuario docker se utiliza para que los contenedores se comuniquen con el broker mientras que device se asigna a los sensores en campo.
 Las diferencias entre contenedores y dispositivos se configuran en el archivo de acl, como se visualiza en el código \ref{cod:mosquittoAcl}.
