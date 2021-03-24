@@ -90,7 +90,7 @@ Por lo tanto se evaluó como aspecto relevante ganar experiencia con esta tecnol
 % redis
 Los contenedores que forman la aplicación deben compartir una memoria volátil para que el sistema pueda funcionar correctamente.
 Se eligió a Redis para que funcione como memoria compartida entre los componentes aislados dentro del trabajo.
-Redis es un almacén de estructuras de datos en memoria y puede ser usado como una base de datos, una \emph{caché} de memoria y un broker para crear un bus de eventos.
+Redis \citep{da2015redis} es un almacén de estructuras de datos en memoria y puede ser usado como una base de datos, una \emph{caché} de memoria y un broker para crear un bus de eventos.
 Esta tecnología permite hacer persistencia de datos pero solo en el esquema de clave-valor y permite también establecer los tiempos de vida para los datos.
 Los tiempos de vida de los datos se utilizaron en el trabajo para gestionar las sesiones de los usuarios.
 Si una persona pasa demasiado tiempo sin interactuar con la aplicación tiene que volver a ingresar su usuario y contraseña para seguir utilizando el sistema con normalidad.	
@@ -100,7 +100,7 @@ Si una persona pasa demasiado tiempo sin interactuar con la aplicación tiene qu
 
 \subsection{Bibliotecas y paquetes web}
 % Angular & Angular Material
-Para implementar la capa de aplicación se utilizó un framework de diseño de interfaces gráficas llamado Angular y se creó una SWA.
+Para implementar la capa de aplicación se utilizó un framework de diseño de interfaces gráficas llamado Angular y se creó una SWA \citep{mesbah2007migrating}.
 Se desarrolló el código usando el lenguaje TypeScript que es un \emph{superset} de JavaScript.
 Está basado en el paradigma de componentes para generar aplicaciones escalables y poder reutilizar el código escrito en otros trabajos.
 Además pone a disposición una colección de bibliotecas para manejar formularios, comunicaciones cliente-servidor, \emph{routing}, entre otras funcionalidades.
@@ -108,40 +108,41 @@ Tiene entre sus facilidades ofrecidas, un cliente de terminal que acelera los ti
 Por todas estas ventajas, se decidió inclinarse por este framework.
 
 El estilo empleado en el trabajo fue el de diseño material.
-Para lograrlo se trabajó con Angular Material que es una biblioteca de componentes de interfaz gráfica para Angular.
+Para lograrlo se trabajó con Angular Material \citep{WEBSITE:AngularMaterialio} que es una biblioteca de componentes de interfaz gráfica para Angular.
 Está pensada para construir una experiencia consistente y funcional, adhiriendo con los principios de diseño más utilizados.
 Estos principios se refieren a la portabilidad entre navegadores y la independencia de dispositivos.
 
 % express & cors
-Se necesitó crear una \emph{REST API} y para lograrlo se usó un framework para realizar servidores con Nodejs denominado Express.
+Se necesitó crear una \emph{REST API} que es una interfaz para lograr una transferencia de datos a través de una representación de estados \citep{zhou2014rest}.
+Para lograrlo se usó un framework para realizar servidores con Nodejs denominado Express \citep{WEBSITE:ExpressPage}.
 El framework está pensado para construir aplicaciones webs e interfaces de programación de aplicaciones (API).
 Una API se encarga de definir las interacciones entre múltiples programas o puede intermediar entre componentes de hardware y software.
 Express es la biblioteca más utilizada para trabajar con Nodejs. \citep{WEBSITE:Express}
 
-Para solucionar el problema de intercambio de recursos de origen cruzado del frontend (CORS) se utilizó la biblioteca CORS para Nodejs.
-CORS es una solución que permite acceder a recursos restringidos de un dominio diferente al del frontend.
+Para solucionar el problema de intercambio de recursos de origen cruzado del frontend (CORS) \citep{WEBSITE:CORS} se utilizó la biblioteca CORS para Nodejs.
+CORS \citep{WEBSITE:CORSjs} es una solución que permite acceder a recursos restringidos de un dominio diferente al del frontend.
 
 % wsjs
-Para cumplir con el requerimiento de la sección \ref{objetivos} que demanda ver en vivo las mediciones al calibrar un instrumento, se utilizó WS. 
+Para cumplir con el requerimiento de la sección \ref{objetivos} que demanda ver en vivo las mediciones al calibrar un instrumento, se utilizó WS \citep{WEBSITE:WSjs}. 
 Esta dependencia es una biblioteca de Nodejs que se usa para realizar servidores con la capacidad de entablar una conexión WebSocket.
 Es fácil de utilizar y es altamente configurable.
 Se decidió incorporarla al trabajo debido a que la documentación es completa y simple de entender.
 
 \subsection{Bibliotecas y paquetes de transporte}
 % paho MQTT
-Eclipse Paho es una biblioteca MQTT que está disponible para varios lenguajes de programación.
+Eclipse Paho \citep{WEBSITE:EclipsePaho} es una biblioteca MQTT que está disponible para varios lenguajes de programación.
 En el trabajo realizado se utilizó para darle conectividad a los servicios programados en Python.
 La biblioteca provee una clase cliente que habilita la comunicación con un broker MQTT.
 Se ofrece además, una serie de funciones auxiliares que permiten codificar el programa con mayor facilidad.
 
 % mqttjs
-Se necesitó un recurso que ofrezca de capacidades MQTT al código escrito en JavaScript y para esa misión se usó MQTTjs.
+Se necesitó un recurso que ofrezca de capacidades MQTT al código escrito en JavaScript y para esa misión se usó MQTTjs \citep{WEBSITE:MQTTjs}.
 MQTTjs es una biblioteca que provee de las herramientas para crear un cliente MQTT en Nodejs y en un navegador.
 Se lo puede instalar de forma global en el sistema operativo para hacer uso de las herramientas de terminal que ofrece.
 Las herramientas permiten hacer pruebas de subscripción y publicación de mensajes.
 
 % pyModbusTCP
-Para que el código escrito en Python pueda utilizar el protocolo ModbusTCP se usó la biblioteca PyModbusTCP.
+Para que el código escrito en Python pueda utilizar el protocolo ModbusTCP se usó la biblioteca PyModbusTCP \citep{WEBSITE:pyModbusTCP}.
 Este recurso permite crear un cliente para acceder a un servidor o bien crear una aplicación que se comporte como esclavo.
 
 % oitc/modbus-server
@@ -150,7 +151,7 @@ Está configurado para utilizar el puerto 5020 para evitar problemas de permisos
 El sistema de orquestación corrige el puerto al conectar el 5020 del contenedor con el 502 del ordenador.
 
 % mongoose
-Mongoose es una biblioteca de modelado de datos de objetos(ODM).
+Mongoose \citep{WEBSITE:mongoose} es una biblioteca de modelado de datos de objetos(ODM).
 Un ODM gestiona las relaciones entre los datos, provee de una validación de esquema y se usa para traducir los objetos del programa en ejecución en una representación dentro de la base de datos.
 La biblioteca se creó para trabajar con MongoDB y está disponible para la plataforma Nodejs.
 
@@ -167,7 +168,7 @@ Por estas razones se decidió usar este recurso en el trabajo, con la idea de pr
 % jsonwebtoken
 La segunda biblioteca utilizada para cumplir con los requerimientos de seguridad fue Jsonwebtoken.
 Es un paquete que permite crear un \emph{JavaScript Web Token (JWT)}.
-JWT es un estándar que se utiliza para la fabricación de \emph{tokens} de acceso que permiten identificar una entidad y determinar cuales son sus privilegios en el sistema.
+JWT es un estándar que se utiliza para la fabricación de \emph{tokens} de acceso que permiten identificar una entidad y determinar cuales son sus privilegios en el sistema \citep{olivera2014jwt}.
 El token está formado por una cabecera, una carga útil y una firma.
 La cabecera identifica el algoritmo de encriptación y el tipo de token.
 La carga útil lleva consigo la información relevante para el funcionamiento de la aplicación.

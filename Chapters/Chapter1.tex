@@ -26,8 +26,8 @@ El capítulo presenta las necesidades a satisfacer y una introducción técnica 
 \label{ch1Motivacion}
 
 La tendencia tecnológica actual es interconectar los dispositivos a través de la Internet, a tal punto que la cantidad de objetos en el año 2009 superó al número de personas conectadas y llegado el 2020 la diferencia es de seis veces en favor de los objetos (denominados en la jerga "cosas") \citep{ARTICLE:DaveEvans}.
-Los procesos industriales se ven beneficiados con nuevos métodos de control de inventarios y análisis de mediciones, además es posible gestionar los ambientes productivos para lograr una mayor calidad y comodidad.
-Los datos quedan disponibles para ser procesados por modelos de inteligencia artificial y la información resultante puede ser vista desde cualquier ubicación y en múltiples plataformas. 
+Los procesos industriales se ven beneficiados con nuevos métodos de control de inventarios y análisis de mediciones, ya que es posible gestionar los ambientes productivos para lograr una mayor calidad y comodidad.
+Además los datos quedan disponibles para ser procesados por modelos de inteligencia artificial y la información resultante puede ser vista desde cualquier ubicación y en múltiples plataformas. 
 
 % Realidad de la industria local
 En Argentina muchas empresas están retrasadas en su progreso tecnológico y muchas no incorporaron sistemas electrónicos en sus procesos o productos.
@@ -43,7 +43,7 @@ La misión de la compañía es producir medicamentos para la salud humana, con l
 La empresa tiene la necesidad de acceder al mercado estadounidense y para lograrlo debe satisfacer los requerimientos del \emph{Código federal de regulaciones - Título 21 - Capítulo de alimentos y drogas (21CFR11)} \citep{ARTICLE:21cfr11}.
 La norma establece que los registros de las mediciones ambientales de los depósitos y cuartos productivos se deben almacenar de forma electrónica pero, a su vez, se debe demostrar que los registros tienen la misma validez y seguridad que aquellos hechos en papel. 
 Esto se traduce en la necesidad de tener un sistema informático que se encuentre aprobado por la \emph{Food and Drug Administration (FDA)}, que es el organismo encargado de controlar los medicamentos y alimentos que ingresan a los Estados Unidos.
-Por esa razón Gador tiene comprada y en uso una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} de la marca Honeywell, ya que el producto se encuentra aprobado por la FDA. 
+Por esa razón Gador tiene comprada y en uso una licencia del sistema \emph{Enterprise Buildings Integrator (EBI)} \citep{WEBSITE:HoneywellEBI600} de la marca Honeywell, ya que ese producto se encuentra aprobado por la FDA. 
 Si bien el programa fue adquirido hace varios años, no es económicamente viable reemplazarlo por un producto moderno que esté aprobado por la FDA.
 En consecuencia, se debe lograr un salto tecnológico manteniendo la plataforma que actualmente está operando.
 
@@ -93,7 +93,7 @@ El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:r
 
 % Presentación modelo de capas IoT
 El proyecto realizado presentó una serie de desafíos a resolver, siendo el primero de ellos la variedad de tecnologías involucradas, tanto en la problemática a manipular como en la solución implementada.
-Para introducir orden en la variedad de conocimientos que forman parte del sistema desarrollado, se introduce un modelo de capas de Internet de las cosas (IoT).
+Para introducir orden en la variedad de conocimientos que forman parte del sistema desarrollado, se introduce un modelo de capas de Internet de las cosas (IoT) \citep{dorsemaine2016new}.
 
 % Enumeración de las capas y una breve descripción de cada una
 El modelo de capas seleccionado separa los conocimientos en cinco categorías, las cuales son las capas de negocio, aplicación, procesamiento, red y percepción.
@@ -153,7 +153,7 @@ Cuando una aplicación cumple con este requerimiento se la define como \emph{res
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{./Figures/ch1MaterialDesign.jpg}
-	\caption{Ejemplo de interfaz de diseño material. \citep{WEBSITE:Material}}
+	\caption{Ejemplo de interfaz de diseño material \citep{WEBSITE:Material}}.
 	\label{fig:ch1MaterialDesign}
 \end{figure}
 
@@ -164,7 +164,7 @@ Cuando una aplicación cumple con este requerimiento se la define como \emph{res
 Para alimentar de datos a la interfaz gráfica se necesita de la capa de procesamiento, que entrega el contenido a mostrar en pantalla. La información puede ser almacenada con distintas tecnologías.
 Una de las principales es la tecnología de las bases de datos relacionales.
 Este tipo de base de datos se basa en un esquema de tablas que se relacionan entre sí.
-Estas tecnologías se las suelen llamar SQL y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero.
+Estas tecnologías se las suelen llamar SQL y son utilizadas principalmente en datos de inventarios y sistemas de transacciones de dinero \citep{munar2014big}.
 Existe otro grupo de bases de datos que se denominan no relacionales o NoSQL.
 Esta categoría contiene a los siguientes tipos de bases de datos:
 
@@ -176,11 +176,11 @@ Esta categoría contiene a los siguientes tipos de bases de datos:
 \end{itemize}
 
 % clave-valor
-Las bases de datos clave-valor tratan los datos como una única colección que puede tener campos completamente distintos en cada registro.
+Las bases de datos clave-valor tratan los datos como una única colección que puede tener campos completamente distintos en cada registro \citep{nguyen2015zing}.
 No existe entonces, ningún tipo de relación entre los miembros de la colección. El uso principal de esta tecnología es gestionar diccionarios dentro de la memoria volátil, ya que se pueden definir tiempos de vida para los datos. La muerte programada de un dato puede ser utilizada para gestionar las sesiones de usuario dentro del programa.
 
 % documental
-Almacenar los datos de manera documental significa que se agrupa la información siguiendo un criterio de entidades similares, lo cual no significa que exista una estructura rígida, sino que los datos tienen una naturaleza similar.
+Almacenar los datos de manera documental significa que se agrupa la información siguiendo un criterio de entidades similares, lo cual no significa que exista una estructura rígida, sino que los datos tienen una naturaleza similar \citep{gutierrez2019herramienta}.
 La persistencia se logra siguiendo formatos de codificación estándar, los cuales son:
 % como \emph{XML}, \emph{YAML} y \emph{JSON}.
 
@@ -193,13 +193,13 @@ La persistencia se logra siguiendo formatos de codificación estándar, los cual
 
 % columnas
 Las bases de datos orientadas a columnas están pensadas para minimizar el tiempo de búsqueda, principalmente en series temporales.
-La organización particular de este tipo de tecnologías es afín a los sistemas de IoT ya que los dispositivos de mediciones suelen generar un gran volumen de datos, que se pueden organizar como series temporales.
+La organización particular de este tipo de tecnologías es afín a los sistemas de IoT ya que los dispositivos de mediciones suelen generar un gran volumen de datos, que se pueden organizar como series temporales \citep{abadi2009column}.
 
 % grafos
 Una base de datos orientada a grafos presenta la información como nodos que se encuentran relacionados.
 La diferencia fundamental con los sistemas relacionales es que los nodos no están organizados en tablas.
 Además las relaciones que unen los nodos tienen atributos y no poseen una estructura definida.
-Este tipo de tecnología permite utilizar la teoría de grafos y posibilita realizar consultas siguiendo modelos matemáticos que forman parte de esa rama de la ciencia.
+Este tipo de tecnología permite utilizar la teoría de grafos y posibilita realizar consultas siguiendo modelos matemáticos que forman parte de esa rama de la ciencia \citep{gyssens1994graph}.
 %Un ejemplo de esta tecnología se puede ver en la figura \ref{fig:ch1Grafo}.
 
 %\begin{figure}[h]
@@ -363,7 +363,7 @@ Esta arquitectura de alta disponibilidad se conoce como granja de datos, se pued
 
 % Aplicación
 La capa de aplicación se suele diseñar rápidamente con un framework dedicado a la construcción de interfaces gráficas.
-Uno de los más utilizados es Angular, desarrollado por la empresa Google.
+Uno de los más utilizados es Angular, desarrollado por la empresa Google \citep{WEBSITE:Angulario}.
 El estilo gráfico de diseño material presentado en la sección \ref{ch1IntroduccionTecnica} es la más utilizada.
 Las plataformas de nube ofrecen sus propios sistemas para diseñar la aplicación sin necesidad de escribir demasiado código, pero estas facilidades generan erogaciones adicionales.
 
@@ -371,10 +371,10 @@ Las plataformas de nube ofrecen sus propios sistemas para diseñar la aplicació
 La plataforma de nube presenta una capa de negocios donde se puede controlar el tráfico del sistema en ejecución.
 Desde allí se puede ver la facturación estimada o el consumo de crédito para mantener en funcionamiento el proyecto.
 En esta capa se pueden cambiar las variables de entorno del sistema y se pueden controlar el estado de los componentes.
-Es posible montar servicios que corran programas como \emph{Checkmk} o \emph{Grafana} para visualizar el estado de los dispositivos en campo. O se puede optar por usar los servicios que ofrezca la empresa de nube.
+Es posible montar servicios que corran programas como \emph{Checkmk} o \emph{Grafana} para visualizar el estado de los dispositivos en campo \citep{betke2017real}. O se puede optar por usar los servicios que ofrezca la empresa de nube.
 
 % Orquestación y despliegue
-La tecnología que se suele utilizar para orquestar toda la solución es Kubernetes, ya que además de automatizar el despliegue, también permite ajustar la escala.
+La tecnología que se suele utilizar para orquestar toda la solución es Kubernetes \citep{burns2018kubernetes}, ya que además de automatizar el despliegue, también permite ajustar la escala.
 Ajustar la escala se refiere a la capacidad de crear una réplica de un servicio cuando uno de ellos está trabajando cerca de su límite de procesamiento.
 Es un sistema basado en contenedores y crea un \emph{clúster} a partir de una plantilla donde se definen las reglas de escalamiento.
 
@@ -386,7 +386,7 @@ El objetivo principal que cumplió este trabajo fue demostrarle al cliente el po
 Se propuso crear una prueba de concepto para evaluar la viabilidad de futuros proyectos.
 La creación de un sistema que pueda unir equipos que utilizan Modbus con aquellos que usan MQTT, es de relevancia en general para la industria local.
 
-Otro objetivo importante fue la de utilizar las técnicas adquiridas durante la cursada de la especialización, con la finalidad de asentar los conocimientos a través de la práctica.
+Otro objetivo importante fue el de utilizar las técnicas adquiridas durante la cursada de la especialización, con la finalidad de asentar los conocimientos a través de la práctica.
 
 % Alcance
 El trabajo se limitó a desarrollar el software a desplegar en un servidor.
