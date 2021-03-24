@@ -88,6 +88,49 @@ El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:r
 
 \newpage
 
+% Descripción del sistema marca Honeywell que funciona en planta.
+%\newpage
+\section{Sistema propietario del cliente}
+
+Como se explicó en el capítulo \ref{Chapter1}, el trabajo tiene como objetivo integrarse al sistema que Gador tiene en ejecución.
+Esta sección explica con mayor detalle dicho sistema.
+
+EBI es un sistema de automatización de edificios y gestión empresarial creado por la firma Honeywell.
+Ofrece herramientas para dotar a las dependencias de la empresa de la inteligencia necesaria para incrementar la comodidad, mejorar la seguridad y reducir los costos operativos.
+
+La solución tiene la facultad de gestionar una red de edificios a través de una única interfaz gráfica.
+Su objetivo es reducir los tiempos de respuesta frente a situaciones anormales y mejorar la seguridad.
+Esta tecnología es compatible con dispositivos y software de terceros, con la idea de ofrecer escalabilidad.
+
+Este software es un ecosistema de módulos que pueden ser adquirido a través de licencias para agregar las siguientes funcionalidades:
+
+\begin{itemize}
+	\item Gestión de consumo energético
+	\item Seguridad de vida
+	\item Control de acceso e intrusión
+	\item Vídeo vigilancia
+\end{itemize}
+
+Las distintas licencias que vende Honeywell permiten que EBI utilice los protocolos BACNet, OPC, LonWorks y ModbusTCP.
+Gador adquirió el producto con la licencia ModbusTCP para conectar sus PLCs de variadas marcas.
+Como se puede observar en la figura \ref{fig:ch2EBI1}, se utiliza el software para visualizar los sensores de los distintos cuartos de producción y depósitos.
+En la figura \ref{fig:ch2EBI2} se puede visualizar que EBI está a cargo del control ambiental de las plantas del cliente.
+Este sistema es el corazón de la gestión de edificios de la compañía y determinó los requerimientos que propuso Gador.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ch2EBI1.jpg}
+	\caption{Control de temperatura de sólidos.}
+	\label{fig:ch2EBI1}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./Figures/ch2EBI2.jpg}
+	\caption{Unidad de tratamiento de aire de sólidos.}
+	\label{fig:ch2EBI2}
+\end{figure}
+
 \section{Modelo de capas de la Internet de las Cosas}
 \label{ch1IntroduccionTecnica}
 
@@ -209,8 +252,6 @@ Este tipo de tecnología permite utilizar la teoría de grafos y posibilita real
 %	\label{fig:ch1Grafo}
 %\end{figure}
 
-\newpage
-
 % Capa de red
 \subsection{Capa de red}
 Se dispone de un repertorio de protocolos pertenecientes a la capa de red para lograr que los dispositivos se comuniquen entre sí.
@@ -269,6 +310,7 @@ Para que puedan formar parte del sistema se necesita que sean capaces de soporta
 \subsection{Despliegue de una solución}
 Teniendo definidos los componentes de las capas, se necesita lograr que todas las partes funcionen como una única entidad. Para lograr este objetivo existen tecnologías de despliegue y orquestación, que cumplen la función de interconectar y mantener los servicios para que trabajen en equipo. Tradicionalmente se solían utilizar máquinas virtuales pero actualmente ese enfoque está quedando en desuso en favor de las tecnologías de contenedores. Una máquina virtual acapara parte de una computadora y funciona como un ordenador independiente, mientras que un contenedor funciona como un sistema operativo independiente pero no acapara los recursos de la computadora principal.
 
+\newpage
 
 \section{Estado del arte}
 \label{ch1EstadoDelArte}
@@ -425,8 +467,6 @@ Además tiene la capacidad de utilizar el protocolo MQTT para conectarse directa
 Una vez definidos los objetivos y el alcance del proyecto, se inició un proceso de negociación con el cliente.
 Se buscó determinar cuales eran sus necesidades y sus temores respecto del proyecto.
 Las conversaciones con el cliente dieron como resultado la siguiente lista de requerimientos:
-
-\newpage
 
 \begin{itemize}
 	\item Debe integrarse a la infraestructura de Gador S.A. sin generar conflictos en otros sistemas.
