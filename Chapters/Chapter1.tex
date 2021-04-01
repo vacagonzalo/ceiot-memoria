@@ -92,7 +92,7 @@ El modelo lógico de la arquitectura se puede visualizar en la figura \ref{fig:r
 %\newpage
 \section{Sistema propietario del cliente}
 
-Como se explicó en la sección \ref{ch1Motivacion}, el trabajo tiene como objetivo integrarse al sistema que Gador tiene en ejecución.
+Como se explicó en la sección \ref{ch1Motivacion}, el trabajo tiene como objetivo integrarse al sistema que Gador utiliza actualmente.
 Esta sección explica con mayor detalle dicho sistema.
 
 EBI es un sistema de automatización de edificios y gestión empresarial creado por la firma Honeywell.
@@ -102,7 +102,7 @@ La solución tiene la facultad de gestionar una red de edificios a través de un
 Su objetivo es reducir los tiempos de respuesta frente a situaciones anormales y mejorar la seguridad.
 Esta tecnología es compatible con dispositivos y software de terceros, con la idea de ofrecer escalabilidad.
 
-Este software es un ecosistema de módulos que pueden ser adquirido a través de licencias para agregar las siguientes funcionalidades:
+EBI está compuesto por un ecosistema de módulos que pueden ser adquirido a través de licencias para agregar las siguientes funcionalidades:
 
 \begin{itemize}
 	\item Gestión de consumo energético
@@ -114,6 +114,7 @@ Este software es un ecosistema de módulos que pueden ser adquirido a través de
 Las distintas licencias que vende Honeywell permiten que EBI utilice los protocolos BACNet, OPC, LonWorks y ModbusTCP.
 Gador adquirió el producto con la licencia ModbusTCP para conectar sus PLCs de variadas marcas.
 Como se puede observar en la figura \ref{fig:ch2EBI1}, se utiliza el software para visualizar los sensores de los distintos cuartos de producción y depósitos.
+
 En la figura \ref{fig:ch2EBI2} se puede visualizar que EBI está a cargo del control ambiental de las plantas del cliente.
 Este sistema es el corazón de la gestión de edificios de la compañía y determinó los requerimientos que propuso Gador.
 
@@ -328,7 +329,7 @@ Estas empresas ofrecen su infraestructura y una serie de facilidades que promuev
 Los sensores o actuadores que utilizan corren un firmware específico.
 Por ejemplo, si se decidió utilizar AWS lo más probable es que la capa de percepción ejecute \emph{AWS IoT Core} en sus dispositivos.
 Este esquema es ampliamente utilizado a nivel \emph{enterprise}.
-Por ejemplo, los laboratorios Bayer utilizan el ecosistema de AWS \citep{WEBSITE:AWSBayer}.
+Este es el caso de los laboratorios Bayer, que utilizan el ecosistema de AWS \citep{WEBSITE:AWSBayer}.
 
 % Transporte
 En la capa de transporte, los dispositivos se comunican usualmente utilizando los protocolos \emph{LoRaWAN}, \emph{Sigfox}, \emph{ZigBee} o \emph{Bluetooth}.
